@@ -1,0 +1,38 @@
+{
+  "name": "hivertradercourse",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @hivertradercourse/db db:push",
+    "db:studio": "turbo -F @hivertradercourse/db db:studio",
+    "db:generate": "turbo -F @hivertradercourse/db db:generate",
+    "db:migrate": "turbo -F @hivertradercourse/db db:migrate",
+    "db:start": "turbo -F @hivertradercourse/db db:start",
+    "db:watch": "turbo -F @hivertradercourse/db db:watch",
+    "db:stop": "turbo -F @hivertradercourse/db db:stop",
+    "db:down": "turbo -F @hivertradercourse/db db:down",
+    "check": "biome check --write ."
+  },
+  "dependencies": {
+    "@hivertradercourse/env": "*",
+    "dotenv": "^17.2.2",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
+    "@hivertradercourse/config": "*",
+    "@types/node": "^22.13.14",
+    "turbo": "^2.9.16",
+    "typescript": "^6"
+  },
+  "packageManager": "npm@11.12.1"
+}

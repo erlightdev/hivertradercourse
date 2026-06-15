@@ -1,0 +1,15 @@
+[mcp_servers.better-t-stack]
+command = "npx"
+args = ["create-better-t-stack@latest", "mcp"]
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+[mcp_servers.astro-docs]
+type = "http"
+url = "https://mcp.docs.astro.build/mcp"
+
+[mcp_servers.better-auth]
+type = "http"
+url = "https://mcp.inkeep.com/better-auth/mcp"
