@@ -1,36 +1,141 @@
 ---
 const links = [
-	{ to: "/", label: "Home" },
-	{ to: "/dashboard", label: "Dashboard" },
+  { to: "/", label: "Home" },
+  { to: "/dashboard", label: "Dashboard" },
 ];
 ---
 
-<div>
-  <div class="flex flex-row items-center justify-between px-4 py-2 md:px-6">
-    <nav class="flex gap-4 text-lg">
-      {links.map((link) => (
-        <a href={link.to} class="text-foreground hover:text-muted-foreground transition-colors">
-          {link.label}
-        </a>
-      ))}
-    </nav>
-    <div class="flex items-center gap-2" id="user-menu-container">
-      <a href="/login" id="login-link" class="rounded px-3 py-1.5 text-sm bg-primary hover:bg-primary/90 text-primary-foreground transition-colors">
-        Sign In
-      </a>
-      <div id="user-menu" class="hidden flex items-center gap-3">
-        <span class="text-sm text-muted-foreground hidden sm:inline" id="user-display"></span>
-        <button
-          id="signout-button"
-          class="rounded px-3 py-1.5 text-sm bg-destructive hover:bg-destructive/90 text-destructive-foreground transition-colors"
+<!-- Announcement Bar -->
+<div
+  id="announcement-bar"
+  class="fixed top-0 left-0 w-full min-h-[40px] bg-primary text-primary-foreground flex items-center justify-between px-4 md:px-6 z-50 text-xs sm:text-sm font-medium transition-transform duration-300 font-sans shadow-sm leading-snug"
+>
+  <div class="flex-1 text-center pr-4">
+    🎉 Learn live: Join our daily trading simulator sessions! Get started today.
+  </div>
+  <button
+    id="btn-close-announcement"
+    class="hover:opacity-80 transition-opacity cursor-pointer p-2 -mr-2"
+    aria-label="Close announcement"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+</div>
+
+<!-- Floating Navigation Header -->
+<header
+  id="floating-header"
+  class="fixed left-1/2 -translate-x-1/2 z-45 w-[calc(100%-1rem)] sm:w-[calc(100%-2rem)] max-w-5xl transition-all duration-300"
+  style="top: calc(var(--announcement-visible-height, 40px) + 16px)"
+>
+  <div
+    class="bg-card/85 backdrop-blur-md border border-border rounded-2xl px-3 sm:px-6 py-3 shadow-md flex items-center justify-between"
+  >
+    <!-- Logo & Navigation Links -->
+    <div class="flex items-center gap-4 sm:gap-8">
+      <a
+        href="/"
+        class="flex items-center gap-2.5 select-none outline-hidden rounded-md focus-visible:ring-2 focus-visible:ring-primary"
+      >
+        <img
+          src="/logo.png"
+          class="w-8 h-8 object-contain"
+          alt="HiverLMS Logo"
+        />
+        <span
+          class="font-bold text-lg text-foreground tracking-tight hidden lg:inline"
+          >HiverLMS</span
         >
-          Sign Out
-        </button>
+      </a>
+
+      <nav class="flex items-center gap-1 sm:gap-2">
+        {
+          links.map((link) => (
+            <a
+              href={link.to}
+              class="px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors font-sans outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+
+    <!-- Actions Wrapper -->
+    <div class="flex items-center gap-2 sm:gap-4">
+      <!-- Theme Toggle Button -->
+      <button
+        id="theme-toggle"
+        class="flex items-center justify-center w-10 h-10 border border-border rounded-xl hover:bg-muted/60 text-muted-foreground hover:text-foreground cursor-pointer transition-colors outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+        aria-label="Toggle theme"
+      >
+        <!-- Sun Icon (visible in dark mode) -->
+        <svg
+          id="theme-toggle-sun"
+          class="w-5 h-5 hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <circle cx="12" cy="12" r="5"></circle>
+          <path
+            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+          ></path>
+        </svg>
+        <!-- Moon Icon (visible in light mode) -->
+        <svg
+          id="theme-toggle-moon"
+          class="w-5 h-5 hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+        </svg>
+      </button>
+
+      <!-- User Actions -->
+      <div class="flex items-center gap-2" id="user-menu-container">
+        <a
+          href="/login"
+          id="login-link"
+          class="rounded-xl px-5 py-2 text-sm bg-primary hover:bg-primary/95 text-primary-foreground font-semibold cursor-pointer transition-colors shadow-sm font-sans flex-shrink-0 outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          Start free
+        </a>
+        <div id="user-menu" class="hidden flex items-center gap-3">
+          <span
+            class="text-sm font-medium text-muted-foreground hidden sm:inline font-sans truncate max-w-[120px]"
+            id="user-display"></span>
+          <button
+            id="signout-button"
+            class="rounded-xl px-5 py-2 text-sm bg-destructive hover:bg-destructive/95 text-destructive-foreground font-semibold cursor-pointer transition-colors shadow-sm font-sans flex-shrink-0 outline-hidden focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
     </div>
   </div>
-  <hr class="border-border" />
-</div>
+</header>
 
 <script>
   import { authClient } from "../lib/auth-client";
@@ -40,6 +145,47 @@ const links = [
   const userDisplay = document.getElementById("user-display");
   const signOutButton = document.getElementById("signout-button");
 
+  // Elements for Announcement Bar & Floating Header
+  const announcementBar = document.getElementById(
+    "announcement-bar",
+  ) as HTMLDivElement;
+  const floatingHeader = document.getElementById(
+    "floating-header",
+  ) as HTMLElement;
+  const btnCloseAnnouncement = document.getElementById(
+    "btn-close-announcement",
+  ) as HTMLButtonElement;
+
+  // Theme Toggler
+  const themeToggle = document.getElementById(
+    "theme-toggle",
+  ) as HTMLButtonElement;
+  const sunIcon = document.getElementById("theme-toggle-sun") as SVGElement;
+  const moonIcon = document.getElementById("theme-toggle-moon") as SVGElement;
+
+  let isAnnouncementClosed = false;
+
+  // Initialize theme toggle icons
+  function updateToggleIcons() {
+    const isDark = document.documentElement.classList.contains("dark");
+    if (isDark) {
+      sunIcon.classList.remove("hidden");
+      moonIcon.classList.add("hidden");
+    } else {
+      sunIcon.classList.add("hidden");
+      moonIcon.classList.remove("hidden");
+    }
+  }
+
+  themeToggle?.addEventListener("click", () => {
+    const isDark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    updateToggleIcons();
+  });
+
+  updateToggleIcons();
+
+  // Session Check
   async function checkSession() {
     try {
       const { data: session } = await authClient.getSession();
@@ -47,7 +193,8 @@ const links = [
         loginLink?.classList.add("hidden");
         userMenu?.classList.remove("hidden");
         if (userDisplay) {
-          userDisplay.textContent = session.user.name || session.user.email?.split("@")[0] || "User";
+          userDisplay.textContent =
+            session.user.name || session.user.email?.split("@")[0] || "User";
         }
       }
     } catch (e) {
@@ -55,6 +202,7 @@ const links = [
     }
   }
 
+  // Sign out listener
   signOutButton?.addEventListener("click", async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -65,5 +213,33 @@ const links = [
     });
   });
 
+  // Scroll and Close listeners for Floating Header & Announcement
+  function updateHeaderPosition() {
+    let height = 0;
+    if (!isAnnouncementClosed) {
+      if (window.scrollY > 20) {
+        // Hide announcement bar and push header to the top
+        announcementBar?.classList.add("-translate-y-full");
+      } else {
+        // Show announcement bar and offset header down
+        announcementBar?.classList.remove("-translate-y-full");
+        height = announcementBar ? announcementBar.offsetHeight || 40 : 40;
+      }
+    }
+    document.documentElement.style.setProperty(
+      "--announcement-visible-height",
+      `${height}px`,
+    );
+  }
+
+  // Close announcement bar manually
+  btnCloseAnnouncement?.addEventListener("click", () => {
+    isAnnouncementClosed = true;
+    announcementBar?.classList.add("hidden");
+    updateHeaderPosition();
+  });
+
+  window.addEventListener("scroll", updateHeaderPosition);
+  updateHeaderPosition();
   checkSession();
 </script>

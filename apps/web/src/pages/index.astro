@@ -1,28 +1,915 @@
 ---
 import Layout from "../layouts/Layout.astro";
-
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
-
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
 ---
 
-<Layout title="hivertradercourse">
-  <div class="container mx-auto max-w-3xl px-4 py-2">
-    <pre class="overflow-x-auto font-mono text-sm text-white">{TITLE_TEXT}</pre>
-    <div class="grid gap-6">
+<Layout title="HiverLMS — Master the Art of Trading">
+  <div
+    class="relative overflow-hidden bg-background text-foreground min-h-[calc(100vh-4rem)] flex flex-col justify-between selection:bg-primary/20"
+  >
+    <!-- Deep Ambient Glows & Arcs (Mockup Aesthetics) -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <!-- Premium Grid Pattern from PatternCraft.fun -->
+      <div
+        class="absolute top-0 left-0 right-0 h-[650px] bg-[linear-gradient(to_right,rgba(223,119,91,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(223,119,91,0.04)_1px,transparent_1px)] [background-size:32px_32px] [mask-image:radial-gradient(ellipse_at_top,black_70%,transparent_100%)] pointer-events-none z-0"
+      >
+      </div>
+
+      <!-- Top Left Glow -->
+      <div
+        class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(223,119,91,0.12)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(223,119,91,0.08)_0%,transparent_70%)] blur-3xl"
+      >
+      </div>
+      <!-- Top Right Glow -->
+      <div
+        class="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(223,119,91,0.12)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(223,119,91,0.08)_0%,transparent_70%)] blur-3xl"
+      >
+      </div>
+
+      <!-- Big Ambient Circular Arc Line -->
+      <div
+        class="absolute top-[10%] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full border border-primary/10 dark:border-primary/5 [mask-image:linear-gradient(to_bottom,black_30%,transparent_70%)]"
+      >
+      </div>
+      <!-- Inner Arc -->
+      <div
+        class="absolute top-[18%] left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full border border-primary/5 dark:border-primary/2 [mask-image:linear-gradient(to_bottom,black_40%,transparent_80%)]"
+      >
+      </div>
+
+      <!-- Glowing Arc Highlights -->
+      <div
+        class="absolute top-[25%] left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full border-t-2 border-primary/25 dark:border-primary/15 [mask-image:linear-gradient(to_right,transparent_10%,black_20%,black_30%,transparent_40%,transparent_60%,black_70%,black_80%,transparent_90%)] animate-[spin_120s_linear_infinite]"
+      >
+      </div>
+
+      <!-- Bottom Grid Pattern -->
+      <div
+        class="absolute bottom-0 left-0 right-0 h-[300px] bg-[radial-gradient(rgba(223,119,91,0.12)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(223,119,91,0.06)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:linear-gradient(to_top,black_40%,transparent_100%)]"
+      >
+      </div>
+      <!-- Pixel art blocks highlight at the bottom -->
+      <div
+        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[150px] opacity-15 dark:opacity-25 bg-[radial-gradient(3px_3px_at_4px_4px,var(--primary)_100%,transparent_0)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_at_bottom,black_40%,transparent_80%)]"
+      >
+      </div>
     </div>
+
+    <!-- Hero Section (SaaS-like Compact Centered Design) -->
+    <main
+      class="container mx-auto px-6 pt-24 pb-20 md:pt-32 md:pb-28 relative z-10 flex flex-col items-center text-center my-auto max-w-4xl"
+    >
+      <!-- India Focused Announcement Badge -->
+      <div
+        class="inline-flex items-center gap-2.5 px-4.5 py-1.5 rounded-full bg-card/60 backdrop-blur-md border border-primary/20 dark:border-primary/10 text-foreground text-xs font-medium mb-8 hover:border-primary/40 transition-all duration-300 shadow-md cursor-pointer select-none group"
+      >
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="tracking-wide">🇮🇳 India's First Real-Time Paper Trading Simulator</span>
+      </div>
+
+      <!-- Hero Heading -->
+      <h1
+        class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.15] mb-6 font-sans select-none text-foreground max-w-4xl"
+      >
+        Master Nifty & Bank Nifty <br />
+        <span
+          class="bg-gradient-to-r from-foreground via-primary to-[#eba089] bg-clip-text text-transparent drop-shadow-sm"
+          >With Zero Risk</span
+        >
+      </h1>
+
+      <!-- Hero Description -->
+      <p
+        class="text-xs sm:text-sm md:text-base text-muted-foreground leading-[1.6] mb-8 font-sans max-w-2xl"
+      >
+        Learn directly from expert mentors in live teaching classes, access comprehensive offline courses, and test your skills in real-time.
+      </p>
+
+      <!-- Centered SaaS-style Call to Action Button -->
+      <div class="flex items-center justify-center gap-4 mb-10">
+        <a
+          href="/login"
+          class="px-8 py-3.5 bg-primary hover:bg-primary/95 text-white text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer shadow-md hover:shadow-primary/20"
+        >
+          Start Trading Now
+        </a>
+      </div>
+
+      <!-- Trust Indicators / Features Row -->
+      <div
+        class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-muted-foreground mb-16 border-t border-b border-border/20 py-4 w-full"
+      >
+        <div class="flex items-center gap-2 font-medium">
+          <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Real-Time NSE Feeds</span>
+        </div>
+        <div class="flex items-center gap-2 font-medium">
+          <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Zero Cost (₹0 Charges)</span>
+        </div>
+        <div class="flex items-center gap-2 font-medium">
+          <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>50,000+ Indian Learners</span>
+        </div>
+      </div>
+
+      <!-- Centered Compact Workspace Mockup (SaaS Style) -->
+      <div class="w-full max-w-3xl relative group">
+        <!-- Background Glow -->
+        <div class="absolute -inset-2 rounded-3xl bg-gradient-to-r from-primary to-[#eba089] opacity-20 dark:opacity-30 blur-xl group-hover:opacity-40 transition-all duration-700"></div>
+        
+        <div class="relative bg-card/85 backdrop-blur-xl border border-border/60 rounded-3xl p-5 shadow-2xl flex flex-col gap-4 font-sans select-none overflow-hidden text-left">
+          
+          <!-- Mockup Header -->
+          <div class="flex items-center justify-between border-b border-border/40 pb-3">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+              <span class="text-[10px] text-muted-foreground ml-2 font-mono">hiver_nifty_simulator</span>
+            </div>
+            <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[9px] font-semibold tracking-wide">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              LIVE NSE FEEED ACTIVE
+            </div>
+          </div>
+
+          <!-- Interactive Tabs & Chart Header -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm text-foreground">NIFTY 50 (June Fut)</span>
+              <span class="text-xs text-emerald-500 font-medium">+1.24%</span>
+            </div>
+            <div class="flex items-center gap-1 bg-muted/50 p-0.5 rounded-lg text-[9px] text-muted-foreground font-medium">
+              <span class="bg-card px-2 py-0.5 rounded-md text-foreground shadow-xs">5M</span>
+              <span class="px-2 py-0.5">15M</span>
+              <span class="px-2 py-0.5">1H</span>
+            </div>
+          </div>
+
+          <!-- Chart SVG -->
+          <div id="interactive-chart-container" class="relative w-full h-48 bg-neutral-900/40 dark:bg-black/20 border border-border/30 rounded-2xl flex items-center justify-center overflow-hidden cursor-crosshair">
+            <!-- Grid Lines -->
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            
+            <!-- SVG Candlestick Chart -->
+            <svg id="trading-chart-svg" class="w-full h-full p-2 relative z-10" viewBox="0 0 400 150">
+              <!-- Grid lines inside SVG for alignment -->
+              <line x1="0" y1="50" x2="400" y2="50" stroke="rgba(255,255,255,0.03)" stroke-width="1"></line>
+              <line x1="0" y1="100" x2="400" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1"></line>
+              
+              <!-- Crosshair Trackers (Interactive) -->
+              <line id="chart-vertical-tracker" x1="0" y1="0" x2="0" y2="150" stroke="var(--primary)" stroke-width="1" stroke-dasharray="3 3" class="opacity-0 transition-opacity duration-150"></line>
+              <line id="chart-horizontal-tracker" x1="0" y1="0" x2="400" y2="0" stroke="var(--primary)" stroke-width="1" stroke-dasharray="3 3" class="opacity-0 transition-opacity duration-150"></line>
+              
+              <!-- Target Levels -->
+              <!-- SL Level (₹23,410 maps to Y=124) -->
+              <line x1="0" y1="124" x2="400" y2="124" stroke="#ef4444" stroke-dasharray="4 4" stroke-width="1" class="opacity-40"></line>
+              <!-- Entry Level (₹23,450 maps to Y=100) -->
+              <line x1="0" y1="100" x2="400" y2="100" stroke="#df775b" stroke-dasharray="4 4" stroke-width="1" class="opacity-40"></line>
+              <!-- Target Level (₹23,480 maps to Y=82) -->
+              <line x1="0" y1="82" x2="400" y2="82" stroke="#10b981" stroke-dasharray="4 4" stroke-width="1.2"></line>
+              <text x="280" y="76" fill="#10b981" font-size="8" font-family="sans-serif" font-weight="bold" class="opacity-80">Target Hit + ₹14,200</text>
+              
+              <!-- Candlesticks (15 items) -->
+              <!-- 0 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="20" data-open="23415" data-high="23430" data-low="23410" data-close="23425" data-time="09:15 AM">
+                <line x1="20" y1="112" x2="20" y2="124" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="16.5" y="115" width="7" height="6" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 1 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="45" data-open="23425" data-high="23440" data-low="23420" data-close="23435" data-time="09:25 AM">
+                <line x1="45" y1="106" x2="45" y2="118" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="41.5" y="109" width="7" height="6" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 2 (Bearish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="70" data-open="23435" data-high="23438" data-low="23425" data-close="23428" data-time="09:35 AM">
+                <line x1="70" y1="107.2" x2="70" y2="115" stroke="#ef4444" stroke-width="1.2"></line>
+                <rect x="66.5" y="109" width="7" height="4.2" fill="#ef4444" rx="0.5"></rect>
+              </g>
+              <!-- 3 (Bearish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="95" data-open="23428" data-high="23430" data-low="23415" data-close="23420" data-time="09:45 AM">
+                <line x1="95" y1="112" x2="95" y2="121" stroke="#ef4444" stroke-width="1.2"></line>
+                <rect x="91.5" y="113.8" width="7" height="4.8" fill="#ef4444" rx="0.5"></rect>
+              </g>
+              <!-- 4 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="120" data-open="23420" data-high="23435" data-low="23418" data-close="23432" data-time="09:55 AM">
+                <line x1="120" y1="109" x2="120" y2="119.2" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="116.5" y="110.8" width="7" height="7.2" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 5 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="145" data-open="23432" data-high="23448" data-low="23430" data-close="23445" data-time="10:05 AM">
+                <line x1="145" y1="101.2" x2="145" y2="112" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="141.5" y="103" width="7" height="7.8" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 6 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="170" data-open="23445" data-high="23465" data-low="23440" data-close="23460" data-time="10:15 AM">
+                <line x1="170" y1="91" x2="170" y2="106" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="166.5" y="94" width="7" height="9" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 7 (Bearish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="195" data-open="23460" data-high="23462" data-low="23448" data-close="23450" data-time="10:25 AM">
+                <line x1="195" y1="92.8" x2="195" y2="101.2" stroke="#ef4444" stroke-width="1.2"></line>
+                <rect x="191.5" y="94" width="7" height="6" fill="#ef4444" rx="0.5"></rect>
+              </g>
+              <!-- 8 (Bearish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="220" data-open="23450" data-high="23455" data-low="23435" data-close="23440" data-time="10:35 AM">
+                <line x1="220" y1="97" x2="220" y2="109" stroke="#ef4444" stroke-width="1.2"></line>
+                <rect x="216.5" y="100" width="7" height="6" fill="#ef4444" rx="0.5"></rect>
+              </g>
+              <!-- 9 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="245" data-open="23440" data-high="23458" data-low="23438" data-close="23452" data-time="10:45 AM">
+                <line x1="245" y1="95.2" x2="245" y2="107.2" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="241.5" y="98.8" width="7" height="7.2" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 10 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="270" data-open="23452" data-high="23480" data-low="23450" data-close="23475" data-time="10:55 AM">
+                <line x1="270" y1="82" x2="270" y2="100" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="266.5" y="85" width="7" height="13.8" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 11 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="295" data-open="23475" data-high="23495" data-low="23470" data-close="23490" data-time="11:05 AM">
+                <line x1="295" y1="73" x2="295" y2="88" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="291.5" y="76" width="7" height="9" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 12 (Bearish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="320" data-open="23490" data-high="23493" data-low="23478" data-close="23482" data-time="11:15 AM">
+                <line x1="320" y1="74.2" x2="320" y2="83.2" stroke="#ef4444" stroke-width="1.2"></line>
+                <rect x="316.5" y="76.8" width="7" height="4.8" fill="#ef4444" rx="0.5"></rect>
+              </g>
+              <!-- 13 (Bullish) -->
+              <g class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="345" data-open="23482" data-high="23515" data-low="23480" data-close="23510" data-time="11:25 AM">
+                <line x1="345" y1="61" x2="345" y2="82" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="341.5" y="64" width="7" height="16.8" fill="#10b981" rx="0.5"></rect>
+              </g>
+              <!-- 14 (Bullish) -->
+              <g id="live-candle" class="candle-group cursor-pointer transition-opacity duration-200 hover:opacity-80" data-x="370" data-open="23510" data-high="23540" data-low="23505" data-close="23535" data-time="11:45 AM">
+                <line x1="370" y1="46" x2="370" y2="67" stroke="#10b981" stroke-width="1.2"></line>
+                <rect x="366.5" y="49" width="7" height="15" fill="#10b981" rx="0.5"></rect>
+                <!-- Live Blinking indicator inside candle Close Y (Y=49) -->
+                <circle id="chart-live-dot" cx="370" cy="49" r="4.5" fill="#10b981" class="opacity-80"></circle>
+                <circle id="chart-live-dot-pulse" cx="370" cy="49" r="9" fill="#10b981" class="animate-ping opacity-35"></circle>
+              </g>
+            </svg>
+            
+            <!-- Dynamic OHLC Tooltip -->
+            <div id="chart-tooltip" class="absolute hidden bg-neutral-950/90 dark:bg-black/90 border border-border/80 rounded-2xl p-3 shadow-xl text-[10px] pointer-events-none z-30 font-mono transition-all duration-75 min-w-[170px]">
+              <div class="flex items-center justify-between border-b border-border/40 pb-1.5 mb-1.5">
+                <span class="font-bold text-foreground">NIFTY 50 Fut</span>
+                <span class="text-[9px] text-muted-foreground" id="tooltip-time">11:45 AM</span>
+              </div>
+              <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-muted-foreground">
+                <div>O: <span class="text-foreground font-bold" id="tooltip-open">₹23,510</span></div>
+                <div>H: <span class="text-emerald-500 font-bold" id="tooltip-high">₹23,540</span></div>
+                <div>L: <span class="text-red-500 font-bold" id="tooltip-low">₹23,505</span></div>
+                <div>C: <span class="text-foreground font-bold" id="tooltip-close">₹23,535</span></div>
+              </div>
+            </div>
+            
+            <!-- Position Overlay Labels -->
+            <div class="absolute bottom-3 left-3 flex gap-2 z-20">
+              <span class="text-[8px] bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded-md font-bold">ENTRY: ₹23,450</span>
+              <span class="text-[8px] bg-red-500/10 text-red-500 border border-red-500/20 px-2 py-0.5 rounded-md font-bold">SL: ₹23,410</span>
+            </div>
+          </div>
+
+          <!-- Control Widgets Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <!-- Wallet Card -->
+            <div class="bg-muted/30 border border-border/30 rounded-2xl p-3 flex flex-col justify-between">
+              <span class="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">Simulated Demo Capital</span>
+              <div class="flex flex-col mt-1">
+                <span class="text-base font-bold text-foreground">₹10,00,000.00</span>
+                <span class="text-[8px] text-muted-foreground">Unlimited free resets for strategy testing</span>
+              </div>
+            </div>
+
+            <!-- Quick Action Panel -->
+            <div class="bg-muted/30 border border-border/30 rounded-2xl p-3 flex flex-col justify-between gap-1.5">
+              <span class="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">Quick Order Execution</span>
+              <div class="flex gap-2">
+                <button class="flex-1 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition-all shadow-sm shadow-emerald-500/10 cursor-pointer text-center">Buy Call</button>
+                <button class="flex-1 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-bold transition-all shadow-sm shadow-red-500/10 cursor-pointer text-center">Buy Put</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Simulator Activity Snippet -->
+          <div class="flex items-center justify-between bg-primary/5 border border-primary/10 rounded-2xl p-2 px-3.5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-6 h-6 rounded-full bg-[#eba089]/20 flex items-center justify-center font-bold text-[9px] text-primary">HM</div>
+              <span class="text-[11px] text-foreground font-medium">Hiver Live Mentor Room</span>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-500">+ ₹28,450 Profit Today</span>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- Let's Stay Connected Section -->
+    <section
+      class="w-full py-16 bg-card/10 border-t border-border/40 relative overflow-hidden z-10 flex flex-col items-center text-center"
+    >
+      <!-- Background Pattern from PatternCraft.fun -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <!-- Clean grid line background -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(223,119,91,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(223,119,91,0.06)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_at_center,black_75%,transparent_100%)]"></div>
+        <!-- Ambient subtle glow in center -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
+      </div>
+
+      <div class="container mx-auto px-6 max-w-4xl flex flex-col items-center relative z-10">
+        <h2
+          class="text-4xl md:text-5xl font-bold tracking-tight mb-4 font-sans text-foreground"
+        >
+          Let's stay <span
+            class="bg-gradient-to-r from-primary to-[#eba089] bg-clip-text text-transparent italic font-sans"
+            >connected</span
+          >.
+        </h2>
+
+        <p
+          class="text-foreground/80 text-base md:text-lg leading-[1.7] md:leading-relaxed mb-10 max-w-2xl px-4"
+        >
+          Follow me wherever you spend your time online. Or reach out directly —
+          I read everything that comes in.
+        </p>
+
+        <div class="flex items-center gap-4 w-full justify-center mb-10">
+          <div class="h-px bg-border/80 flex-1 max-w-[40px]"></div>
+          <span
+            class="text-[10px] font-bold tracking-widest text-primary uppercase"
+            >FIND ME HERE</span
+          >
+          <div class="h-px bg-border/80 flex-1 max-w-[40px]"></div>
+        </div>
+
+        <div
+          class="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-12"
+        >
+          <!-- YouTube -->
+          <a
+            href="#"
+            aria-label="YouTube"
+            class="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              ><path
+                d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.95C18.88 4 12 4 12 4s-6.88 0-8.6.47a2.78 2.78 0 0 0-1.94 1.95A29.04 29.04 0 0 0 1 12.01a29.04 29.04 0 0 0 .46 5.59 2.78 2.78 0 0 0 1.94 1.95c1.72.47 8.6.47 8.6.47s6.88 0 8.6-.47a2.78 2.78 0 0 0 1.94-1.95 29.04 29.04 0 0 0 .46-5.59 29.04 29.04 0 0 0-.46-5.59z"
+              ></path><polygon
+                points="9.75 15.02 15.5 12.01 9.75 9.01 9.75 15.02"
+              ></polygon></svg
+            >
+          </a>
+          <!-- Instagram -->
+          <a
+            href="#"
+            aria-label="Instagram"
+            class="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              ><rect x="2" y="2" width="20" height="20" rx="5" ry="5"
+              ></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+              ></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg
+            >
+          </a>
+          <!-- X (Twitter) -->
+          <a
+            href="#"
+            aria-label="X (Twitter)"
+            class="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"
+              ><path
+                d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.8-6.3L6.4 22H3.3l7.2-8.3L3 2h6.4l4.4 5.9L18.9 2z"
+              ></path></svg
+            >
+          </a>
+          <!-- LinkedIn -->
+          <a
+            href="#"
+            aria-label="LinkedIn"
+            class="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              ><path
+                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+              ></path><rect x="2" y="9" width="4" height="12"></rect><circle
+                cx="4"
+                cy="4"
+                r="2"></circle></svg
+            >
+          </a>
+          <!-- Facebook -->
+          <a
+            href="#"
+            aria-label="Facebook"
+            class="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              ><path
+                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              ></path></svg
+            >
+          </a>
+          <!-- WhatsApp -->
+          <a
+            href="#"
+            aria-label="WhatsApp"
+            class="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              ><path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+              ></path></svg
+            >
+          </a>
+        </div>
+
+        <div
+          class="flex flex-col w-full sm:w-auto sm:flex-row items-stretch sm:items-center gap-4 px-4 md:px-0"
+        >
+          <a
+            href="mailto:admin@hiver.com.np"
+            class="flex items-center justify-center gap-2 px-6 py-4 sm:py-3.5 bg-background border border-border rounded-full text-base sm:text-sm font-medium hover:border-foreground transition-colors shadow-sm text-foreground w-full sm:w-auto"
+          >
+            <svg
+              class="w-5 h-5 sm:w-4 sm:h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              ><path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              ></path><polyline points="22,6 12,13 2,6"></polyline></svg
+            >
+            admin@hiver.com.np
+          </a>
+          <a
+            href="#"
+            class="flex items-center justify-center gap-2 px-6 py-4 sm:py-3.5 bg-[#25D366] hover:bg-[#20bd5a] text-white border border-[#25D366] rounded-full text-base sm:text-sm font-semibold transition-colors shadow-sm w-full sm:w-auto"
+          >
+            <svg class="w-5 h-5 sm:w-4 sm:h-4 fill-current" viewBox="0 0 24 24"
+              ><path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+              ></path></svg
+            >
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Revamp (Card Style) -->
+    <footer class="w-full pt-12 pb-6 px-4 md:px-6 z-10 relative">
+      <div
+        class="container mx-auto bg-card border border-border/50 rounded-3xl p-8 md:p-12 shadow-sm relative overflow-hidden"
+      >
+        <!-- Footer Background Pattern -->
+        <div
+          class="absolute inset-0 bg-[radial-gradient(rgba(223,119,91,0.1)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(223,119,91,0.05)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-50"
+        >
+        </div>
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent pointer-events-none"
+        >
+        </div>
+
+        <div
+          class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-16"
+        >
+          <!-- Brand & Socials (Left Column) -->
+          <div class="lg:col-span-4 flex flex-col gap-6">
+            <a
+              href="/"
+              class="text-2xl font-bold font-sans tracking-tight text-foreground flex items-center gap-2"
+            >
+              <div
+                class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary"
+              >
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"
+                  ><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
+                >
+              </div>
+              HiverLMS
+            </a>
+
+            <!-- Social Icons -->
+            <div class="flex items-center gap-3">
+              <a
+                href="#"
+                aria-label="Facebook"
+                class="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  ><path
+                    d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                  ></path></svg
+                >
+              </a>
+              <a
+                href="#"
+                aria-label="X (Twitter)"
+                class="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+              >
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"
+                  ><path
+                    d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.8-6.3L6.4 22H3.3l7.2-8.3L3 2h6.4l4.4 5.9L18.9 2z"
+                  ></path></svg
+                >
+              </a>
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                class="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  ><path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                  ></path><rect x="2" y="9" width="4" height="12"></rect><circle
+                    cx="4"
+                    cy="4"
+                    r="2"></circle></svg
+                >
+              </a>
+              <a
+                href="#"
+                aria-label="YouTube"
+                class="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  ><path
+                    d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.95C18.88 4 12 4 12 4s-6.88 0-8.6.47a2.78 2.78 0 0 0-1.94 1.95A29.04 29.04 0 0 0 1 12.01a29.04 29.04 0 0 0 .46 5.59 2.78 2.78 0 0 0 1.94 1.95c1.72.47 8.6.47 8.6.47s6.88 0 8.6-.47a2.78 2.78 0 0 0 1.94-1.95 29.04 29.04 0 0 0 .46-5.59 29.04 29.04 0 0 0-.46-5.59z"
+                  ></path><polygon
+                    points="9.75 15.02 15.5 12.01 9.75 9.01 9.75 15.02"
+                  ></polygon></svg
+                >
+              </a>
+              <a
+                href="#"
+                aria-label="Instagram"
+                class="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:border-amber-500 hover:text-amber-500 transition-colors shadow-sm"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  ><rect x="2" y="2" width="20" height="20" rx="5" ry="5"
+                  ></rect><path
+                    d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                  ></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"
+                  ></line></svg
+                >
+              </a>
+            </div>
+          </div>
+
+          <!-- Links Grid -->
+          <div
+            class="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 text-sm"
+          >
+            <!-- Courses -->
+            <div class="flex flex-col gap-1 md:gap-1.5">
+              <h4 class="font-bold text-foreground font-sans text-base mb-2">
+                Course
+              </h4>
+              <a
+                href="/"
+                class="bg-primary/10 text-primary font-medium px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Home</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Trading Masterclass</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Options Basics</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Advanced Strategies</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Risk Management</a
+              >
+            </div>
+
+            <!-- Mentor -->
+            <div class="flex flex-col gap-1 md:gap-1.5">
+              <h4 class="font-bold text-foreground font-sans text-base mb-2">
+                Mentor
+              </h4>
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >1-on-1 Sessions</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Group Mentoring</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Trade Reviews</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Live Q&A</a
+              >
+            </div>
+
+            <!-- Training -->
+            <div class="flex flex-col gap-1 md:gap-1.5">
+              <h4 class="font-bold text-foreground font-sans text-base mb-2">
+                Training
+              </h4>
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Trading Simulator</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Market Replays</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Backtesting Tools</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Daily Scenarios</a
+              >
+            </div>
+
+            <!-- YouTube Videos -->
+            <div class="flex flex-col gap-1 md:gap-1.5">
+              <h4 class="font-bold text-foreground font-sans text-base mb-2">
+                Popular YouTube Videos
+              </h4>
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Market Structure 101</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >How to Read Order Flow</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Psychology of Trading</a
+              >
+              <a
+                href="#"
+                class="text-muted-foreground hover:text-primary hover:bg-primary/10 px-3 py-1.5 rounded-md transition-all duration-200 block -mx-3"
+                >Passing Prop Firms</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Legal Row -->
+        <div
+          class="relative z-10 border-t border-border/60 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground"
+        >
+          <p>
+            &copy; {new Date().getFullYear()} HiverLMS. All rights reserved.
+          </p>
+          <div
+            class="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-2"
+          >
+            <a href="#" class="hover:text-foreground transition-colors"
+              >Terms of use</a
+            >
+            <a href="#" class="hover:text-foreground transition-colors"
+              >Privacy policy</a
+            >
+            <a href="#" class="hover:text-foreground transition-colors"
+              >Refund policy</a
+            >
+            <a href="#" class="hover:text-foreground transition-colors"
+              >Contact us</a
+            >
+            <a href="#" class="hover:text-foreground transition-colors"
+              >About us</a
+            >
+            <a href="#" class="hover:text-foreground transition-colors">FAQs</a>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </Layout>
 
+<script>
+  import { authClient } from "../lib/auth-client";
+
+  // Chart Interactive Logic
+  const svg = document.getElementById("trading-chart-svg") as SVGSVGElement | null;
+  const tooltip = document.getElementById("chart-tooltip") as HTMLDivElement | null;
+  const tooltipTime = document.getElementById("tooltip-time");
+  const tooltipOpen = document.getElementById("tooltip-open");
+  const tooltipHigh = document.getElementById("tooltip-high");
+  const tooltipLow = document.getElementById("tooltip-low");
+  const tooltipClose = document.getElementById("tooltip-close");
+  
+  const verticalTracker = document.getElementById("chart-vertical-tracker");
+  const horizontalTracker = document.getElementById("chart-horizontal-tracker");
+  const liveDot = document.getElementById("chart-live-dot");
+  const liveDotPulse = document.getElementById("chart-live-dot-pulse");
+  const container = document.getElementById("interactive-chart-container");
+
+  const candles = document.querySelectorAll(".candle-group");
+
+  if (svg && container) {
+    container.addEventListener("mousemove", (e) => {
+      const rect = svg.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      
+      // Convert browser coordinate to SVG coordinate system (0 0 400 150)
+      const svgX = (mouseX / rect.width) * 400;
+      
+      // Find nearest candle based on X coordinate
+      let nearestCandle: Element | null = null;
+      let minDistance = Infinity;
+      
+      candles.forEach((candle) => {
+        const xAttr = candle.getAttribute("data-x");
+        if (xAttr) {
+          const candleX = parseFloat(xAttr);
+          const distance = Math.abs(candleX - svgX);
+          if (distance < minDistance) {
+            minDistance = distance;
+            nearestCandle = candle;
+          }
+        }
+      });
+      
+      if (nearestCandle) {
+        const cX = parseFloat((nearestCandle as Element).getAttribute("data-x") || "0");
+        const cOpen = parseFloat((nearestCandle as Element).getAttribute("data-open") || "0");
+        const cHigh = parseFloat((nearestCandle as Element).getAttribute("data-high") || "0");
+        const cLow = parseFloat((nearestCandle as Element).getAttribute("data-low") || "0");
+        const cClose = parseFloat((nearestCandle as Element).getAttribute("data-close") || "0");
+        const cTime = (nearestCandle as Element).getAttribute("data-time") || "";
+        
+        // Calculate Close price Y coordinate (₹23,400 maps to 130, ₹23,550 maps to 40)
+        const cY = 130 - (cClose - 23400) * 0.6;
+        
+        // Update vertical and horizontal crosshairs
+        if (verticalTracker) {
+          verticalTracker.setAttribute("x1", cX.toString());
+          verticalTracker.setAttribute("x2", cX.toString());
+          verticalTracker.classList.remove("opacity-0");
+        }
+        if (horizontalTracker) {
+          horizontalTracker.setAttribute("y1", cY.toString());
+          horizontalTracker.setAttribute("y2", cY.toString());
+          horizontalTracker.classList.remove("opacity-0");
+        }
+        
+        // Hide default live dot if hovering on other candles (candle 14 is the live one)
+        if (nearestCandle !== document.getElementById("live-candle")) {
+          liveDot?.classList.add("opacity-0");
+          liveDotPulse?.classList.add("opacity-0");
+        } else {
+          liveDot?.classList.remove("opacity-0");
+          liveDotPulse?.classList.remove("opacity-0");
+        }
+        
+        // Update tooltip content
+        if (tooltipTime) tooltipTime.textContent = cTime;
+        if (tooltipOpen) tooltipOpen.textContent = `₹${cOpen.toLocaleString("en-IN")}`;
+        if (tooltipHigh) tooltipHigh.textContent = `₹${cHigh.toLocaleString("en-IN")}`;
+        if (tooltipLow) tooltipLow.textContent = `₹${cLow.toLocaleString("en-IN")}`;
+        if (tooltipClose) tooltipClose.textContent = `₹${cClose.toLocaleString("en-IN")}`;
+        
+        // Show and position tooltip
+        if (tooltip) {
+          tooltip.classList.remove("hidden");
+          const tooltipWidth = tooltip.offsetWidth;
+          const tooltipHeight = tooltip.offsetHeight;
+          
+          let posX = e.clientX - rect.left - tooltipWidth / 2;
+          let posY = e.clientY - rect.top - tooltipHeight - 15;
+          
+          // Boundaries checks
+          if (posX < 10) posX = 10;
+          if (posX + tooltipWidth > rect.width - 10) posX = rect.width - tooltipWidth - 10;
+          if (posY < 10) posY = e.clientY - rect.top + 15;
+          
+          tooltip.style.left = `${posX}px`;
+          tooltip.style.top = `${posY}px`;
+        }
+      }
+    });
+    
+    container.addEventListener("mouseleave", () => {
+      verticalTracker?.classList.add("opacity-0");
+      horizontalTracker?.classList.add("opacity-0");
+      tooltip?.classList.add("hidden");
+      
+      liveDot?.classList.remove("opacity-0");
+      liveDotPulse?.classList.remove("opacity-0");
+    });
+  }
+
+  async function checkSession() {
+    try {
+      const { data: session } = await authClient.getSession();
+      if (session?.user) {
+        // Option to redirect or change layout if authenticated
+      }
+    } catch (e) {
+      // Not authenticated
+    }
+  }
+
+  checkSession();
+</script>

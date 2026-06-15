@@ -38,6 +38,8 @@ const { title = "hivertradercourse", hideHeader = false } = Astro.props;
   </head>
   <body class="min-h-screen bg-background text-foreground font-sans antialiased">
     {!hideHeader && <Header />}
-    <slot />
+    <div class={!hideHeader ? "pt-[var(--announcement-visible-height,40px)] transition-all duration-300" : ""}>
+      <slot />
+    </div>
   </body>
 </html>
