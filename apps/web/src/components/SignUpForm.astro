@@ -3,59 +3,59 @@ import { authClient } from "../lib/auth-client";
 ---
 
 <div class="mx-auto mt-10 w-full max-w-md p-6">
-  <h1 class="mb-6 text-center font-bold text-3xl text-white">Create Account</h1>
+  <h1 class="mb-6 text-center font-bold text-3xl text-foreground">Create Account</h1>
 
   <form id="signup-form" class="space-y-4">
     <div class="space-y-1">
-      <label for="name" class="block text-sm font-medium text-neutral-300">Name</label>
+      <label for="name" class="block text-sm font-medium text-foreground">Name</label>
       <input
         id="name"
         name="name"
         type="text"
         required
-        class="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2.5 text-white placeholder-neutral-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        class="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-card-foreground placeholder-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         placeholder="John Doe"
       />
     </div>
 
     <div class="space-y-1">
-      <label for="email" class="block text-sm font-medium text-neutral-300">Email</label>
+      <label for="email" class="block text-sm font-medium text-foreground">Email</label>
       <input
         id="email"
         name="email"
         type="email"
         required
-        class="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2.5 text-white placeholder-neutral-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        class="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-card-foreground placeholder-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         placeholder="you@example.com"
       />
     </div>
 
     <div class="space-y-1">
-      <label for="password" class="block text-sm font-medium text-neutral-300">Password</label>
+      <label for="password" class="block text-sm font-medium text-foreground">Password</label>
       <input
         id="password"
         name="password"
         type="password"
         required
         minlength="8"
-        class="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2.5 text-white placeholder-neutral-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        class="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-card-foreground placeholder-muted-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
         placeholder="••••••••"
       />
-      <p class="text-xs text-neutral-500">Must be at least 8 characters</p>
+      <p class="text-xs text-muted-foreground">Must be at least 8 characters</p>
     </div>
 
     <p id="form-error" class="text-sm text-red-500 hidden"></p>
 
     <button
       type="submit"
-      class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-neutral-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      class="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
       Sign Up
     </button>
   </form>
 
   <div class="mt-4 text-center">
-    <a href="/login" class="text-indigo-400 hover:text-indigo-300 text-sm">
+    <a href="/login" class="text-primary hover:text-primary/80 text-sm">
       Already have an account? Sign In
     </a>
   </div>

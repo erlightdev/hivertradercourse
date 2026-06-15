@@ -1,3 +1,3 @@
 {
-  "extends": "@hivertradercourse/config/tsconfig.base.json"
+	"extends": "@hivertradercourse/config/tsconfig.base.json"
 }
