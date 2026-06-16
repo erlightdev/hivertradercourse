@@ -77,17 +77,18 @@ import Layout from "../layouts/Layout.astro";
               </div>
             </a>
             
-            <!-- Team Link -->
-            <a href="#" id="nav-team" class="sidebar-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
+            <!-- 1:1 Live Session Link -->
+            <a href="#" id="nav-live-session" class="sidebar-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-bold text-primary hover:bg-muted/50 border border-primary/20 transition-all shadow-3xs">
               <div class="flex items-center gap-3">
-                <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                <svg class="w-4 h-4 shrink-0 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
-                <span class="sidebar-text">Team</span>
+                <span class="sidebar-text">1:1 Live Session</span>
               </div>
+              <span class="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold sidebar-text shadow-3xs flex items-center gap-1 leading-none">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                LIVE
+              </span>
             </a>
             
             <!-- Chat Link -->
@@ -565,15 +566,14 @@ import Layout from "../layouts/Layout.astro";
               <span class="text-[10px] font-mono text-muted-foreground/40">Overview</span>
             </button>
             
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-team">
+            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-live-session">
               <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
+                <svg class="w-3.5 h-3.5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
-                <span>Team</span>
+                <span>1:1 Live Session</span>
               </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Overview</span>
+              <span class="text-[10px] font-mono text-primary/80">Premium</span>
             </button>
             
             <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-chat">
@@ -1137,8 +1137,13 @@ import Layout from "../layouts/Layout.astro";
         closeBlogPanel();
 
         items.forEach(el => {
-          el.classList.remove("active", "font-bold", "text-foreground", "bg-muted/80");
-          el.classList.add("text-muted-foreground", "font-semibold");
+          if (el.id === "nav-live-session") {
+            el.classList.remove("active", "bg-muted/80", "shadow-2xs");
+            el.classList.add("shadow-3xs");
+          } else {
+            el.classList.remove("active", "font-bold", "text-foreground", "bg-muted/80");
+            el.classList.add("text-muted-foreground", "font-semibold");
+          }
         });
         
         // Also clear active states from all submenu items
@@ -1148,8 +1153,13 @@ import Layout from "../layouts/Layout.astro";
           el.classList.add("text-muted-foreground", "font-semibold");
         });
         
-        item.classList.add("active", "font-bold", "text-foreground", "bg-muted/80");
-        item.classList.remove("text-muted-foreground", "font-semibold");
+        if (item.id === "nav-live-session") {
+          item.classList.add("active", "bg-muted/80", "shadow-2xs");
+          item.classList.remove("shadow-3xs");
+        } else {
+          item.classList.add("active", "font-bold", "text-foreground", "bg-muted/80");
+          item.classList.remove("text-muted-foreground", "font-semibold");
+        }
 
         // Update Dashboard title
         const textSpan = item.querySelector(".sidebar-text");
@@ -1167,8 +1177,13 @@ import Layout from "../layouts/Layout.astro";
         
         // Clear active states from all regular items
         items.forEach(el => {
-          el.classList.remove("active", "font-bold", "text-foreground", "bg-muted/80");
-          el.classList.add("text-muted-foreground", "font-semibold");
+          if (el.id === "nav-live-session") {
+            el.classList.remove("active", "bg-muted/80", "shadow-2xs");
+            el.classList.add("shadow-3xs");
+          } else {
+            el.classList.remove("active", "font-bold", "text-foreground", "bg-muted/80");
+            el.classList.add("text-muted-foreground", "font-semibold");
+          }
         });
 
         // Clear active states from all other submenu items
