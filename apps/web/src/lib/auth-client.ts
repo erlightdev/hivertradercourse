@@ -58,7 +58,11 @@ export async function setInitialPassword(password: string): Promise<void> {
 		credentials: "include",
 	});
 	if (!res.ok) {
-		const data = (await res.json().catch(() => null)) as { error?: string } | null;
-		throw new Error(data?.error || "Could not set your password. Please try again.");
+		const data = (await res.json().catch(() => null)) as {
+			error?: string;
+		} | null;
+		throw new Error(
+			data?.error || "Could not set your password. Please try again.",
+		);
 	}
 }

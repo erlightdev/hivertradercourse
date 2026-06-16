@@ -12,7 +12,11 @@ class ToastManager {
 		return this.container;
 	}
 
-	show(message: string, type: "success" | "error" | "info" = "info", title?: string) {
+	show(
+		message: string,
+		type: "success" | "error" | "info" = "info",
+		title?: string,
+	) {
 		const container = this.getContainer();
 		const toastEl = document.createElement("div");
 
@@ -20,15 +24,17 @@ class ToastManager {
 		// Transition uses spring-like cubic-bezier easeOutBack curve
 		const baseStyles =
 			"pointer-events-auto flex w-full items-start gap-3 overflow-hidden rounded-xl border p-4 shadow-lg backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.21,1.02,0.43,1.01)] transform translate-x-8 opacity-0 scale-95";
-		
+
 		let typeStyles = "";
 		let defaultTitle = "";
 
 		if (type === "success") {
-			typeStyles = "bg-card/95 text-foreground border-emerald-500/20 shadow-emerald-500/5";
+			typeStyles =
+				"bg-card/95 text-foreground border-emerald-500/20 shadow-emerald-500/5";
 			defaultTitle = "Success";
 		} else if (type === "error") {
-			typeStyles = "bg-card/95 text-foreground border-destructive/20 shadow-destructive/5";
+			typeStyles =
+				"bg-card/95 text-foreground border-destructive/20 shadow-destructive/5";
 			defaultTitle = "Error";
 		} else {
 			typeStyles = "bg-card/95 text-foreground border-border";

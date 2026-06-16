@@ -34,5 +34,8 @@
 		"turbo": "^2.9.16",
 		"typescript": "^6"
 	},
+	"overrides": {
+		"vite": "^7"
+	},
 	"packageManager": "npm@11.12.1"
 }

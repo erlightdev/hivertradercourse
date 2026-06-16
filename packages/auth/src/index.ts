@@ -51,7 +51,7 @@ export function createAuth() {
 								pass: env.SMTP_PASS,
 							},
 						});
-						
+
 						const info = await transporter.sendMail({
 							from: env.EMAIL_FROM,
 							to: email,
@@ -59,9 +59,14 @@ export function createAuth() {
 							text: `Your OTP is ${otp}. It will expire soon.`,
 							html: `<p>Your OTP is <b>${otp}</b>. It will expire soon.</p>`,
 						});
-						console.log(`[Better Auth OTP] Email sent successfully! Message ID: ${info.messageId}`);
+						console.log(
+							`[Better Auth OTP] Email sent successfully! Message ID: ${info.messageId}`,
+						);
 					} catch (error) {
-						console.error(`[Better Auth OTP] ERROR sending email to ${email}:`, error);
+						console.error(
+							`[Better Auth OTP] ERROR sending email to ${email}:`,
+							error,
+						);
 						throw error; // Propagate to Better Auth
 					}
 				},

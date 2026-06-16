@@ -6,7 +6,9 @@ export const env = createEnv({
 	client: {
 		PUBLIC_SERVER_URL: z.url(),
 	},
-	runtimeEnv: (import.meta as any).env,
+	runtimeEnv: (
+		import.meta as unknown as { env: Record<string, string | undefined> }
+	).env,
 	skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 	emptyStringAsUndefined: true,
 });

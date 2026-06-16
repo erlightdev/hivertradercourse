@@ -155,8 +155,15 @@ app.post("/api/set-initial-password", async (c) => {
 	}
 
 	const password = (body as { password?: unknown })?.password;
-	if (typeof password !== "string" || password.length < 8 || password.length > 128) {
-		return c.json({ error: "Password must be between 8 and 128 characters." }, 400);
+	if (
+		typeof password !== "string" ||
+		password.length < 8 ||
+		password.length > 128
+	) {
+		return c.json(
+			{ error: "Password must be between 8 and 128 characters." },
+			400,
+		);
 	}
 
 	const userId = session.user.id;
@@ -167,7 +174,10 @@ app.post("/api/set-initial-password", async (c) => {
 	// If a password already exists, this is the wrong endpoint — use reset.
 	if (existing?.password) {
 		return c.json(
-			{ error: "This account already has a password. Use reset password instead." },
+			{
+				error:
+					"This account already has a password. Use reset password instead.",
+			},
 			409,
 		);
 	}
