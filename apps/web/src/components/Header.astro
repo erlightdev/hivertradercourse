@@ -160,8 +160,8 @@ const links = [
   const themeToggle = document.getElementById(
     "theme-toggle",
   ) as HTMLButtonElement;
-  const sunIcon = document.getElementById("theme-toggle-sun") as SVGElement;
-  const moonIcon = document.getElementById("theme-toggle-moon") as SVGElement;
+  const sunIcon = document.getElementById("theme-toggle-sun") as unknown as SVGElement;
+  const moonIcon = document.getElementById("theme-toggle-moon") as unknown as SVGElement;
 
   let isAnnouncementClosed = false;
 

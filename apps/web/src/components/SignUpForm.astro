@@ -1,5 +1,4 @@
 ---
-import { authClient } from "../lib/auth-client";
 ---
 
 <!-- Back to Home Button -->
@@ -180,7 +179,8 @@ import { authClient } from "../lib/auth-client";
 </div>
 
 <script>
-  import { authClient } from "../lib/auth-client";
+  import { authClient, getAccountStatus, discardUnverifiedAccount } from "../lib/auth-client";
+  import { toast } from "../lib/toast";
 
   const form = document.getElementById("signup-form") as HTMLFormElement;
   const nameInput = document.getElementById("name") as HTMLInputElement;
@@ -216,8 +216,25 @@ import { authClient } from "../lib/auth-client";
   const displayOtpEmail = document.getElementById("display-otp-email") as HTMLSpanElement;
 
   // Navigation controller
+  let currentStep: 'name' | 'email' | 'otp' | 'password' = 'name';
+
+  // Two-phase signup state: the account is created (with a temporary password)
+  // right after the email step so the email-verification OTP has a real user to
+  // attach to. The password step then swaps the temp password for the real one.
+  let createdEmail: string | null = null;
+  let tempPassword: string | null = null;
+
+  function generateTempPassword() {
+    return (
+      Math.random().toString(36).substring(2, 10) +
+      Math.random().toString(36).substring(2, 10).toUpperCase() +
+      "!"
+    );
+  }
+
   function showStep(step: 'name' | 'email' | 'otp' | 'password') {
     formError.classList.add("hidden");
+    currentStep = step;
 
     if (step === 'name') {
       mainHeader.classList.remove("hidden");
@@ -293,12 +310,88 @@ import { authClient } from "../lib/auth-client";
     showStep('name');
   });
 
-  btnContinueEmail.addEventListener("click", () => {
+  // Handle OTP sending for signup
+  btnContinueEmail.addEventListener("click", async () => {
     if (!emailInput.validity.valid) {
       emailInput.reportValidity();
       return;
     }
-    showStep('otp');
+    
+    btnContinueEmail.disabled = true;
+    const originalText = btnContinueEmail.textContent;
+    btnContinueEmail.textContent = "Checking email...";
+
+    const email = emailInput.value.trim().toLowerCase();
+    // Normalize the field so every later step (OTP display, password swap)
+    // compares against the same canonical value Better Auth stores.
+    emailInput.value = email;
+
+    try {
+      // Step 0: find out whether this email is already in use, and how. This
+      // lets us guide the user instead of failing with a generic error.
+      let status;
+      try {
+        status = await getAccountStatus(email);
+      } catch {
+        toast.error("We couldn't verify this email right now. Please try again.");
+        return;
+      }
+
+      if (status.exists && status.emailVerified) {
+        // A real, completed account already owns this email.
+        if (status.hasGoogle && !status.hasPassword) {
+          toast.error("This email is already registered with Google. Please sign in with Google instead.");
+        } else {
+          toast.info("This email is already registered. Redirecting you to sign in…");
+        }
+        setTimeout(() => {
+          window.location.href = `/login?email=${encodeURIComponent(email)}`;
+        }, 1800);
+        return;
+      }
+
+      // Phase 1: create the account with a temporary password (unless we already
+      // created it for this email on a previous attempt). The user must exist
+      // before an email-verification OTP can be sent/checked.
+      if (createdEmail !== email) {
+        // An unverified, abandoned signup (e.g. a closed tab from a previous
+        // attempt) would block re-registration with a "user exists" error.
+        // Discard it first so the user can start cleanly.
+        if (status.exists && !status.emailVerified) {
+          await discardUnverifiedAccount(email);
+        }
+
+        btnContinueEmail.textContent = "Sending code...";
+        tempPassword = generateTempPassword();
+        const { error: signUpError } = await authClient.signUp.email({
+          name: nameInput.value,
+          email,
+          password: tempPassword,
+        });
+        if (signUpError) {
+          toast.error(signUpError.message || "Could not start signup. Please try again.");
+          return;
+        }
+        createdEmail = email;
+      }
+
+      // Phase 2: send the email-verification OTP to the now-existing user.
+      const { error } = await authClient.emailOtp.sendVerificationOtp({
+        email,
+        type: "email-verification",
+      });
+      if (error) {
+        toast.error(error.message || "Failed to send verification code.");
+      } else {
+        toast.success("Verification code sent to your email!");
+        showStep('otp');
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred.");
+    } finally {
+      btnContinueEmail.disabled = false;
+      btnContinueEmail.textContent = originalText;
+    }
   });
 
   btnOtpBack.addEventListener("click", () => {
@@ -306,37 +399,73 @@ import { authClient } from "../lib/auth-client";
   });
 
   // Verify OTP button
-  btnVerifyOtp.addEventListener("click", () => {
+  btnVerifyOtp.addEventListener("click", async () => {
     const code = otpInputs.map(input => input.value).join("");
     if (code.length < 6) {
-      formError.textContent = "Please enter the full 6-digit verification code.";
-      formError.classList.remove("hidden");
+      toast.error("Please enter the full 6-digit verification code.");
       return;
     }
 
-    formError.classList.add("hidden");
     btnVerifyOtp.disabled = true;
     btnVerifyOtp.textContent = "Verifying...";
 
-    // Mock verification delay, then transition to set password step
-    setTimeout(() => {
+    try {
+      const { error } = await authClient.emailOtp.checkVerificationOtp({
+        email: emailInput.value,
+        type: "email-verification",
+        otp: code,
+      });
+      if (error) {
+        toast.error(error.message || "Invalid or expired verification code.");
+        btnVerifyOtp.disabled = false;
+        btnVerifyOtp.textContent = "Verify & continue";
+      } else {
+        toast.success("Email verified successfully!");
+        btnVerifyOtp.disabled = false;
+        btnVerifyOtp.textContent = "Verify & continue";
+        showStep('password');
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred.");
       btnVerifyOtp.disabled = false;
       btnVerifyOtp.textContent = "Verify & continue";
-      showStep('password');
-    }, 1200);
+    }
   });
 
   // Submit Handler
   async function submitSignup(passwordVal: string) {
-    formError.classList.add("hidden");
-    
-    // Disable submit/skip buttons
+    // The account was already created (with a temporary password) at the email
+    // step, and its email is now verified via OTP. Here we just swap in the
+    // user's chosen password. If anything is out of sync, fall back to a fresh
+    // signUp.email so the user is never left stranded.
     btnSubmitSignup.disabled = true;
     btnSkipPassword.disabled = true;
     const originalBtnText = btnSubmitSignup.textContent;
     btnSubmitSignup.textContent = "Registering...";
 
+    const reEnable = () => {
+      btnSubmitSignup.disabled = false;
+      btnSkipPassword.disabled = false;
+      btnSubmitSignup.textContent = originalBtnText;
+    };
+
     try {
+      if (createdEmail === emailInput.value && tempPassword) {
+        const { error } = await authClient.changePassword({
+          currentPassword: tempPassword,
+          newPassword: passwordVal,
+        });
+        if (error) {
+          toast.error(error.message || "Could not set your password. Please try again.");
+          reEnable();
+          return;
+        }
+        toast.success("Account created successfully!");
+        window.location.href = "/dashboard";
+        return;
+      }
+
+      // Fallback: account wasn't pre-created (shouldn't normally happen).
       await authClient.signUp.email(
         {
           name: nameInput.value,
@@ -345,54 +474,60 @@ import { authClient } from "../lib/auth-client";
         },
         {
           onSuccess: () => {
+            toast.success("Account created successfully!");
             window.location.href = "/dashboard";
           },
           onError: (ctx) => {
-            formError.textContent = ctx.error.message || "Registration failed. Please try again.";
-            formError.classList.remove("hidden");
-            btnSubmitSignup.disabled = false;
-            btnSkipPassword.disabled = false;
-            btnSubmitSignup.textContent = originalBtnText;
+            toast.error(ctx.error.message || "Registration failed. Please try again.");
+            reEnable();
           },
         }
       );
     } catch (error) {
-      formError.textContent = "An unexpected error occurred.";
-      formError.classList.remove("hidden");
-      btnSubmitSignup.disabled = false;
-      btnSkipPassword.disabled = false;
-      btnSubmitSignup.textContent = originalBtnText;
+      toast.error("An unexpected error occurred.");
+      reEnable();
     }
   }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    if (!passwordInput.value || passwordInput.value.length < 8) {
-      formError.textContent = "Password must be at least 8 characters.";
-      formError.classList.remove("hidden");
-      return;
+    if (currentStep === 'name') {
+      btnContinueName.click();
+    } else if (currentStep === 'email') {
+      btnContinueEmail.click();
+    } else if (currentStep === 'otp') {
+      btnVerifyOtp.click();
+    } else if (currentStep === 'password') {
+      if (!passwordInput.value || passwordInput.value.length < 8) {
+        toast.error("Password must be at least 8 characters.");
+        return;
+      }
+      submitSignup(passwordInput.value);
     }
-    submitSignup(passwordInput.value);
   });
 
   btnSkipPassword.addEventListener("click", () => {
-    // Generate a strong, secure random password under the hood since database adapter requires it
-    const randomPassword = Math.random().toString(36).substring(2, 10) + 
-                           Math.random().toString(36).substring(2, 10).toUpperCase() + "!";
-    submitSignup(randomPassword);
+    // The account already exists (created at the email step with a temporary
+    // password) and the user is signed in, so we can go straight to the app.
+    if (createdEmail === emailInput.value) {
+      toast.success("Account created successfully!");
+      window.location.href = "/dashboard";
+      return;
+    }
+    // Fallback for the unexpected case where no account was pre-created.
+    submitSignup(generateTempPassword());
   });
 
   // Google Social Sign Up
   googleBtn?.addEventListener("click", async () => {
-    formError.classList.add("hidden");
+    toast.info("Connecting to Google...");
     try {
       await authClient.signIn.social({
         provider: "google",
         callbackURL: "/dashboard"
       });
     } catch (error) {
-      formError.textContent = "Google registration failed.";
-      formError.classList.remove("hidden");
+      toast.error("Google registration failed.");
     }
   });
 
@@ -452,7 +587,23 @@ import { authClient } from "../lib/auth-client";
     }, 1000);
   }
 
-  btnResendOtp.addEventListener("click", () => {
-    startOtpCountdown();
+  btnResendOtp.addEventListener("click", async () => {
+    btnResendOtp.disabled = true;
+    try {
+      const { error } = await authClient.emailOtp.sendVerificationOtp({
+        email: emailInput.value,
+        type: "email-verification",
+      });
+      if (error) {
+        toast.error(error.message || "Failed to resend code.");
+        btnResendOtp.disabled = false;
+      } else {
+        toast.success("Verification code resent successfully.");
+        startOtpCountdown();
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred.");
+      btnResendOtp.disabled = false;
+    }
   });
 </script>

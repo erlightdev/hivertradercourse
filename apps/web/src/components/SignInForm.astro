@@ -1,5 +1,4 @@
 ---
-import { authClient } from "../lib/auth-client";
 ---
 
 <!-- Back to Home Button -->
@@ -170,6 +169,40 @@ import { authClient } from "../lib/auth-client";
                 </button>
             </div>
         </div>
+
+        <!-- Set New Password Step (for accounts that have no password yet) -->
+        <div id="set-password-step" class="space-y-6 w-full hidden">
+            <div class="text-center">
+                <h1 class="text-2xl font-bold text-foreground tracking-tight mb-1 font-sans">Set a password</h1>
+                <p class="text-sm text-muted-foreground font-sans">
+                    Your identity is verified. Choose a password to sign in with next time.
+                </p>
+            </div>
+
+            <div class="space-y-2">
+                <label for="new-password" class="block text-sm font-medium text-muted-foreground">New password</label>
+                <input
+                    type="password"
+                    id="new-password"
+                    placeholder="••••••••"
+                    class="w-full px-4 py-3 bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-sm text-foreground placeholder-muted-foreground focus:outline-none transition-colors"
+                />
+            </div>
+
+            <div class="space-y-2">
+                <label for="confirm-password" class="block text-sm font-medium text-muted-foreground">Confirm password</label>
+                <input
+                    type="password"
+                    id="confirm-password"
+                    placeholder="••••••••"
+                    class="w-full px-4 py-3 bg-card border border-border focus:border-primary focus:ring-1 focus:ring-primary rounded-lg text-sm text-foreground placeholder-muted-foreground focus:outline-none transition-colors"
+                />
+            </div>
+
+            <button type="button" id="btn-submit-set-password" class="w-full flex items-center justify-center py-3 px-4 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background cursor-pointer">
+                Save password & continue
+            </button>
+        </div>
     </form>
 
     <!-- Error container -->
@@ -191,7 +224,8 @@ import { authClient } from "../lib/auth-client";
 </div>
 
 <script>
-  import { authClient } from "../lib/auth-client";
+  import { authClient, getAccountStatus, setInitialPassword } from "../lib/auth-client";
+  import { toast } from "../lib/toast";
 
   const form = document.getElementById("signin-form") as HTMLFormElement;
   const emailInput = document.getElementById("email") as HTMLInputElement;
@@ -227,10 +261,27 @@ import { authClient } from "../lib/auth-client";
   const otpInputs = Array.from(document.querySelectorAll("#otp-inputs-container input")) as HTMLInputElement[];
   const displayOtpEmail = document.getElementById("display-otp-email") as HTMLSpanElement;
 
+  // Set-password step refs
+  const setPasswordStep = document.getElementById("set-password-step") as HTMLDivElement;
+  const newPasswordInput = document.getElementById("new-password") as HTMLInputElement;
+  const confirmPasswordInput = document.getElementById("confirm-password") as HTMLInputElement;
+  const btnSubmitSetPassword = document.getElementById("btn-submit-set-password") as HTMLButtonElement;
+
+  // Which OTP journey are we in:
+  //  'login'       — verify OTP and go to dashboard
+  //  'reset'       — account HAS a password; OTP + new password resets it
+  //  'set-initial' — account has NO password; OTP signs in, then we set one
+  let otpFlow: 'login' | 'reset' | 'set-initial' = 'login';
+  // For the 'reset' flow we hold the entered code until the new password is set,
+  // because emailOtp.resetPassword consumes email + otp + password together.
+  let pendingResetOtp = '';
+
   // Navigation Logic
-  function showStep(step: 'email' | 'password' | 'otp' | 'forgot-password') {
+  let currentStep: 'email' | 'password' | 'otp' | 'forgot-password' | 'set-password' = 'email';
+
+  function showStep(step: 'email' | 'password' | 'otp' | 'forgot-password' | 'set-password') {
     formError.classList.add("hidden");
-    formError.className = "text-sm text-destructive mt-4 text-center block";
+    currentStep = step;
 
     if (step === 'email') {
       mainHeader.classList.remove("hidden");
@@ -243,6 +294,7 @@ import { authClient } from "../lib/auth-client";
       passwordStep.classList.add("hidden");
       otpStep.classList.add("hidden");
       forgotPasswordStep.classList.add("hidden");
+      setPasswordStep.classList.add("hidden");
 
       passwordInput.required = false;
       emailInput.focus();
@@ -257,6 +309,7 @@ import { authClient } from "../lib/auth-client";
       passwordStep.classList.remove("hidden");
       otpStep.classList.add("hidden");
       forgotPasswordStep.classList.add("hidden");
+      setPasswordStep.classList.add("hidden");
 
       passwordInput.required = true;
       passwordInput.focus();
@@ -271,6 +324,7 @@ import { authClient } from "../lib/auth-client";
       passwordStep.classList.add("hidden");
       otpStep.classList.remove("hidden");
       forgotPasswordStep.classList.add("hidden");
+      setPasswordStep.classList.add("hidden");
 
       passwordInput.required = false;
       displayOtpEmail.textContent = emailInput.value;
@@ -288,28 +342,122 @@ import { authClient } from "../lib/auth-client";
       emailStep.classList.add("hidden");
       passwordStep.classList.add("hidden");
       otpStep.classList.add("hidden");
-      forgotPasswordStep.classList.remove("hidden");
+      forgotPasswordStep.classList.add("hidden");
+      setPasswordStep.classList.add("hidden");
 
       passwordInput.required = false;
       forgotEmailInput.focus();
+    } else if (step === 'set-password') {
+      mainHeader.classList.add("hidden");
+      googleBtn.classList.add("hidden");
+      mainDivider.classList.add("hidden");
+      mainFooter.classList.add("hidden");
+      helpFooter.classList.add("hidden");
+
+      emailStep.classList.add("hidden");
+      passwordStep.classList.add("hidden");
+      otpStep.classList.add("hidden");
+      forgotPasswordStep.classList.add("hidden");
+      setPasswordStep.classList.remove("hidden");
+
+      passwordInput.required = false;
+      newPasswordInput.value = "";
+      confirmPasswordInput.value = "";
+      newPasswordInput.focus();
     }
   }
 
+  // Prefill the email when redirected here from signup ("already registered").
+  const prefillEmail = new URLSearchParams(window.location.search).get("email");
+  if (prefillEmail) {
+    emailInput.value = prefillEmail;
+  }
+
   // Trigger continues
-  btnContinueEmail.addEventListener("click", () => {
+  btnContinueEmail.addEventListener("click", async () => {
     if (!emailInput.validity.valid) {
       emailInput.reportValidity();
       return;
     }
-    showStep('password');
+
+    const email = emailInput.value.trim().toLowerCase();
+    emailInput.value = email;
+
+    btnContinueEmail.disabled = true;
+    const originalText = btnContinueEmail.textContent;
+    btnContinueEmail.textContent = "Checking email...";
+
+    try {
+      const status = await getAccountStatus(email);
+
+      if (!status.exists) {
+        toast.error("No account found with this email. Please sign up first.");
+        return;
+      }
+
+      // Account exists but has no password set — there is nothing to enter on
+      // this step. Steer the user to the method that actually works for them.
+      if (!status.hasPassword) {
+        if (status.hasGoogle) {
+          toast.error("This account uses Google sign-in. Please continue with Google.");
+        } else {
+          toast.error("This account has no password set. Please log in with OTP instead.");
+        }
+        return;
+      }
+
+      showStep('password');
+    } catch {
+      // If the lookup fails, don't block the user — let them try the password.
+      showStep('password');
+    } finally {
+      btnContinueEmail.disabled = false;
+      btnContinueEmail.textContent = originalText;
+    }
   });
 
-  btnOtpLogin.addEventListener("click", () => {
+  // Handle OTP Sending
+  btnOtpLogin.addEventListener("click", async () => {
     if (!emailInput.validity.valid) {
       emailInput.reportValidity();
       return;
     }
-    showStep('otp');
+    
+    const email = emailInput.value.trim().toLowerCase();
+    emailInput.value = email;
+
+    btnOtpLogin.disabled = true;
+    const originalText = btnOtpLogin.textContent;
+    btnOtpLogin.textContent = "Checking email...";
+
+    try {
+      // A sign-in OTP would otherwise silently create a brand-new account for
+      // an unknown email. On the login page we want to send those users to
+      // signup instead.
+      const status = await getAccountStatus(email);
+      if (!status.exists) {
+        toast.error("No account found with this email. Please sign up first.");
+        return;
+      }
+
+      btnOtpLogin.textContent = "Sending code...";
+      const { error } = await authClient.emailOtp.sendVerificationOtp({
+        email,
+        type: "sign-in",
+      });
+      if (error) {
+        toast.error(error.message || "Failed to send verification code.");
+      } else {
+        otpFlow = 'login';
+        toast.success("Verification code sent to your email!");
+        showStep('otp');
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred.");
+    } finally {
+      btnOtpLogin.disabled = false;
+      btnOtpLogin.textContent = originalText;
+    }
   });
 
   btnBackToEmail.addEventListener("click", () => {
@@ -337,33 +485,53 @@ import { authClient } from "../lib/auth-client";
       return;
     }
 
-    formError.classList.add("hidden");
+    const email = forgotEmailInput.value.trim().toLowerCase();
+    forgotEmailInput.value = email;
+    // Keep the shared email in sync so the OTP + set-password steps use it.
+    emailInput.value = email;
+
     btnSubmitForgot.disabled = true;
-    btnSubmitForgot.textContent = "Sending reset link...";
+    const originalText = btnSubmitForgot.textContent;
+    btnSubmitForgot.textContent = "Checking email...";
 
     try {
-      await authClient.forgetPassword({
-        email: forgotEmailInput.value,
-        redirectTo: "/reset-password"
-      }, {
-        onSuccess: () => {
-          formError.textContent = "A reset link has been sent to your email address.";
-          formError.className = "text-sm text-emerald-400 mt-4 text-center block";
-          formError.classList.remove("hidden");
-        },
-        onError: (ctx) => {
-          formError.textContent = ctx.error.message || "Failed to send reset link.";
-          formError.className = "text-sm text-destructive mt-4 text-center block";
-          formError.classList.remove("hidden");
+      const status = await getAccountStatus(email);
+      if (!status.exists) {
+        toast.error("No account found with this email. Please sign up first.");
+        return;
+      }
+
+      btnSubmitForgot.textContent = "Sending code...";
+
+      if (status.hasPassword) {
+        // Account already has a password — proper OTP-verified reset.
+        const { error } = await authClient.emailOtp.requestPasswordReset({ email });
+        if (error) {
+          toast.error(error.message || "Failed to send verification code.");
+          return;
         }
-      });
+        otpFlow = 'reset';
+      } else {
+        // Google-only / OTP-only account with no password yet. Verify ownership
+        // with a sign-in OTP, then let the user set their first password.
+        const { error } = await authClient.emailOtp.sendVerificationOtp({
+          email,
+          type: "sign-in",
+        });
+        if (error) {
+          toast.error(error.message || "Failed to send verification code.");
+          return;
+        }
+        otpFlow = 'set-initial';
+      }
+
+      toast.success("Verification code sent to your email!");
+      showStep('otp');
     } catch (error) {
-      formError.textContent = "An unexpected error occurred.";
-      formError.className = "text-sm text-destructive mt-4 text-center block";
-      formError.classList.remove("hidden");
+      toast.error("An unexpected error occurred.");
     } finally {
       btnSubmitForgot.disabled = false;
-      btnSubmitForgot.textContent = "Send reset link";
+      btnSubmitForgot.textContent = originalText;
     }
   });
 
@@ -424,77 +592,195 @@ import { authClient } from "../lib/auth-client";
   }
 
   const btnResendOtp = document.getElementById("btn-resend-otp") as HTMLButtonElement;
-  btnResendOtp.addEventListener("click", () => {
-    startOtpCountdown();
+  btnResendOtp.addEventListener("click", async () => {
+    btnResendOtp.disabled = true;
+    try {
+      const { error } = otpFlow === 'reset'
+        ? await authClient.emailOtp.requestPasswordReset({ email: emailInput.value })
+        : await authClient.emailOtp.sendVerificationOtp({
+            email: emailInput.value,
+            type: "sign-in",
+          });
+      if (error) {
+        toast.error(error.message || "Failed to resend code.");
+        btnResendOtp.disabled = false;
+      } else {
+        toast.success("Verification code resent successfully.");
+        startOtpCountdown();
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred.");
+      btnResendOtp.disabled = false;
+    }
   });
 
   // Verify and login submit handler
-  btnSubmitOtp.addEventListener("click", () => {
+  btnSubmitOtp.addEventListener("click", async () => {
     const code = otpInputs.map(input => input.value).join("");
     if (code.length < 6) {
-      formError.textContent = "Please enter the full 6-digit verification code.";
-      formError.classList.remove("hidden");
+      toast.error("Please enter the full 6-digit verification code.");
       return;
     }
 
-    formError.classList.add("hidden");
+    // For the 'reset' flow we don't consume the OTP yet — resetPassword needs
+    // email + otp + the new password together. Stash the code and collect the
+    // password on the next step.
+    if (otpFlow === 'reset') {
+      pendingResetOtp = code;
+      showStep('set-password');
+      return;
+    }
+
     btnSubmitOtp.disabled = true;
     btnSubmitOtp.textContent = "Verifying...";
 
-    setTimeout(() => {
-      window.location.href = "/dashboard";
-    }, 1500);
+    try {
+      await authClient.signIn.emailOtp({
+        email: emailInput.value,
+        otp: code,
+      }, {
+        onSuccess: () => {
+          if (otpFlow === 'set-initial') {
+            // Verified and signed in, but no password exists yet — let them set one.
+            toast.success("Verified! Now set your password.");
+            showStep('set-password');
+            btnSubmitOtp.disabled = false;
+            btnSubmitOtp.textContent = "Verify & log in";
+          } else {
+            toast.success("Logged in successfully!");
+            window.location.href = "/dashboard";
+          }
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || "Invalid or expired verification code.");
+          btnSubmitOtp.disabled = false;
+          btnSubmitOtp.textContent = "Verify & log in";
+        }
+      });
+    } catch (err) {
+      toast.error("An unexpected error occurred.");
+      btnSubmitOtp.disabled = false;
+      btnSubmitOtp.textContent = "Verify & log in";
+    }
   });
 
-  // Submit Password Signin
+  // Set-password submit (used by both 'reset' and 'set-initial' flows)
+  btnSubmitSetPassword.addEventListener("click", async () => {
+    const password = newPasswordInput.value;
+    const confirm = confirmPasswordInput.value;
+
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
+    if (password !== confirm) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    btnSubmitSetPassword.disabled = true;
+    const originalText = btnSubmitSetPassword.textContent;
+    btnSubmitSetPassword.textContent = "Saving...";
+
+    try {
+      if (otpFlow === 'reset') {
+        // Account had a password — reset it with the OTP we collected, then
+        // sign in with the new password.
+        const { error } = await authClient.emailOtp.resetPassword({
+          email: emailInput.value,
+          otp: pendingResetOtp,
+          password,
+        });
+        if (error) {
+          toast.error(error.message || "Invalid or expired verification code.");
+          // Send the user back to re-enter the code.
+          showStep('otp');
+          return;
+        }
+        await authClient.signIn.email(
+          { email: emailInput.value, password },
+          {
+            onSuccess: () => {
+              toast.success("Password updated. You're signed in!");
+              window.location.href = "/dashboard";
+            },
+            onError: () => {
+              toast.success("Password updated. Please sign in.");
+              showStep('email');
+            },
+          }
+        );
+      } else {
+        // 'set-initial': the OTP already created a session; set the first password.
+        await setInitialPassword(password);
+        toast.success("Password set. You're all set!");
+        window.location.href = "/dashboard";
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "An unexpected error occurred.");
+    } finally {
+      pendingResetOtp = '';
+      btnSubmitSetPassword.disabled = false;
+      btnSubmitSetPassword.textContent = originalText;
+    }
+  });
+
+  // Submit Form routing based on currentStep
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     
-    formError.classList.add("hidden");
-    btnSubmitSignin.disabled = true;
-    btnSubmitSignin.textContent = "Signing in...";
+    if (currentStep === 'email') {
+      btnContinueEmail.click();
+    } else if (currentStep === 'password') {
+      if (!passwordInput.value) {
+        toast.error("Please enter your password.");
+        return;
+      }
+      btnSubmitSignin.disabled = true;
+      btnSubmitSignin.textContent = "Signing in...";
 
-    try {
-      await authClient.signIn.email(
-        {
-          email: emailInput.value,
-          password: passwordInput.value,
-        },
-        {
-          onSuccess: () => {
-            window.location.href = "/dashboard";
+      try {
+        await authClient.signIn.email(
+          {
+            email: emailInput.value,
+            password: passwordInput.value,
           },
-          onError: (ctx) => {
-            formError.textContent = ctx.error.message || "Sign in failed. Please try again.";
-            formError.classList.remove("hidden");
-          },
-        }
-      );
-    } catch (error) {
-      formError.textContent = "An unexpected error occurred.";
-      formError.classList.remove("hidden");
-    } finally {
-      btnSubmitSignin.disabled = false;
-      btnSubmitSignin.textContent = "Sign in";
+          {
+            onSuccess: () => {
+              toast.success("Logged in successfully!");
+              window.location.href = "/dashboard";
+            },
+            onError: (ctx) => {
+              toast.error(ctx.error.message || "Sign in failed. Please try again.");
+              btnSubmitSignin.disabled = false;
+              btnSubmitSignin.textContent = "Sign in";
+            },
+          }
+        );
+      } catch (error) {
+        toast.error("An unexpected error occurred.");
+        btnSubmitSignin.disabled = false;
+        btnSubmitSignin.textContent = "Sign in";
+      }
+    } else if (currentStep === 'otp') {
+      btnSubmitOtp.click();
+    } else if (currentStep === 'forgot-password') {
+      btnSubmitForgot.click();
+    } else if (currentStep === 'set-password') {
+      btnSubmitSetPassword.click();
     }
   });
 
   // Google Social Sign In
   googleBtn?.addEventListener("click", async () => {
-    formError.classList.add("hidden");
+    toast.info("Connecting to Google...");
     try {
       await authClient.signIn.social({
         provider: "google",
         callbackURL: "/dashboard"
       });
     } catch (error) {
-      formError.textContent = "Google sign-in failed.";
-      formError.classList.remove("hidden");
+      toast.error("Google sign-in failed.");
     }
-  });
-
-  btnOtpLogin.addEventListener("click", () => {
-    formError.textContent = "OTP sign-in is not enabled. Please sign in with your password.";
-    formError.classList.remove("hidden");
   });
 </script>
