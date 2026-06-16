@@ -25,6 +25,7 @@
 	"dependencies": {
 		"@hivertradercourse/env": "*",
 		"dotenv": "^17.2.2",
+		"tailwind-scrollbar": "^4.0.2",
 		"zod": "^4.1.13"
 	},
 	"devDependencies": {
