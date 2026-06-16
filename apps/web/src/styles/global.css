@@ -189,3 +189,95 @@
 		transition: background-color 5000s ease-in-out 0s;
 	}
 }
+
+@keyframes snake-top {
+	0% {
+		left: -100%;
+	}
+	50%, 100% {
+		left: 100%;
+	}
+}
+
+@keyframes snake-right {
+	0% {
+		top: -100%;
+	}
+	50%, 100% {
+		top: 100%;
+	}
+}
+
+@keyframes snake-bottom {
+	0% {
+		right: -100%;
+	}
+	50%, 100% {
+		right: 100%;
+	}
+}
+
+@keyframes snake-left {
+	0% {
+		bottom: -100%;
+	}
+	50%, 100% {
+		bottom: 100%;
+	}
+}
+
+.btn-snake-border {
+	position: relative !important;
+	z-index: 0 !important;
+	overflow: hidden !important;
+	border: 1px solid hsl(var(--border) / 0.3) !important;
+}
+
+.btn-snake-border > .snake-line {
+	position: absolute !important;
+	display: block !important;
+}
+
+/* Top line moving left to right */
+.btn-snake-border > .snake-line:nth-child(1) {
+	top: 0 !important;
+	left: -100% !important;
+	width: 100% !important;
+	height: 2px !important;
+	background: linear-gradient(90deg, transparent, #df775b) !important;
+	animation: snake-top 2s linear infinite !important;
+}
+
+/* Right line moving top to bottom */
+.btn-snake-border > .snake-line:nth-child(2) {
+	top: -100% !important;
+	right: 0 !important;
+	width: 2px !important;
+	height: 100% !important;
+	background: linear-gradient(180deg, transparent, #df775b) !important;
+	animation: snake-right 2s linear infinite !important;
+	animation-delay: 0.5s !important;
+}
+
+/* Bottom line moving right to left */
+.btn-snake-border > .snake-line:nth-child(3) {
+	bottom: 0 !important;
+	right: -100% !important;
+	width: 100% !important;
+	height: 2px !important;
+	background: linear-gradient(270deg, transparent, #df775b) !important;
+	animation: snake-bottom 2s linear infinite !important;
+	animation-delay: 1s !important;
+}
+
+/* Left line moving bottom to top */
+.btn-snake-border > .snake-line:nth-child(4) {
+	bottom: -100% !important;
+	left: 0 !important;
+	width: 2px !important;
+	height: 100% !important;
+	background: linear-gradient(360deg, transparent, #df775b) !important;
+	animation: snake-left 2s linear infinite !important;
+	animation-delay: 1.5s !important;
+}
+

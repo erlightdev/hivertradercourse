@@ -265,6 +265,70 @@ import Layout from "../layouts/Layout.astro";
         <!-- Right Section: Actions & Utilities -->
         <div class="flex items-center gap-3">
           
+          <!-- Connect Wrapper -->
+          <div class="relative">
+            <button id="connect-btn" class="btn-snake-border flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border bg-muted/30 hover:bg-muted/50 text-foreground font-semibold text-xs transition-all cursor-pointer shadow-3xs">
+              <span class="snake-line"></span>
+              <span class="snake-line"></span>
+              <span class="snake-line"></span>
+              <span class="snake-line"></span>
+              <svg class="w-3.5 h-3.5 shrink-0 z-10 text-foreground/85" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              <span class="z-10">Community Connect</span>
+              <svg id="connect-arrow" class="w-3 h-3 text-foreground/60 transition-transform duration-200 shrink-0 z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <!-- Connect Dropdown -->
+            <div id="connect-dropdown" class="absolute right-0 mt-2 w-64 bg-card/95 backdrop-blur-md border border-border/80 rounded-sm shadow-xl p-1.5 hidden z-50">
+              <!-- WhatsApp -->
+              <a href="https://wa.me/9800000000" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-emerald-500/10 transition-all border border-transparent hover:border-emerald-500/10 cursor-pointer group">
+                <div class="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/15">
+                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 360 362" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#25D366" fill-rule="evenodd" d="M307.546 52.566C273.709 18.684 228.706.017 180.756 0 81.951 0 1.538 80.404 1.504 179.235c-.017 31.594 8.242 62.432 23.928 89.609L0 361.736l95.024-24.925c26.179 14.285 55.659 21.805 85.655 21.814h.077c98.788 0 179.21-80.413 179.244-179.244.017-47.898-18.608-92.926-52.454-126.807v-.008Zm-126.79 275.788h-.06c-26.73-.008-52.952-7.194-75.831-20.765l-5.44-3.231-56.391 14.791 15.05-54.981-3.542-5.638c-14.912-23.721-22.793-51.139-22.776-79.286.035-82.14 66.867-148.973 149.051-148.973 39.793.017 77.198 15.53 105.328 43.695 28.131 28.157 43.61 65.596 43.593 105.398-.035 82.149-66.867 148.982-148.982 148.982v.008Zm81.719-111.577c-4.478-2.243-26.497-13.073-30.606-14.568-4.108-1.496-7.09-2.243-10.073 2.243-2.982 4.487-11.568 14.577-14.181 17.559-2.613 2.991-5.226 3.361-9.704 1.117-4.477-2.243-18.908-6.97-36.02-22.226-13.313-11.878-22.304-26.54-24.916-31.027-2.613-4.486-.275-6.91 1.959-9.136 2.011-2.011 4.478-5.234 6.721-7.847 2.244-2.613 2.983-4.486 4.478-7.469 1.496-2.991.748-5.603-.369-7.847-1.118-2.243-10.073-24.289-13.812-33.253-3.636-8.732-7.331-7.546-10.073-7.692-2.613-.13-5.595-.155-8.586-.155-2.991 0-7.839 1.118-11.947 5.604-4.108 4.486-15.677 15.324-15.677 37.361s16.047 43.344 18.29 46.335c2.243 2.991 31.585 48.225 76.51 67.632 10.684 4.615 19.029 7.374 25.535 9.437 10.727 3.412 20.49 2.931 28.208 1.779 8.604-1.289 26.498-10.838 30.228-21.298 3.73-10.46 3.73-19.433 2.613-21.298-1.117-1.865-4.108-2.991-8.586-5.234l.008-.017Z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs font-bold text-foreground leading-none">WhatsApp Support</p>
+                  <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Direct chat with our trading desk</p>
+                </div>
+              </a>
+              <!-- Telegram -->
+              <a href="https://t.me/hivertrader" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-sky-500/10 transition-all border border-transparent hover:border-sky-500/10 cursor-pointer group">
+                <div class="w-8 h-8 rounded-full bg-sky-500/10 text-sky-500 flex items-center justify-center shrink-0 border border-sky-500/15">
+                  <svg class="w-4 h-4 shrink-0" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+                    <defs>
+                      <linearGradient id="telegram-grad-new" x1="50%" x2="50%" y1="0%" y2="100%">
+                        <stop offset="0%" stop-color="#2AABEE"/>
+                        <stop offset="100%" stop-color="#229ED9"/>
+                      </linearGradient>
+                    </defs>
+                    <path fill="url(#telegram-grad-new)" d="M128 0C94.06 0 61.48 13.494 37.5 37.49A128.038 128.038 0 0 0 0 128c0 33.934 13.5 66.514 37.5 90.51C61.48 242.506 94.06 256 128 256s66.52-13.494 90.5-37.49c24-23.996 37.5-56.576 37.5-90.51 0-33.934-13.5-66.514-37.5-90.51C194.52 13.494 161.94 0 128 0Z"/>
+                    <path fill="#FFF" d="M57.94 126.648c37.32-16.256 62.2-26.974 74.64-32.152 35.56-14.786 42.94-17.354 47.76-17.441 1.06-.017 3.42.245 4.96 1.49 1.28 1.05 1.64 2.47 1.82 3.467.16.996.38 3.266.2 5.038-1.92 20.24-10.26 69.356-14.5 92.026-1.78 9.592-5.32 12.808-8.74 13.122-7.44.684-13.08-4.912-20.28-9.63-11.26-7.386-17.62-11.982-28.56-19.188-12.64-8.328-4.44-12.906 2.76-20.386 1.88-1.958 34.64-31.748 35.26-34.45.08-.338.16-1.598-.6-2.262-.74-.666-1.84-.438-2.64-.258-1.14.256-19.12 12.152-54 35.686-5.1 3.508-9.72 5.218-13.88 5.128-4.56-.098-13.36-2.584-19.9-4.708-8-2.606-14.38-3.984-13.82-8.41.28-2.304 3.46-4.662 9.52-7.072Z"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs font-bold text-foreground leading-none">Telegram Channel</p>
+                  <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Instant updates & daily signals</p>
+                </div>
+              </a>
+              <!-- Discord -->
+              <a href="https://discord.gg/hivertrader" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-indigo-500/10 transition-all border border-transparent hover:border-indigo-500/10 cursor-pointer group">
+                <div class="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0 border border-indigo-500/15">
+                  <svg class="w-4 h-4 shrink-0" viewBox="0 0 256 199" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+                    <path d="M216.856 16.597A208.502 208.502 0 0 0 164.042 0c-2.275 4.113-4.933 9.645-6.766 14.046-19.692-2.961-39.203-2.961-58.533 0-1.832-4.4-4.55-9.933-6.846-14.046a207.809 207.809 0 0 0-52.855 16.638C5.618 67.147-3.443 116.4 1.087 164.956c22.169 16.555 43.653 26.612 64.775 33.193A161.094 161.094 0 0 0 79.735 175.3a136.413 136.413 0 0 1-21.846-10.632 108.636 108.636 0 0 0 5.356-4.237c42.122 19.702 87.89 19.702 129.51 0a131.66 131.66 0 0 0 5.355 4.237 136.07 136.07 0 0 1-21.886 10.653c4.006 8.02 8.638 15.67 13.873 22.848 21.142-6.58 42.646-16.637 64.815-33.213 5.316-56.288-9.08-105.09-38.056-148.36ZM85.474 135.095c-12.645 0-23.015-11.805-23.015-26.18s10.149-26.2 23.015-26.2c12.867 0 23.236 11.804 23.015 26.2.02 14.375-10.148 26.18-23.015 26.18Zm85.051 0c-12.645 0-23.014-11.805-23.014-26.18s10.148-26.2 23.014-26.2c12.867 0 23.236 11.804 23.015 26.2 0 14.375-10.148 26.18-23.015 26.18Z" fill="#5865F2"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs font-bold text-foreground leading-none">Discord Server</p>
+                  <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Join the community discussion</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
           <!-- Invite & Earn Wrapper -->
           <div class="relative">
             <button id="invite-earn-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-xs transition-all cursor-pointer shadow-3xs">
@@ -397,6 +461,14 @@ import Layout from "../layouts/Layout.astro";
               <circle cx="12" cy="12" r="5"></circle>
               <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
             </svg>
+          </button>
+
+          <!-- Create Course Button -->
+          <button id="create-course-btn" class="flex items-center gap-1.5 px-4 py-1.5 rounded-sm bg-gradient-to-b from-[#e88c73] via-[#df775b] to-[#c8664d] hover:brightness-105 active:translate-y-[2px] active:border-b-[1px] active:mb-[1px] active:shadow-xs text-white font-bold text-xs shadow-[0_3px_5px_rgba(223,119,91,0.25)] hover:shadow-[0_4px_7px_rgba(223,119,91,0.35)] transition-all duration-100 cursor-pointer border-t border-t-white/30 border-x border-x-[#df775b]/60 border-b-[3px] border-b-[#9e412a] select-none">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span>Create Course</span>
           </button>
 
           <!-- Vertical Divider -->
@@ -658,6 +730,52 @@ import Layout from "../layouts/Layout.astro";
       
     </div>
   </div>
+
+  <!-- Create Course Modal Overlay -->
+  <div id="create-course-modal-overlay" class="fixed inset-0 z-[100] bg-background/80 backdrop-blur-xs hidden justify-center items-center">
+    <div id="create-course-modal-content" class="relative w-full max-w-md bg-card text-card-foreground border border-border rounded-sm shadow-xl p-5 scale-95 opacity-0 transition-all duration-200 ease-out">
+      <div class="flex items-center justify-between border-b border-border/40 pb-3 mb-4">
+        <h3 class="font-bold text-sm text-foreground">Create New Course</h3>
+        <button id="close-create-course-btn" class="p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-all cursor-pointer" type="button">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <form id="create-course-form" class="space-y-4">
+        <div class="space-y-1.5">
+          <label for="course-title" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Course Title</label>
+          <input type="text" id="course-title" placeholder="e.g. Technical Analysis Masterclass" required class="w-full px-3 py-2 text-xs bg-muted/30 border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium" />
+        </div>
+        
+        <div class="space-y-1.5">
+          <label for="course-category" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Category</label>
+          <select id="course-category" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold">
+            <option value="trading">Trading Strategies</option>
+            <option value="crypto">Cryptocurrency</option>
+            <option value="forex">Forex Trading</option>
+            <option value="basics">Market Basics</option>
+          </select>
+        </div>
+        
+        <div class="space-y-1.5">
+          <label for="course-description" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Description</label>
+          <textarea id="course-description" rows="3" placeholder="Brief outline of course content and learning goals..." class="w-full px-3 py-2 text-xs bg-muted/30 border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium resize-none"></textarea>
+        </div>
+        
+        <div class="flex justify-end gap-2 pt-2 border-t border-border/40">
+          <button type="button" id="cancel-create-course-btn" class="px-3.5 py-2 hover:bg-muted text-xs font-bold rounded-sm border border-border transition-colors cursor-pointer text-muted-foreground hover:text-foreground">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 bg-gradient-to-b from-[#e88c73] via-[#df775b] to-[#c8664d] hover:brightness-105 active:translate-y-[2px] active:border-b-[1px] active:mb-[1px] active:shadow-xs text-white font-bold text-xs rounded-sm shadow-[0_3px_5px_rgba(223,119,91,0.25)] hover:shadow-[0_4px_7px_rgba(223,119,91,0.35)] transition-all duration-100 cursor-pointer border-t border-t-white/30 border-x border-x-[#df775b]/60 border-b-[3px] border-b-[#9e412a] select-none">
+            Create Course
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </Layout>
 
 <!-- Core Styles Overrides -->
@@ -754,6 +872,19 @@ import Layout from "../layouts/Layout.astro";
   const notificationsDropdown = document.getElementById("notifications-dropdown")!;
   const bellUnreadDot = document.getElementById("bell-unread-dot")!;
   const markAllReadBtn = document.getElementById("mark-all-read-btn")!;
+
+  // Connect selectors
+  const connectBtn = document.getElementById("connect-btn")!;
+  const connectDropdown = document.getElementById("connect-dropdown")!;
+  const connectArrow = document.getElementById("connect-arrow")!;
+
+  // Create Course Selectors
+  const createCourseBtn = document.getElementById("create-course-btn")!;
+  const createCourseModalOverlay = document.getElementById("create-course-modal-overlay")!;
+  const createCourseModalContent = document.getElementById("create-course-modal-content")!;
+  const closeCreateCourseBtn = document.getElementById("close-create-course-btn")!;
+  const cancelCreateCourseBtn = document.getElementById("cancel-create-course-btn")!;
+  const createCourseForm = document.getElementById("create-course-form") as HTMLFormElement;
 
   let currentUser: any = null;
 
@@ -934,6 +1065,59 @@ import Layout from "../layouts/Layout.astro";
       }
     });
 
+    // Create Course Modal toggles
+    const openCreateCourse = () => {
+      createCourseModalOverlay.classList.remove("hidden");
+      createCourseModalOverlay.classList.add("flex");
+      
+      // Close other dropdowns
+      inviteDropdown.classList.add("hidden");
+      notificationsDropdown.classList.add("hidden");
+      topProfileDropdown.classList.add("hidden");
+      connectDropdown.classList.add("hidden");
+      connectArrow.classList.remove("rotate-180");
+      
+      void createCourseModalOverlay.offsetWidth; // Force reflow
+      createCourseModalContent.classList.remove("scale-95", "opacity-0");
+      createCourseModalContent.classList.add("scale-100", "opacity-100");
+    };
+
+    const closeCreateCourse = () => {
+      createCourseModalContent.classList.remove("scale-100", "opacity-100");
+      createCourseModalContent.classList.add("scale-95", "opacity-0");
+      setTimeout(() => {
+        createCourseModalOverlay.classList.add("hidden");
+        createCourseModalOverlay.classList.remove("flex");
+      }, 200);
+    };
+
+    if (createCourseBtn) {
+      createCourseBtn.addEventListener("click", openCreateCourse);
+    }
+    if (closeCreateCourseBtn) {
+      closeCreateCourseBtn.addEventListener("click", closeCreateCourse);
+    }
+    if (cancelCreateCourseBtn) {
+      cancelCreateCourseBtn.addEventListener("click", closeCreateCourse);
+    }
+    createCourseModalOverlay.addEventListener("click", (e) => {
+      if (e.target === createCourseModalOverlay) {
+        closeCreateCourse();
+      }
+    });
+
+    if (createCourseForm) {
+      createCourseForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const title = (document.getElementById("course-title") as HTMLInputElement).value;
+        const category = (document.getElementById("course-category") as HTMLSelectElement).value;
+        
+        alert(`Success! Course "${title}" (${category}) has been created successfully.`);
+        createCourseForm.reset();
+        closeCreateCourse();
+      });
+    }
+
     // 3. Profile dropup menu toggle
     profileBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -956,6 +1140,10 @@ import Layout from "../layouts/Layout.astro";
       if (notificationsBellBtn && notificationsDropdown && !notificationsBellBtn.contains(target) && !notificationsDropdown.contains(target)) {
         notificationsDropdown.classList.add("hidden");
       }
+      if (connectBtn && connectDropdown && !connectBtn.contains(target) && !connectDropdown.contains(target)) {
+        connectDropdown.classList.add("hidden");
+        connectArrow.classList.remove("rotate-180");
+      }
     });
 
     // Top Profile dropdown toggle
@@ -964,6 +1152,8 @@ import Layout from "../layouts/Layout.astro";
       topProfileDropdown.classList.toggle("hidden");
       inviteDropdown.classList.add("hidden");
       notificationsDropdown.classList.add("hidden");
+      connectDropdown.classList.add("hidden");
+      connectArrow.classList.remove("rotate-180");
     });
 
     // Invite & Earn dropdown toggler
@@ -972,6 +1162,8 @@ import Layout from "../layouts/Layout.astro";
       inviteDropdown.classList.toggle("hidden");
       notificationsDropdown.classList.add("hidden");
       topProfileDropdown.classList.add("hidden");
+      connectDropdown.classList.add("hidden");
+      connectArrow.classList.remove("rotate-180");
     });
 
     // Copy Referral Link logic
@@ -989,6 +1181,22 @@ import Layout from "../layouts/Layout.astro";
       e.stopPropagation();
       notificationsDropdown.classList.toggle("hidden");
       inviteDropdown.classList.add("hidden");
+      topProfileDropdown.classList.add("hidden");
+      connectDropdown.classList.add("hidden");
+      connectArrow.classList.remove("rotate-180");
+    });
+
+    // Connect dropdown toggler
+    connectBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isHidden = connectDropdown.classList.toggle("hidden");
+      if (isHidden) {
+        connectArrow.classList.remove("rotate-180");
+      } else {
+        connectArrow.classList.add("rotate-180");
+      }
+      inviteDropdown.classList.add("hidden");
+      notificationsDropdown.classList.add("hidden");
       topProfileDropdown.classList.add("hidden");
     });
 
@@ -1027,6 +1235,11 @@ import Layout from "../layouts/Layout.astro";
       if (e.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
         e.preventDefault();
         openCommand();
+      }
+      if (e.key === "Escape") {
+        if (!createCourseModalOverlay.classList.contains("hidden")) {
+          closeCreateCourse();
+        }
       }
     });
 
