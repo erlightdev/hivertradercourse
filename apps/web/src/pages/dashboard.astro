@@ -35,7 +35,7 @@ import ProfileSettingsModal from "../components/dashboard/ProfileSettingsModal.a
       <main class="flex-1 overflow-y-auto p-6 md:p-8 bg-muted/10">
         
         <!-- Dashboard Header (Title only) -->
-        <div class="flex items-center justify-between border-b border-border/40 pb-4">
+        <div id="dashboard-header-container" class="flex items-center justify-between border-b border-border/40 pb-4">
           <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-foreground" id="dashboard-title">Dashboard</h1>
         </div>
 
@@ -340,6 +340,16 @@ import ProfileSettingsModal from "../components/dashboard/ProfileSettingsModal.a
         }
       }
     });
+
+    // Toggle the outer page header when viewing Chat to optimize full-body height
+    const pageHeader = document.getElementById("dashboard-header-container");
+    if (pageHeader) {
+      if (viewId === "view-chat") {
+        pageHeader.classList.add("hidden");
+      } else {
+        pageHeader.classList.remove("hidden");
+      }
+    }
   }
 
   function openBlogPanel() {

@@ -1,69 +1,62 @@
 ---
-// ChatView Component (Optimized single-panel Group Chat terminal)
+// ChatView Component (ChatGPT-like clean group chat UI)
 ---
 
-<div id="view-chat" class="hidden mt-6 animate-fade-in h-[calc(100vh-12rem)] min-h-[500px] bg-card border border-border rounded-xl flex flex-col overflow-hidden">
+<div id="view-chat" class="hidden animate-fade-in h-[calc(100vh-6rem)] flex flex-col overflow-hidden bg-card border border-border rounded-xl">
   
-  <!-- CHAT HEADER -->
-  <div class="h-16 border-b border-border px-6 flex items-center justify-between shrink-0 bg-muted/10">
+  <!-- CHAT BOX INTEGRATED HEADER -->
+  <div class="h-16 border-b border-border px-6 flex items-center shrink-0 bg-muted/10">
     <div class="flex items-center gap-3 min-w-0">
-      <!-- Unified Group Icon -->
-      <div class="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold shrink-0 select-none">
+      <div class="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-sm shrink-0 select-none">
         #
       </div>
       <div class="min-w-0">
-        <div class="flex items-center gap-2.5">
-          <h2 class="font-extrabold text-sm md:text-base text-foreground tracking-tight leading-none">global-trading-desk</h2>
-          <span class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[9px] font-bold border border-emerald-500/15 leading-none">
+        <div class="flex items-center gap-2">
+          <h2 class="font-extrabold text-sm md:text-base text-foreground tracking-tight leading-none">Global Trading Desk</h2>
+          <span class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-bold border border-emerald-500/15 leading-none select-none ml-1 shrink-0">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-            14 Online
+            14 online
           </span>
         </div>
-        <p class="text-[11px] text-muted-foreground mt-1.5 font-medium truncate hidden sm:block">Public trading floor for sharing chart patterns, market news, and option forecasts.</p>
+        <p class="text-[10px] text-muted-foreground mt-1.5 font-medium truncate hidden sm:block">Public community discussions and live option flow forecasts</p>
       </div>
     </div>
   </div>
 
-    <!-- CONVERSATION STREAM (SCROLLBOX - OPTIMIZED FOR TEXT READABILITY) -->
-    <div id="chat-messages-container" class="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 scrollbar-thin bg-card">
-      <!-- Messages are generated programmatically here -->
-    </div>
+  <!-- CONVERSATION STREAM (SCROLLBOX - ChatGPT CLEAN FORMAT) -->
+  <div id="chat-messages-container" class="flex-1 overflow-y-auto px-6 md:px-8 py-4 scrollbar-thin bg-card flex flex-col divide-y divide-border/10">
+    <!-- Messages are generated programmatically here -->
+  </div>
 
+  <!-- INPUT AREA WRAPPER -->
+  <div class="p-6 bg-card border-t border-border/5 shrink-0 flex flex-col gap-3">
     <!-- QUICK TRADING EMOJI TRAY -->
-    <div class="px-6 py-2 border-t border-border bg-muted/10 flex gap-1.5 items-center overflow-x-auto scrollbar-none shrink-0">
-      <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0 mr-2">Trade Emojis:</span>
-      <button data-emoji="📈 Bullish" class="quick-emoji-btn px-2.5 py-1 bg-card hover:bg-muted border border-border/80 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">📈 Bullish</button>
-      <button data-emoji="📉 Bearish" class="quick-emoji-btn px-2.5 py-1 bg-card hover:bg-muted border border-border/80 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">📉 Bearish</button>
-      <button data-emoji="🚀 Breakout" class="quick-emoji-btn px-2.5 py-1 bg-card hover:bg-muted border border-border/80 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">🚀 Breakout</button>
-      <button data-emoji="💰 Target Hit!" class="quick-emoji-btn px-2.5 py-1 bg-card hover:bg-muted border border-border/80 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">💰 Target Hit!</button>
-      <button data-emoji="⚠️ Stoploss Hit" class="quick-emoji-btn px-2.5 py-1 bg-card hover:bg-muted border border-border/80 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">⚠️ Stoploss</button>
+    <div class="max-w-3xl mx-auto w-full flex gap-1.5 items-center overflow-x-auto scrollbar-none shrink-0 px-2">
+      <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0 mr-1.5">Trade Emojis:</span>
+      <button type="button" data-emoji="📈 Bullish" class="quick-emoji-btn px-2.5 py-1 bg-muted/20 hover:bg-muted border border-border/40 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">📈 Bullish</button>
+      <button type="button" data-emoji="📉 Bearish" class="quick-emoji-btn px-2.5 py-1 bg-muted/20 hover:bg-muted border border-border/40 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">📉 Bearish</button>
+      <button type="button" data-emoji="🚀 Breakout" class="quick-emoji-btn px-2.5 py-1 bg-muted/20 hover:bg-muted border border-border/40 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">🚀 Breakout</button>
+      <button type="button" data-emoji="💰 Target Hit!" class="quick-emoji-btn px-2.5 py-1 bg-muted/20 hover:bg-muted border border-border/40 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">💰 Target Hit!</button>
+      <button type="button" data-emoji="⚠️ Stoploss Hit" class="quick-emoji-btn px-2.5 py-1 bg-muted/20 hover:bg-muted border border-border/40 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">⚠️ Stoploss</button>
     </div>
 
-    <!-- MESSAGE INPUT FOOTER -->
-    <form id="chat-input-form" class="p-4 border-t border-border flex items-center gap-3 bg-muted/20 shrink-0">
-      <!-- User profile preview indicator -->
-      <div class="chat-my-avatar w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center shrink-0 border border-primary/25 shadow-xs select-none">
-        H
-      </div>
-
-      <div class="relative flex-1">
-        <input type="text" id="chat-message-input" autocomplete="off" class="w-full px-4 py-3 pr-10 text-xs bg-card border border-border rounded-lg focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/60 shadow-3xs transition-all" placeholder="Type a message inside #global-trading-desk..." />
-        <!-- Attachment clips icon -->
-        <button type="button" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer transition-colors" title="Attach file">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+    <!-- ChatGPT STYLE INPUT BOX -->
+    <form id="chat-input-form" class="max-w-3xl mx-auto w-full relative">
+      <div class="relative bg-muted/30 border border-border/80 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/25 rounded-2xl pl-4 pr-12 py-3 shadow-3xs transition-all flex items-center">
+        <input type="text" id="chat-message-input" autocomplete="off" class="w-full bg-transparent border-0 outline-hidden focus:ring-0 text-sm font-semibold text-foreground placeholder-muted-foreground/60 pr-4 py-0.5" placeholder="Type a message inside Global Trading Desk..." />
+        
+        <!-- Nested Send Button inside input pill -->
+        <button type="submit" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 bg-primary text-primary-foreground hover:bg-primary/95 hover:shadow-2xs active:translate-y-[1px] rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
           </svg>
         </button>
       </div>
-
-      <button type="submit" class="p-3 bg-primary text-primary-foreground hover:bg-primary/95 hover:shadow-2xs active:translate-y-[1px] rounded-lg transition-all cursor-pointer flex items-center justify-center shrink-0">
-        <svg class="w-4.5 h-4.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-        </svg>
-      </button>
     </form>
   </div>
+
+</div>
 
 <script>
   import { authClient } from "../../lib/auth-client";
@@ -131,16 +124,16 @@
     }
   }
 
-  // Draw message stream optimized for text readability
+  // Draw message stream in ultra-clean ChatGPT format
   function renderMessages() {
     msgContainer.innerHTML = "";
 
     if (messages.length === 0) {
       msgContainer.innerHTML = `
-        <div class="h-full flex items-center justify-center text-center p-6 select-none">
+        <div class="h-full flex items-center justify-center text-center p-6 select-none flex-1">
           <div class="space-y-1.5">
             <p class="text-base font-bold text-muted-foreground">No messages yet</p>
-            <p class="text-xs text-muted-foreground/60 leading-normal font-medium">Type a message to kick off the group chat conversation!</p>
+            <p class="text-xs text-muted-foreground/60 leading-normal font-medium font-sans">Type a message to start community conversation!</p>
           </div>
         </div>
       `;
@@ -149,38 +142,29 @@
 
     messages.forEach(msg => {
       const isMe = msg.isMe;
-      const cardHtml = isMe
-        ? `
-          <div class="flex gap-3.5 items-end justify-end ml-16 animate-slide-up">
-            <div class="flex flex-col gap-1.5 items-end max-w-xl md:max-w-2xl">
-              <div class="flex items-baseline gap-2">
-                <span class="text-[9px] text-muted-foreground/50 font-bold">${msg.time}</span>
-                <span class="text-xs font-bold text-foreground">You</span>
-              </div>
-              <div class="px-4.5 py-3 rounded-2xl rounded-tr-none bg-primary text-primary-foreground text-sm font-semibold leading-relaxed shadow-xs whitespace-pre-wrap select-text">
-                ${msg.text}
-              </div>
+      
+      const rowHtml = `
+        <div class="py-5 select-text">
+          <div class="flex gap-4 items-start max-w-3xl mx-auto w-full animate-slide-up">
+            <!-- Round User Avatar -->
+            <div class="w-8 h-8 rounded-full ${msg.avatarColor} text-white text-[10px] font-bold flex items-center justify-center shrink-0 border border-border/10 shadow-3xs select-none">
+              ${msg.avatar}
             </div>
-            <div class="w-8 h-8 rounded-full ${msg.avatarColor} text-white text-[10px] font-bold flex items-center justify-center border border-primary/20 shadow-xs select-none shrink-0">${msg.avatar}</div>
-          </div>
-        `
-        : `
-          <div class="flex gap-3.5 items-start mr-16 animate-slide-up">
-            <div class="w-8 h-8 rounded-full ${msg.avatarColor} text-white text-[10px] font-bold flex items-center justify-center border border-primary/20 shadow-xs select-none shrink-0">${msg.avatar}</div>
-            <div class="flex flex-col gap-1.5 max-w-xl md:max-w-2xl">
+            
+            <!-- Message Content -->
+            <div class="flex-1 space-y-1 min-w-0">
               <div class="flex items-baseline gap-2">
-                <span class="text-xs font-bold text-foreground">${msg.sender}</span>
-                ${msg.role ? `<span class="px-1.5 py-0.2 bg-primary/10 text-primary text-[6px] font-extrabold rounded uppercase leading-none border border-primary/10">${msg.role}</span>` : ""}
+                <span class="text-xs font-bold text-foreground">${isMe ? "You" : msg.sender}</span>
+                ${msg.role ? `<span class="px-1.5 py-0.2 bg-primary/10 text-primary text-[7px] font-extrabold rounded-md uppercase tracking-wider leading-none border border-primary/15 shrink-0">${msg.role}</span>` : ""}
                 <span class="text-[9px] text-muted-foreground/50 font-bold">${msg.time}</span>
               </div>
-              <div class="px-4.5 py-3 rounded-2xl rounded-tl-none bg-muted/30 border border-border/40 text-foreground text-sm font-semibold leading-relaxed shadow-3xs whitespace-pre-wrap select-text">
-                ${msg.text}
-              </div>
+              <p class="text-sm font-semibold leading-relaxed text-foreground/90 whitespace-pre-wrap">${msg.text}</p>
             </div>
           </div>
-        `;
+        </div>
+      `;
 
-      msgContainer.insertAdjacentHTML("beforeend", cardHtml);
+      msgContainer.insertAdjacentHTML("beforeend", rowHtml);
     });
 
     // Auto scroll bottom
@@ -221,11 +205,11 @@
 
   // Real-time Group Chat Simulation (Receives trading signals/tips from mock members over time)
   const simulatedComments = [
-    { sender: "Amber Bull", avatar: "AB", avatarColor: "bg-amber-500", text: "Reliance is breaking out of its range! Solid bull candles on high volume. This should easily drag Nifty above 22,050." },
+    { sender: "Reliance Speculator", avatar: "RS", avatarColor: "bg-blue-500", text: "Reliance is breaking out of its range! Solid bull candles on high volume. This should easily drag Nifty above 22,050." },
     { sender: "Prakash Nayak", role: "Trader", avatar: "PN", avatarColor: "bg-emerald-500", text: "Closed remaining CE calls at +40%! Spectacular morning move. Taking a break now to avoid overtrading." },
     { sender: "Emerald Bear", avatar: "EB", avatarColor: "bg-teal-500", text: "Just closed my straddles. Decay was massive in the first hour. Decent green profits today." },
     { sender: "Rose Scalp", avatar: "RS", avatarColor: "bg-rose-500", text: "Look at the 15-minute chart of Nifty. Clean bull flag breakout. Targets are fully aligned for another leg up." },
-    { sender: "Sapphire", avatar: "ST", avatarColor: "bg-blue-500", text: "Open interest shows 22,100 has huge call writing. Unlikely to cross 22,100 in this session. Be cautious on longs there." }
+    { sender: "Sapphire Options", avatar: "SO", avatarColor: "bg-purple-500", text: "Open interest shows 22,100 has huge call writing. Unlikely to cross 22,100 in this session. Be cautious on longs there." }
   ];
 
   function startChatSimulation() {
@@ -249,7 +233,7 @@
       };
 
       // Append simulation message
-      if (messages.length > 25) {
+      if (messages.length > 30) {
         messages.shift();
       }
       messages.push(newMsg);
