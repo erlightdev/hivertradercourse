@@ -1,5 +1,514 @@
 ---
-// ChatView Component (Empty for now)
+// ChatView Component (WordPress/Discord-style trading terminal group chat)
 ---
-<div id="view-chat" class="hidden mt-6">
+
+<div id="view-chat" class="hidden mt-6 animate-fade-in h-[calc(100vh-12rem)] min-h-[500px]">
+  <!-- CHAT MAIN SHELL -->
+  <div class="bg-card border border-border rounded-xl shadow-md h-full flex overflow-hidden">
+    
+    <!-- LEFT SIDEBAR: CHANNELS -->
+    <div class="w-60 border-r border-border bg-muted/20 flex flex-col shrink-0 hidden md:flex">
+      <!-- Search Channels Box -->
+      <div class="p-4 border-b border-border">
+        <div class="relative">
+          <svg class="h-3.5 w-3.5 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+          </svg>
+          <input type="text" id="channel-search" class="w-full pl-8 pr-3 py-1.5 text-[11px] bg-card border border-border rounded-md focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground font-semibold placeholder:text-muted-foreground/60" placeholder="Search channels..." />
+        </div>
+      </div>
+
+      <!-- Channels List -->
+      <div class="p-2.5 flex-1 overflow-y-auto space-y-0.5 scrollbar-thin">
+        <p class="text-[9px] font-bold text-muted-foreground uppercase tracking-widest px-3 mb-2">Public Channels</p>
+        
+        <button data-channel="global" class="channel-btn active w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-foreground bg-muted/80 transition-all text-left cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <span class="text-primary font-bold text-sm">#</span>
+            <span class="truncate">global-trading-desk</span>
+          </div>
+          <span class="px-1.5 py-0.5 rounded-full bg-emerald-500 text-[8px] font-bold text-white shadow-3xs leading-none">Live</span>
+        </button>
+
+        <button data-channel="scalping" class="channel-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all text-left cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <span class="text-muted-foreground/60 font-bold text-sm">#</span>
+            <span class="truncate">scalping-alerts</span>
+          </div>
+          <span class="w-1.5 h-1.5 rounded-full bg-primary hidden"></span>
+        </button>
+
+        <button data-channel="options" class="channel-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all text-left cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <span class="text-muted-foreground/60 font-bold text-sm">#</span>
+            <span class="truncate">options-strategies</span>
+          </div>
+        </button>
+
+        <button data-channel="charts" class="channel-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all text-left cursor-pointer">
+          <div class="flex items-center gap-2.5">
+            <span class="text-muted-foreground/60 font-bold text-sm">#</span>
+            <span class="truncate">technical-analysis</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- User footer inside sidebar -->
+      <div class="p-3 border-t border-border bg-muted/10 flex items-center gap-2.5">
+        <div class="chat-my-avatar w-7 h-7 rounded-full bg-primary text-white font-bold text-[10px] flex items-center justify-center shrink-0 border border-primary/20 shadow-xs select-none">H</div>
+        <div class="min-w-0 flex-1">
+          <p class="chat-my-name text-[10px] font-bold text-foreground truncate leading-none">Hiver</p>
+          <span class="flex items-center gap-1 mt-0.5 leading-none">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-[8px] text-muted-foreground font-semibold">Online</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDDLE: CONVERSATION PANEL -->
+    <div class="flex-1 flex flex-col h-full bg-card">
+      <!-- Chat Header -->
+      <div class="h-14 border-b border-border px-4 md:px-6 flex items-center justify-between shrink-0">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-primary font-bold text-lg leading-none">#</span>
+            <h2 id="chat-active-channel-name" class="font-bold text-sm text-foreground tracking-tight leading-none">global-trading-desk</h2>
+            <span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-500 text-[8px] font-bold border border-emerald-500/15 leading-none">14 Active</span>
+          </div>
+          <p id="chat-active-channel-desc" class="text-[10px] text-muted-foreground mt-1 font-medium truncate hidden sm:block">Public trading floor for sharing chart setups, news, and market forecasts.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Clear Chat history button -->
+          <button id="chat-clear-btn" class="p-1.5 hover:bg-muted rounded text-muted-foreground hover:text-foreground cursor-pointer transition-colors" title="Clear conversation history">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h8c1 0 2 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Streams scroll box -->
+      <div id="chat-messages-container" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 scrollbar-thin bg-muted/5">
+        <!-- Messages are generated programmatically here -->
+      </div>
+
+      <!-- Quick trading emoji tray -->
+      <div class="px-4 py-1.5 border-t border-border bg-muted/10 flex gap-1.5 items-center overflow-x-auto scrollbar-none shrink-0">
+        <span class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider shrink-0 mr-1.5">Trade Emojis:</span>
+        <button data-emoji="📈 Bullish" class="quick-emoji-btn px-2 py-0.5 bg-card hover:bg-muted border border-border/80 text-[10px] font-semibold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">📈 Bullish</button>
+        <button data-emoji="📉 Bearish" class="quick-emoji-btn px-2 py-0.5 bg-card hover:bg-muted border border-border/80 text-[10px] font-semibold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">📉 Bearish</button>
+        <button data-emoji="🚀 Breakout" class="quick-emoji-btn px-2 py-0.5 bg-card hover:bg-muted border border-border/80 text-[10px] font-semibold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">🚀 Breakout</button>
+        <button data-emoji="💰 Target Hit!" class="quick-emoji-btn px-2 py-0.5 bg-card hover:bg-muted border border-border/80 text-[10px] font-semibold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">💰 Target Hit!</button>
+        <button data-emoji="⚠️ Sl Hit" class="quick-emoji-btn px-2 py-0.5 bg-card hover:bg-muted border border-border/80 text-[10px] font-semibold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">⚠️ Stoploss</button>
+      </div>
+
+      <!-- Message Input Box -->
+      <form id="chat-input-form" class="p-3 border-t border-border flex items-center gap-2 bg-muted/20 shrink-0">
+        <div class="relative flex-1">
+          <input type="text" id="chat-message-input" autocomplete="off" class="w-full px-4 py-2.5 pr-10 text-xs bg-card border border-border rounded-lg focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/60 shadow-3xs transition-all" placeholder="Message #global-trading-desk..." />
+          <!-- Attachment dummy clip icon -->
+          <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer transition-colors" title="Attach file">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+            </svg>
+          </button>
+        </div>
+        <button type="submit" class="p-2.5 bg-primary text-primary-foreground hover:bg-primary/95 hover:shadow-2xs active:translate-y-[1px] rounded-lg transition-all cursor-pointer flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT: MEMBERS ONLINE LIST -->
+    <div class="w-44 border-l border-border bg-muted/10 p-4 shrink-0 hidden lg:flex flex-col">
+      <div class="mb-3">
+        <h3 class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Online Users</h3>
+        <p class="text-[9px] text-muted-foreground/70 mt-1 font-semibold">Trading Desk active</p>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-2.5 scrollbar-thin">
+        <!-- Admin row -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center border border-primary/20 relative shadow-3xs select-none">
+            H
+            <span class="absolute bottom-0 right-0 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-card"></span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1">
+              <p class="text-[10px] font-bold text-foreground truncate max-w-[80px]">Hiver</p>
+              <span class="px-1 py-0.2 bg-primary/10 text-primary text-[6px] font-extrabold rounded uppercase leading-none">Admin</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prakash row -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-emerald-500 text-white text-[9px] font-bold flex items-center justify-center border border-emerald-500/10 relative shadow-3xs select-none">
+            P
+            <span class="absolute bottom-0 right-0 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-card"></span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1">
+              <p class="text-[10px] font-bold text-foreground truncate max-w-[80px]">Prakash</p>
+              <span class="px-1 py-0.2 bg-emerald-500/10 text-emerald-500 text-[6px] font-extrabold rounded uppercase leading-none">Trader</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Amber Bull row -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-amber-500 text-white text-[9px] font-bold flex items-center justify-center border border-amber-500/10 relative shadow-3xs select-none">
+            AB
+            <span class="absolute bottom-0 right-0 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-card"></span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1">
+              <p class="text-[10px] font-bold text-foreground truncate max-w-[80px]">Amber Bull</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Emerald Bear row -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-teal-500 text-white text-[9px] font-bold flex items-center justify-center border border-teal-500/10 relative shadow-3xs select-none">
+            EB
+            <span class="absolute bottom-0 right-0 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-card"></span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1">
+              <p class="text-[10px] font-bold text-foreground truncate max-w-[80px]">Emerald Bear</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sapphire Trader row -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-blue-500 text-white text-[9px] font-bold flex items-center justify-center border border-blue-500/10 relative shadow-3xs select-none">
+            ST
+            <span class="absolute bottom-0 right-0 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-card"></span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1">
+              <p class="text-[10px] font-bold text-foreground truncate max-w-[80px]">Sapphire</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rose Scalper row -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center border border-rose-500/10 relative shadow-3xs select-none">
+            RS
+            <span class="absolute bottom-0 right-0 w-1.5 h-1.5 bg-amber-500 rounded-full border border-card"></span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1">
+              <p class="text-[10px] font-bold text-foreground truncate max-w-[80px]">Rose Scalp</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+<script>
+  import { authClient } from "../../lib/auth-client";
+  import { toast } from "../../lib/dashboard-store";
+
+  // Elements
+  const msgContainer = document.getElementById("chat-messages-container")!;
+  const inputForm = document.getElementById("chat-input-form") as HTMLFormElement;
+  const msgInput = document.getElementById("chat-message-input") as HTMLInputElement;
+  const channelSearch = document.getElementById("channel-search") as HTMLInputElement;
+  const chatActiveName = document.getElementById("chat-active-channel-name")!;
+  const chatActiveDesc = document.getElementById("chat-active-channel-desc")!;
+  const clearBtn = document.getElementById("chat-clear-btn")!;
+
+  let currentChannel = "global";
+  let myName = "Hiver";
+  let myInitials = "H";
+  let avatarColorClass = "bg-primary";
+
+  // Mock messages database
+  type Msg = {
+    id: string;
+    sender: string;
+    role?: string;
+    avatar: string;
+    avatarColor: string;
+    text: string;
+    time: string;
+    isMe: boolean;
+  };
+
+  const channelMessages: Record<string, Msg[]> = {
+    global: [
+      { id: "1", sender: "Hiver", role: "Admin", avatar: "H", avatarColor: "bg-primary", text: "Welcome to the HiverLMS Group Chat trading terminal! Share setups and discuss trades.", time: "10:30 AM", isMe: false },
+      { id: "2", sender: "Prakash", role: "Trader", avatar: "P", avatarColor: "bg-emerald-500", text: "Nifty option chain shows heavy support near 22,000 index levels. Looks primed for a breakout.", time: "10:32 AM", isMe: false },
+      { id: "3", sender: "Amber Bull", avatar: "AB", avatarColor: "bg-amber-500", text: "Fully agreed. Just took some 22,000 CE calls. Target set at 22,120 index.", time: "10:35 AM", isMe: false }
+    ],
+    scalping: [
+      { id: "1", sender: "Rose Scalp", avatar: "RS", avatarColor: "bg-rose-500", text: "BANKNIFTY 1-min chart shows double bottom breakout. Scalping long from 47,200.", time: "10:05 AM", isMe: false },
+      { id: "2", sender: "Emerald Bear", avatar: "EB", avatarColor: "bg-teal-500", text: "Quick scalp done! +12% gains in options CE premium in 3 minutes.", time: "10:08 AM", isMe: false }
+    ],
+    options: [
+      { id: "1", sender: "Hiver", role: "Admin", avatar: "H", avatarColor: "bg-primary", text: "Discussion on options setups, short straddles, and spreads.", time: "09:15 AM", isMe: false },
+      { id: "2", sender: "Sapphire", avatar: "ST", avatarColor: "bg-blue-500", text: "Selling 22,400 Call and 21,800 Put for weekly expiry. Decay is looking very sweet today.", time: "09:45 AM", isMe: false }
+    ],
+    charts: [
+      { id: "1", sender: "Prakash", role: "Trader", avatar: "P", avatarColor: "bg-emerald-500", text: "Reliance breaking out of daily ascending triangle. Volume is 2x average.", time: "08:30 AM", isMe: false }
+    ]
+  };
+
+  const channelDescriptions: Record<string, string> = {
+    global: "Public trading floor for sharing chart setups, news, and market forecasts.",
+    scalping: "Fast-paced short-term trading alarms, 1-minute chart targets, and momentum calls.",
+    options: "Option spreads, hedging parameters, decay strategies, and option chain analytics.",
+    charts: "Detailed chart pattern analyses, breakout confirmations, and support/resistance zones."
+  };
+
+  // Populate active user session
+  async function loadUser() {
+    try {
+      const { data: session } = await authClient.getSession();
+      if (session?.user) {
+        myName = session.user.name || "Hiver";
+        myInitials = myName.split(" ").map(n => n[0]).join("").toUpperCase();
+
+        // Retrieve current avatar theme color to match settings
+        const currentTheme = localStorage.getItem("profile-avatar-theme") || "default";
+        if (currentTheme === "emerald") {
+          avatarColorClass = "bg-gradient-to-br from-emerald-400 to-teal-500";
+        } else if (currentTheme === "blue") {
+          avatarColorClass = "bg-gradient-to-br from-blue-400 to-indigo-500";
+        } else if (currentTheme === "indigo") {
+          avatarColorClass = "bg-gradient-to-br from-indigo-400 to-purple-500";
+        } else if (currentTheme === "rose") {
+          avatarColorClass = "bg-gradient-to-br from-rose-400 to-pink-500";
+        } else {
+          avatarColorClass = "bg-primary";
+        }
+
+        // Update UI panels for our my-user footer
+        const myAvatars = document.querySelectorAll(".chat-my-avatar");
+        myAvatars.forEach(el => {
+          el.className = `chat-my-avatar w-7 h-7 rounded-full text-white font-bold text-[10px] flex items-center justify-center shrink-0 border border-primary/20 shadow-xs select-none ${avatarColorClass}`;
+          el.textContent = myInitials;
+        });
+
+        const myNames = document.querySelectorAll(".chat-my-name");
+        myNames.forEach(el => el.textContent = myName);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // Draw message stream
+  function renderMessages() {
+    msgContainer.innerHTML = "";
+    const list = channelMessages[currentChannel] || [];
+
+    if (list.length === 0) {
+      msgContainer.innerHTML = `
+        <div class="h-full flex items-center justify-center text-center p-6 select-none">
+          <div class="space-y-1.5">
+            <p class="text-sm font-bold text-muted-foreground">This is the start of #${chatActiveName.textContent}</p>
+            <p class="text-[10px] text-muted-foreground/60 leading-normal font-medium">Send a message to kick off the group chat conversation!</p>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    list.forEach(msg => {
+      const isMe = msg.isMe;
+      const cardHtml = isMe
+        ? `
+          <div class="flex gap-2.5 items-end justify-end ml-12 animate-slide-up">
+            <div class="flex flex-col gap-1 items-end">
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-[8px] text-muted-foreground/60 font-semibold">${msg.time}</span>
+                <span class="text-[10px] font-bold text-foreground">You</span>
+              </div>
+              <div class="px-3.5 py-2.5 rounded-2xl rounded-tr-none bg-primary text-primary-foreground text-xs font-semibold leading-relaxed shadow-3xs max-w-sm whitespace-pre-wrap select-text">
+                ${msg.text}
+              </div>
+            </div>
+            <div class="w-6 h-6 rounded-full ${msg.avatarColor} text-white text-[9px] font-bold flex items-center justify-center border border-primary/20 shadow-3xs select-none">${msg.avatar}</div>
+          </div>
+        `
+        : `
+          <div class="flex gap-2.5 items-start mr-12 animate-slide-up">
+            <div class="w-6 h-6 rounded-full ${msg.avatarColor} text-white text-[9px] font-bold flex items-center justify-center border border-primary/20 shadow-3xs select-none shrink-0">${msg.avatar}</div>
+            <div class="flex flex-col gap-1">
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-[10px] font-bold text-foreground">${msg.sender}</span>
+                ${msg.role ? `<span class="px-1 py-0.2 bg-primary/10 text-primary text-[6px] font-extrabold rounded uppercase leading-none">${msg.role}</span>` : ""}
+                <span class="text-[8px] text-muted-foreground/60 font-semibold">${msg.time}</span>
+              </div>
+              <div class="px-3.5 py-2.5 rounded-2xl rounded-tl-none bg-card border border-border text-foreground text-xs font-medium leading-relaxed shadow-3xs max-w-sm whitespace-pre-wrap select-text">
+                ${msg.text}
+              </div>
+            </div>
+          </div>
+        `;
+
+      msgContainer.insertAdjacentHTML("beforeend", cardHtml);
+    });
+
+    // Auto scroll bottom
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+  }
+
+  // Handle send message
+  inputForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = msgInput.value.trim();
+    if (!text) return;
+
+    const newMsg: Msg = {
+      id: Date.now().toString(),
+      sender: myName,
+      avatar: myInitials,
+      avatarColor: avatarColorClass,
+      text,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isMe: true
+    };
+
+    channelMessages[currentChannel] = channelMessages[currentChannel] || [];
+    channelMessages[currentChannel].push(newMsg);
+    msgInput.value = "";
+    renderMessages();
+  });
+
+  // Channel switcher triggers
+  const channelBtns = document.querySelectorAll(".channel-btn") as NodeListOf<HTMLButtonElement>;
+  channelBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const channel = btn.getAttribute("data-channel")!;
+      currentChannel = channel;
+
+      channelBtns.forEach(b => {
+        b.classList.remove("active", "font-bold", "text-foreground", "bg-muted/80");
+        b.classList.add("text-muted-foreground", "font-semibold");
+      });
+
+      btn.classList.add("active", "font-bold", "text-foreground", "bg-muted/80");
+      btn.classList.remove("text-muted-foreground", "font-semibold");
+
+      // Update header info
+      chatActiveName.textContent = btn.querySelector("span:not(.truncate)")?.textContent || btn.querySelector(".truncate")!.textContent;
+      chatActiveDesc.textContent = channelDescriptions[channel] || "";
+      msgInput.placeholder = `Message #${chatActiveName.textContent}...`;
+
+      renderMessages();
+    });
+  });
+
+  // Quick trade emoji tray listener
+  const emojiBtns = document.querySelectorAll(".quick-emoji-btn") as NodeListOf<HTMLButtonElement>;
+  emojiBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const emoji = btn.getAttribute("data-emoji")!;
+      msgInput.value += (msgInput.value ? " " : "") + emoji;
+      msgInput.focus();
+    });
+  });
+
+  // Clear Chat history action
+  clearBtn.addEventListener("click", () => {
+    channelMessages[currentChannel] = [];
+    renderMessages();
+    toast.success("Chat history cleared.");
+  });
+
+  // Simple local channel search filter
+  channelSearch.addEventListener("input", () => {
+    const val = channelSearch.value.trim().toLowerCase();
+    channelBtns.forEach(btn => {
+      const name = btn.querySelector(".truncate")?.textContent?.toLowerCase() || "";
+      if (name.includes(val)) {
+        btn.classList.remove("hidden");
+      } else {
+        btn.classList.add("hidden");
+      }
+    });
+  });
+
+  // Real-time Group Chat Simulation (Receives trading signals/tips from mock members over time)
+  const simulatedComments = [
+    { sender: "Amber Bull", avatar: "AB", avatarColor: "bg-amber-500", text: "Nifty is pushing higher! 22,050 target breached. Volume is confirming the momentum.", channel: "global" },
+    { sender: "Prakash", role: "Trader", avatar: "P", avatarColor: "bg-emerald-500", text: "Great long call guys! Just closed 50% CE holdings at +25% gains. Keeping the rest for target 2.", channel: "global" },
+    { sender: "Emerald Bear", avatar: "EB", avatarColor: "bg-teal-500", text: "Put writers are defending 22,000 fiercely. Unlikely to fall below this in this weekly session.", channel: "options" },
+    { sender: "Rose Scalp", avatar: "RS", avatarColor: "bg-rose-500", text: "Look at BANKNIFTY go! Breakout was clean. +30 points scalped on 1-min candle.", channel: "scalping" },
+    { sender: "Sapphire", avatar: "ST", avatarColor: "bg-blue-500", text: "Adding Reliance to my radar. Retesting major 2,900 resistance. Breakout here would lift Nifty massively.", channel: "charts" }
+  ];
+
+  function startChatSimulation() {
+    setInterval(() => {
+      const chatView = document.getElementById("view-chat")!;
+      // Only simulate if chat view is active/visible
+      if (chatView.classList.contains("hidden")) return;
+
+      // Pick a random comment
+      const comment = simulatedComments[Math.floor(Math.random() * simulatedComments.length)];
+      
+      const newMsg = {
+        id: Date.now().toString(),
+        sender: comment.sender,
+        role: (comment as any).role,
+        avatar: comment.avatar,
+        avatarColor: comment.avatarColor,
+        text: comment.text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isMe: false
+      };
+
+      // Append simulation message to target channel database
+      const channel = comment.channel;
+      channelMessages[channel] = channelMessages[channel] || [];
+      
+      // Prevent infinite bloat
+      if (channelMessages[channel].length > 15) {
+        channelMessages[channel].shift();
+      }
+
+      channelMessages[channel].push(newMsg);
+
+      // Trigger visual alert/dot indicator on channel button if not current active channel
+      if (channel !== currentChannel) {
+        const btn = document.querySelector(`[data-channel="${channel}"]`)!;
+        const alertDot = btn.querySelector(".rounded-full") || btn.querySelector(".bg-primary");
+        if (alertDot) {
+          alertDot.classList.remove("hidden");
+        }
+      } else {
+        // Re-render only if user is actively viewing this channel
+        renderMessages();
+      }
+    }, 20000); // simulation sends message every 20 seconds
+  }
+
+  // Run on dashboard navigation triggers to sync details
+  const chatNavBtn = document.getElementById("nav-chat");
+  if (chatNavBtn) {
+    chatNavBtn.addEventListener("click", () => {
+      loadUser();
+      renderMessages();
+    });
+  }
+
+  // Load initially
+  loadUser();
+  renderMessages();
+  startChatSimulation();
+</script>
