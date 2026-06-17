@@ -1,0 +1,590 @@
+---
+// ProfileSettingsModal Component (Shadcn-style)
+---
+
+<!-- DIALOG OVERLAY -->
+<div id="profile-settings-overlay" class="fixed inset-0 bg-background/80 backdrop-blur-xs z-[100] hidden items-center justify-center animate-fade-in p-4">
+  
+  <!-- DIALOG CONTENT BOX -->
+  <div id="profile-settings-content" class="bg-card border border-border rounded-xl shadow-lg max-w-2xl w-full h-[550px] flex flex-col md:flex-row overflow-hidden scale-95 opacity-0 transition-all duration-200 relative">
+    
+    <!-- CLOSE BUTTON -->
+    <button id="profile-settings-close-btn" class="absolute top-4 right-4 p-1.5 hover:bg-muted rounded text-muted-foreground hover:text-foreground cursor-pointer z-50 transition-colors" aria-label="Close settings">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6 6 18M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- LEFT SIDEBAR: NAVIGATION TABS -->
+    <div class="w-full md:w-52 bg-muted/20 border-r border-border p-4 flex flex-col shrink-0">
+      <div class="mb-4">
+        <h2 class="text-sm font-bold text-foreground tracking-tight">Account Settings</h2>
+        <p class="text-[10px] text-muted-foreground mt-0.5 font-medium">Manage your profile and settings</p>
+      </div>
+
+      <nav class="space-y-1 flex-1">
+        <!-- Tab 1 Trigger -->
+        <button data-tab="tab-profile" class="profile-tab-trigger active w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold text-foreground bg-muted/80 transition-all text-left cursor-pointer">
+          <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <span>My Profile</span>
+        </button>
+
+        <!-- Tab 2 Trigger -->
+        <button data-tab="tab-security" class="profile-tab-trigger w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all text-left cursor-pointer">
+          <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span>Security & Login</span>
+        </button>
+
+        <!-- Tab 3 Trigger -->
+        <button data-tab="tab-preferences" class="profile-tab-trigger w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all text-left cursor-pointer">
+          <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          </svg>
+          <span>Preferences</span>
+        </button>
+      </nav>
+
+      <!-- VERSION AND FOOTER -->
+      <div class="pt-4 border-t border-border mt-auto">
+        <p class="text-[9px] font-mono text-muted-foreground/60 text-center font-semibold uppercase tracking-wider">HiverLMS v1.0.0</p>
+      </div>
+    </div>
+
+    <!-- RIGHT CONTENT AREA (SCROLLABLE TAB WINDOWS) -->
+    <div class="flex-1 p-6 md:p-8 overflow-y-auto h-full scrollbar-thin">
+      
+      <!-- TAB 1: PROFILE CONTENT -->
+      <div id="tab-profile" class="profile-tab-content space-y-5">
+        <div>
+          <h3 class="text-sm font-bold text-foreground">Profile Information</h3>
+          <p class="text-[11px] text-muted-foreground mt-1 leading-normal font-medium">Update your public details and avatar theme color.</p>
+        </div>
+
+        <form id="profile-details-form" class="space-y-4">
+          <!-- AVATAR SELECTION -->
+          <div class="space-y-2">
+            <label class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Profile Avatar Theme</label>
+            <div class="flex items-center gap-4 bg-muted/20 border border-border/40 p-3 rounded-lg">
+              <!-- Current Avatar Preview Box -->
+              <div id="avatar-preview-circle" class="w-12 h-12 rounded-full bg-primary text-white font-bold text-sm flex items-center justify-center border border-primary/25 shadow-2xs shrink-0 select-none transition-all duration-300">
+                H
+              </div>
+              
+              <div class="flex flex-col gap-1.5">
+                <span class="text-[11px] text-muted-foreground font-semibold">Choose avatar theme gradient</span>
+                <div class="flex items-center gap-2">
+                  <button type="button" data-avatar-theme="default" class="avatar-theme-btn w-6 h-6 rounded-full bg-primary border border-primary/30 cursor-pointer ring-offset-background hover:scale-105 active:scale-95 transition-all" title="Amber Theme"></button>
+                  <button type="button" data-avatar-theme="emerald" class="avatar-theme-btn w-6 h-6 rounded-full bg-emerald-500 border border-emerald-500/30 cursor-pointer ring-offset-background hover:scale-105 active:scale-95 transition-all" title="Emerald Theme"></button>
+                  <button type="button" data-avatar-theme="blue" class="avatar-theme-btn w-6 h-6 rounded-full bg-blue-500 border border-blue-500/30 cursor-pointer ring-offset-background hover:scale-105 active:scale-95 transition-all" title="Blue Theme"></button>
+                  <button type="button" data-avatar-theme="indigo" class="avatar-theme-btn w-6 h-6 rounded-full bg-indigo-500 border border-indigo-500/30 cursor-pointer ring-offset-background hover:scale-105 active:scale-95 transition-all" title="Indigo Theme"></button>
+                  <button type="button" data-avatar-theme="rose" class="avatar-theme-btn w-6 h-6 rounded-full bg-rose-500 border border-rose-500/30 cursor-pointer ring-offset-background hover:scale-105 active:scale-95 transition-all" title="Rose Theme"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL NAME FIELD -->
+          <div class="space-y-1.5">
+            <label for="profile-input-name" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Full Name</label>
+            <input type="text" id="profile-input-name" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Full name" required />
+          </div>
+
+          <!-- USERNAME FIELD -->
+          <div class="space-y-1.5">
+            <label for="profile-input-username" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Username</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs text-muted-foreground font-semibold">@</span>
+              <input type="text" id="profile-input-username" class="w-full pl-7 pr-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="username" />
+            </div>
+          </div>
+
+          <!-- BIO FIELD -->
+          <div class="space-y-1.5">
+            <label for="profile-input-bio" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Bio</label>
+            <textarea id="profile-input-bio" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium placeholder:text-muted-foreground/50 transition-all shadow-3xs h-16 resize-none" placeholder="Write a short summary about your trading style..."></textarea>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-2 bg-primary text-primary-foreground hover:bg-primary/95 font-bold text-xs rounded-md transition-colors shadow-2xs cursor-pointer">
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 2: SECURITY & LOGIN -->
+      <div id="tab-security" class="profile-tab-content space-y-5 hidden">
+        <div>
+          <h3 class="text-sm font-bold text-foreground">Security & Password</h3>
+          <p class="text-[11px] text-muted-foreground mt-1 leading-normal font-medium">Update your login password to secure your account credentials.</p>
+        </div>
+
+        <form id="profile-security-form" class="space-y-4">
+          <!-- EMAIL FIELD (DISABLED) -->
+          <div class="space-y-1.5">
+            <label for="profile-input-email" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Registered Email</label>
+            <input type="email" id="profile-input-email" class="w-full px-3 py-2 text-xs bg-muted/60 border border-border rounded-md text-muted-foreground/80 cursor-not-allowed font-semibold select-all" readonly />
+            <p class="text-[9px] text-muted-foreground font-medium mt-0.5">Contact support to change your account email address.</p>
+          </div>
+
+          <div class="border-b border-border/40 my-3"></div>
+
+          <!-- CURRENT PASSWORD -->
+          <div class="space-y-1.5">
+            <label for="profile-input-curpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Current Password</label>
+            <input type="password" id="profile-input-curpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Old password" />
+          </div>
+
+          <!-- NEW PASSWORD -->
+          <div class="space-y-1.5">
+            <label for="profile-input-newpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">New Password</label>
+            <input type="password" id="profile-input-newpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Minimum 8 characters" />
+          </div>
+
+          <!-- CONFIRM PASSWORD -->
+          <div class="space-y-1.5">
+            <label for="profile-input-confpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Confirm New Password</label>
+            <input type="password" id="profile-input-confpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Verify your password" />
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-2 bg-primary text-primary-foreground hover:bg-primary/95 font-bold text-xs rounded-md transition-colors shadow-2xs cursor-pointer">
+              Update Password
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 3: PREFERENCES -->
+      <div id="tab-preferences" class="profile-tab-content space-y-5 hidden">
+        <div>
+          <h3 class="text-sm font-bold text-foreground">Preferences</h3>
+          <p class="text-[11px] text-muted-foreground mt-1 leading-normal font-medium">Configure regional formats and notification parameters.</p>
+        </div>
+
+        <form id="profile-preferences-form" class="space-y-4">
+          <!-- REGIONAL BLOCK -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label for="pref-currency" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Default Currency</label>
+              <select id="pref-currency" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold cursor-pointer select-none">
+                <option value="INR">INR (₹)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="NPR">NPR (Rs)</option>
+              </select>
+            </div>
+            
+            <div class="space-y-1.5">
+              <label for="pref-language" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Language</label>
+              <select id="pref-language" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold cursor-pointer select-none">
+                <option value="en">English</option>
+                <option value="np">Nepalese</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="border-b border-border/40 my-3"></div>
+
+          <!-- NOTIFICATION TOGGLES (SHADCN SWITCH COMPONENT MOCKS) -->
+          <div class="space-y-3.5">
+            <label class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">Notification Settings</label>
+            
+            <!-- Switch 1 -->
+            <div class="flex items-center justify-between p-2.5 rounded-lg border border-border/30 bg-muted/10">
+              <div>
+                <p class="text-xs font-bold text-foreground leading-none">Weekly Trade Recap</p>
+                <p class="text-[9px] text-muted-foreground mt-1 leading-tight font-medium">Receive weekly trading performance insights by email.</p>
+              </div>
+              <button type="button" id="switch-trade-recap" data-state="true" class="pref-switch relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-primary transition-colors focus-visible:outline-hidden" role="switch">
+                <span class="pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xs transition-transform translate-x-4"></span>
+              </button>
+            </div>
+
+            <!-- Switch 2 -->
+            <div class="flex items-center justify-between p-2.5 rounded-lg border border-border/30 bg-muted/10">
+              <div>
+                <p class="text-xs font-bold text-foreground leading-none">Course Updates</p>
+                <p class="text-[9px] text-muted-foreground mt-1 leading-tight font-medium">Get notifications about newly launched training lessons.</p>
+              </div>
+              <button type="button" id="switch-course-update" data-state="true" class="pref-switch relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-primary transition-colors focus-visible:outline-hidden" role="switch">
+                <span class="pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xs transition-transform translate-x-4"></span>
+              </button>
+            </div>
+
+            <!-- Switch 3 -->
+            <div class="flex items-center justify-between p-2.5 rounded-lg border border-border/30 bg-muted/10">
+              <div>
+                <p class="text-xs font-bold text-foreground leading-none">Account Alerts</p>
+                <p class="text-[9px] text-muted-foreground mt-1 leading-tight font-medium">Receive email notifications for logins from unrecognized devices.</p>
+              </div>
+              <button type="button" id="switch-account-alerts" data-state="true" class="pref-switch relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-primary transition-colors focus-visible:outline-hidden" role="switch">
+                <span class="pointer-events-none block h-4 w-4 rounded-full bg-background shadow-xs transition-transform translate-x-4"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-2 bg-primary text-primary-foreground hover:bg-primary/95 font-bold text-xs rounded-md transition-colors shadow-2xs cursor-pointer">
+              Save Preferences
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  import { authClient } from "../../lib/auth-client";
+  import { toast } from "../../lib/dashboard-store";
+
+  // Elements
+  const overlay = document.getElementById("profile-settings-overlay")!;
+  const content = document.getElementById("profile-settings-content")!;
+  const closeBtn = document.getElementById("profile-settings-close-btn")!;
+
+  // Account settings triggers (both Sidebar & Topbar Account buttons)
+  const triggers = [
+    "sidebar-account-btn",
+    "topbar-account-btn",
+    "topbar-settings-btn"
+  ];
+
+  // Forms and Inputs
+  const profileDetailsForm = document.getElementById("profile-details-form") as HTMLFormElement;
+  const profileInputName = document.getElementById("profile-input-name") as HTMLInputElement;
+  const profileInputUsername = document.getElementById("profile-input-username") as HTMLInputElement;
+  const profileInputBio = document.getElementById("profile-input-bio") as HTMLTextAreaElement;
+  const avatarPreview = document.getElementById("avatar-preview-circle")!;
+
+  const securityForm = document.getElementById("profile-security-form") as HTMLFormElement;
+  const profileInputEmail = document.getElementById("profile-input-email") as HTMLInputElement;
+  const currentPasswordInput = document.getElementById("profile-input-curpass") as HTMLInputElement;
+  const newPasswordInput = document.getElementById("profile-input-newpass") as HTMLInputElement;
+  const confirmPasswordInput = document.getElementById("profile-input-confpass") as HTMLInputElement;
+
+  const preferencesForm = document.getElementById("profile-preferences-form") as HTMLFormElement;
+  const currencySelect = document.getElementById("pref-currency") as HTMLSelectElement;
+  const languageSelect = document.getElementById("pref-language") as HTMLSelectElement;
+
+  // Active theme track
+  let selectedAvatarTheme = localStorage.getItem("profile-avatar-theme") || "default";
+
+  // Modal open / close animations
+  function openSettings() {
+    overlay.classList.remove("hidden");
+    overlay.classList.add("flex");
+    
+    // Close other dropdowns
+    document.getElementById("top-profile-dropdown")?.classList.add("hidden");
+    document.getElementById("profile-dropup-menu")?.classList.add("hidden");
+    document.getElementById("invite-earn-dropdown")?.classList.add("hidden");
+    document.getElementById("notifications-dropdown")?.classList.add("hidden");
+    
+    void overlay.offsetWidth; // force reflow
+    content.classList.remove("scale-95", "opacity-0");
+    content.classList.add("scale-100", "opacity-100");
+
+    // Populate current session state
+    loadSessionDetails();
+  }
+
+  function closeSettings() {
+    content.classList.remove("scale-100", "opacity-100");
+    content.classList.add("scale-95", "opacity-0");
+    setTimeout(() => {
+      overlay.classList.add("hidden");
+      overlay.classList.remove("flex");
+    }, 200);
+  }
+
+  // Load actual user session details
+  async function loadSessionDetails() {
+    try {
+      const { data: session } = await authClient.getSession();
+      if (session?.user) {
+        const user = session.user;
+        profileInputName.value = user.name || "";
+        profileInputEmail.value = user.email || "";
+        
+        // Initials fallback
+        const initials = (user.name || "H").split(" ").map((n: string) => n[0]).join("").toUpperCase();
+        avatarPreview.textContent = initials;
+
+        // Custom bio and username (restore from localStorage as extension properties)
+        profileInputUsername.value = localStorage.getItem(`profile-username-${user.id}`) || "";
+        profileInputBio.value = localStorage.getItem(`profile-bio-${user.id}`) || "";
+
+        // Highlight selected theme
+        applyAvatarThemeColor(selectedAvatarTheme, initials);
+      }
+    } catch (e) {
+      console.error("Could not fetch user session for settings", e);
+    }
+  }
+
+  // Helper to handle avatar preview colors
+  function applyAvatarThemeColor(theme: string, initials: string) {
+    // Reset background classes
+    avatarPreview.className = "w-12 h-12 rounded-full text-white font-bold text-sm flex items-center justify-center border shadow-2xs shrink-0 select-none transition-all duration-300";
+    
+    if (theme === "emerald") {
+      avatarPreview.classList.add("bg-gradient-to-br", "from-emerald-400", "to-teal-500", "border-emerald-500/20");
+    } else if (theme === "blue") {
+      avatarPreview.classList.add("bg-gradient-to-br", "from-blue-400", "to-indigo-500", "border-blue-500/20");
+    } else if (theme === "indigo") {
+      avatarPreview.classList.add("bg-gradient-to-br", "from-indigo-400", "to-purple-500", "border-indigo-500/20");
+    } else if (theme === "rose") {
+      avatarPreview.classList.add("bg-gradient-to-br", "from-rose-400", "to-pink-500", "border-rose-500/20");
+    } else {
+      avatarPreview.classList.add("bg-primary", "border-primary/20");
+    }
+    
+    avatarPreview.textContent = initials;
+  }
+
+  // Set up triggers listeners
+  triggers.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        openSettings();
+      });
+    }
+  });
+
+  closeBtn.addEventListener("click", closeSettings);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeSettings();
+  });
+
+  // TABS SWITCHER LOGIC
+  const tabTriggers = document.querySelectorAll(".profile-tab-trigger") as NodeListOf<HTMLButtonElement>;
+  const tabContents = document.querySelectorAll(".profile-tab-content") as NodeListOf<HTMLElement>;
+
+  tabTriggers.forEach(trigger => {
+    trigger.addEventListener("click", () => {
+      const targetTabId = trigger.getAttribute("data-tab")!;
+      
+      // Update triggers states
+      tabTriggers.forEach(t => {
+        t.classList.remove("active", "font-bold", "text-foreground", "bg-muted/80");
+        t.classList.add("text-muted-foreground", "font-semibold");
+      });
+      trigger.classList.add("active", "font-bold", "text-foreground", "bg-muted/80");
+      trigger.classList.remove("text-muted-foreground", "font-semibold");
+
+      // Update contents
+      tabContents.forEach(content => {
+        if (content.id === targetTabId) {
+          content.classList.remove("hidden");
+        } else {
+          content.classList.add("hidden");
+        }
+      });
+    });
+  });
+
+  // AVATAR THEME BUTTONS
+  const themeBtns = document.querySelectorAll(".avatar-theme-btn") as NodeListOf<HTMLButtonElement>;
+  themeBtns.forEach(btn => {
+    const theme = btn.getAttribute("data-avatar-theme")!;
+    btn.addEventListener("click", () => {
+      selectedAvatarTheme = theme;
+      localStorage.setItem("profile-avatar-theme", theme);
+      const initials = avatarPreview.textContent || "H";
+      applyAvatarThemeColor(theme, initials);
+      
+      // Trigger instant UI reflections across any page avatar containers
+      updateGlobalAvatars(theme, initials);
+    });
+  });
+
+  function updateGlobalAvatars(theme: string, initials: string) {
+    const fallbacks = ["avatar-fallback", "top-avatar-fallback", "top-dropdown-avatar-fallback"];
+    fallbacks.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.className = "rounded-full text-white font-bold flex items-center justify-center shrink-0 text-xs shadow-sm select-none transition-all duration-300";
+        // Map styling sizes and layout
+        if (id === "top-dropdown-avatar-fallback") {
+          el.className += " w-10 h-10 border border-primary/20 text-sm";
+        } else {
+          el.className += " w-8 h-8 border border-primary/20";
+        }
+
+        // Apply theme styles
+        if (theme === "emerald") {
+          el.classList.add("bg-gradient-to-br", "from-emerald-400", "to-teal-500");
+        } else if (theme === "blue") {
+          el.classList.add("bg-gradient-to-br", "from-blue-400", "to-indigo-500");
+        } else if (theme === "indigo") {
+          el.classList.add("bg-gradient-to-br", "from-indigo-400", "to-purple-500");
+        } else if (theme === "rose") {
+          el.classList.add("bg-gradient-to-br", "from-rose-400", "to-pink-500");
+        } else {
+          el.classList.add("bg-primary");
+        }
+        el.textContent = initials;
+      }
+    });
+  }
+
+  // PROFILE DETAILS FORM SUBMIT
+  profileDetailsForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const newName = profileInputName.value.trim();
+    if (!newName) return;
+
+    try {
+      const { error } = await authClient.updateUser({ name: newName });
+      if (error) {
+        toast.error(error.message || "Could not update profile name.");
+        return;
+      }
+
+      // Save bio/username locally (since standard table does not house them by default)
+      const sessionRes = await authClient.getSession();
+      const userId = sessionRes.data?.user?.id;
+      if (userId) {
+        localStorage.setItem(`profile-username-${userId}`, profileInputUsername.value.trim());
+        localStorage.setItem(`profile-bio-${userId}`, profileInputBio.value.trim());
+      }
+
+      // Update name values on page
+      const nameElements = ["profile-name", "top-profile-name"];
+      nameElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = newName;
+      });
+
+      const menuUser = document.getElementById("menu-user-name");
+      if (menuUser) menuUser.textContent = newName;
+
+      // Update initials globally
+      const initials = newName.split(" ").map(n => n[0]).join("").toUpperCase();
+      updateGlobalAvatars(selectedAvatarTheme, initials);
+
+      toast.success("Profile details saved successfully.");
+    } catch (err: any) {
+      toast.error(err.message || "An unexpected error occurred.");
+    }
+  });
+
+  // SECURITY FORM SUBMIT
+  securityForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const currentPassword = currentPasswordInput.value;
+    const newPassword = newPasswordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error("Please fill in all password fields.");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      toast.error("New password must be at least 8 characters long.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("New password and confirmation password do not match.");
+      return;
+    }
+
+    try {
+      const { error } = await authClient.changePassword({
+        currentPassword,
+        newPassword,
+        revokeOtherSessions: true
+      });
+
+      if (error) {
+        toast.error(error.message || "Could not change password.");
+        return;
+      }
+
+      currentPasswordInput.value = "";
+      newPasswordInput.value = "";
+      confirmPasswordInput.value = "";
+
+      toast.success("Password changed successfully.");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update your account password.");
+    }
+  });
+
+  // PREFERENCES FORM SUBMIT & SWITCHES
+  const prefSwitches = document.querySelectorAll(".pref-switch") as NodeListOf<HTMLButtonElement>;
+  prefSwitches.forEach(sw => {
+    // Load initial switches values
+    const prefId = sw.id;
+    const storedVal = localStorage.getItem(prefId) !== "false"; // default to true
+    sw.setAttribute("data-state", storedVal ? "true" : "false");
+    
+    const span = sw.querySelector("span")!;
+    if (storedVal) {
+      sw.classList.remove("bg-muted");
+      sw.classList.add("bg-primary");
+      span.classList.add("translate-x-4");
+      span.classList.remove("translate-x-0");
+    } else {
+      sw.classList.remove("bg-primary");
+      sw.classList.add("bg-muted");
+      span.classList.add("translate-x-0");
+      span.classList.remove("translate-x-4");
+    }
+
+    // Toggle click handler
+    sw.addEventListener("click", () => {
+      const state = sw.getAttribute("data-state") === "true";
+      const newState = !state;
+      sw.setAttribute("data-state", newState ? "true" : "false");
+      localStorage.setItem(prefId, newState ? "true" : "false");
+
+      if (newState) {
+        sw.classList.remove("bg-muted");
+        sw.classList.add("bg-primary");
+        span.classList.add("translate-x-4");
+        span.classList.remove("translate-x-0");
+      } else {
+        sw.classList.remove("bg-primary");
+        sw.classList.add("bg-muted");
+        span.classList.add("translate-x-0");
+        span.classList.remove("translate-x-4");
+      }
+    });
+  });
+
+  // Load select dropdowns values
+  const storedCurrency = localStorage.getItem("pref-currency") || "INR";
+  const storedLang = localStorage.getItem("pref-language") || "en";
+  currencySelect.value = storedCurrency;
+  languageSelect.value = storedLang;
+
+  preferencesForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    localStorage.setItem("pref-currency", currencySelect.value);
+    localStorage.setItem("pref-language", languageSelect.value);
+    toast.success("Preferences updated successfully.");
+  });
+
+  // Run on first load to fetch avatar theme
+  const initialTheme = localStorage.getItem("profile-avatar-theme") || "default";
+  setTimeout(async () => {
+    const { data: session } = await authClient.getSession();
+    if (session?.user) {
+      const initials = (session.user.name || "H").split(" ").map(n => n[0]).join("").toUpperCase();
+      updateGlobalAvatars(initialTheme, initials);
+    }
+  }, 1000);
+</script>

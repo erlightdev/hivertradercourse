@@ -15,6 +15,7 @@ import BlogEditorView from "../components/blog/BlogEditorView.astro";
 import SeoSheet from "../components/blog/SeoSheet.astro";
 import BlogCategoriesView from "../components/blog/BlogCategoriesView.astro";
 import BlogTagsView from "../components/blog/BlogTagsView.astro";
+import ProfileSettingsModal from "../components/dashboard/ProfileSettingsModal.astro";
 ---
 
 <Layout title="Dashboard - Hiver" hideHeader={true}>
@@ -107,6 +108,8 @@ import BlogTagsView from "../components/blog/BlogTagsView.astro";
   <CreateCourseModal />
 
   <SeoSheet />
+
+  <ProfileSettingsModal />
 </Layout>
 
 <!-- Core Styles Overrides -->
