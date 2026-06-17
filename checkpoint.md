@@ -70,10 +70,15 @@ To keep codebase maintenance high and maintain a modular design, the monolithic 
 - **Preferences Tab**: Configures local storage preferences (e.g., auto-save intervals, sidebar layout modes).
 - **Security Tab**: Facilitates secure password updates. Accommodates users who signed up with passwordless OTP by allowing them to create a password for the first time.
 
-### 3.5. Group Chat UI (`apps/web/src/components/chat/ChatView.astro`)
-- Compact Messenger-style borderless bubbles.
-- Features a deterministic sender background color generator, guaranteeing color persistence for each user.
-- Utilizes `emoji-picker-element` inside a compact, floating input pill popover.
+### 3.5. Group Chat UI & Ably Integration (`apps/web/src/components/chat/ChatView.astro`)
+- Compact Messenger-style borderless bubbles with a deterministic sender background color tint generator.
+- Utilizes `emoji-picker-element` inside a floating popover alongside trade-emoji quick trays.
+- **WebSocket Streaming with Ably Chat:** Connected to Ably's global mesh network using the authenticated user's email as `clientId` for fully-tracked, high-scale chat rooms.
+- **Secure Token Authentication:** Employs a secure token exchange protocol where client-side Ably Chat initializes via an `authCallback` to a backend Hono endpoint (`/api/chat/auth`). The endpoint validates the user's active Better Auth session before signing a short-lived Ably Token Request using the `ABLY_API_KEY` (root API key), preventing API key exposure and bypassing browser basic-auth dialogs.
+- **Dynamic Messages & Versioning:** Real-time messages are created, updated, and deleted seamlessly using official Ably events (`message.created`, `message.updated`, `message.deleted`) to ensure instant real-time synchronization. Metadata payloads transfer roles, avatars, and display names perfectly.
+- **Historical Back-population:** Resolves the last 30 messages from historical persistence on load, guaranteeing context is preserved immediately when joining the desk.
+- **Live Presence Set Tracking:** Subscribes to member enters, leaves, and status updates, dynamically syncing the "online count" in the room header.
+- **Typing Indicator Overlay:** Captures keystrokes and broadcasts typing statuses, displaying responsive `[Name] is typing...` or `[X] people are typing...` labels right above the input pill.
 - Layout height is constrained to `h-[calc(100vh-11.5rem)]` and top-navigation elements are optimized to ensure full responsiveness without viewport spillages.
 
 ---
@@ -114,5 +119,4 @@ Better Auth pre-creates credential rows with a temporary `tempPassword` for OTP 
 ## 7. Next Steps
 
 - Implement dashboard panels for **Courses**, **Analytics**, **Projects**, and **1:1 Live Sessions** (scaffolding inside `apps/web/src/components/` is ready).
-- Polish chat layouts and add real-time WebSocket integrations.
 - Set up automated testing pipelines.

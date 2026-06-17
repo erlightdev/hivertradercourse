@@ -4,6 +4,7 @@ import { env } from "@hivertradercourse/env/server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import * as Ably from "ably";
 
 const app = new Hono();
 
@@ -644,6 +645,44 @@ app.delete("/api/tags/:id", async (c) => {
 		return c.json({ success: true });
 	} catch (e: any) {
 		return c.json({ error: e.message || "Could not delete tag" }, 500);
+	}
+});
+
+let ablyRestClient: Ably.Rest | null = null;
+const getAblyClient = () => {
+	if (!ablyRestClient) {
+		ablyRestClient = new Ably.Rest({ key: env.ABLY_API_KEY });
+	}
+	return ablyRestClient;
+};
+
+app.get("/api/chat/auth", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const clientId = user.email || user.id || "anonymous-user";
+	try {
+		const client = getAblyClient();
+		const tokenRequest = await client.auth.createTokenRequest({ clientId });
+		return c.json(tokenRequest);
+	} catch (e: any) {
+		console.error("Failed to generate Ably token:", e);
+		return c.json({ error: e.message || "Failed to generate token" }, 500);
+	}
+});
+
+app.post("/api/chat/auth", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const clientId = user.email || user.id || "anonymous-user";
+	try {
+		const client = getAblyClient();
+		const tokenRequest = await client.auth.createTokenRequest({ clientId });
+		return c.json(tokenRequest);
+	} catch (e: any) {
+		console.error("Failed to generate Ably token:", e);
+		return c.json({ error: e.message || "Failed to generate token" }, 500);
 	}
 });
 

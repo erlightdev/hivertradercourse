@@ -5,6 +5,7 @@ export const env = createEnv({
 	clientPrefix: "PUBLIC_",
 	client: {
 		PUBLIC_SERVER_URL: z.url(),
+		PUBLIC_ABLY_KEY: z.string().min(1),
 	},
 	runtimeEnv: (
 		import.meta as unknown as { env: Record<string, string | undefined> }

@@ -14,6 +14,11 @@ export default defineConfig({
 				context: "client",
 				default: "http://localhost:3000",
 			}),
+			PUBLIC_ABLY_KEY: envField.string({
+				access: "public",
+				context: "client",
+				default: "FSYahw.vYdeVA:-l719D4Gw6iZHNqoWbZsoECWcqA--7ycUirkjkBr06Y",
+			}),
 		},
 	},
 	vite: {

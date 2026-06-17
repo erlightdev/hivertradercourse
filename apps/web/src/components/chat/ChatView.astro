@@ -15,7 +15,7 @@
           <h2 class="font-extrabold text-sm md:text-base text-foreground tracking-tight leading-none">Global Trading Desk</h2>
           <span class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-bold border border-emerald-500/15 leading-none select-none ml-1 shrink-0">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-            14 online
+            <span id="online-count">Connecting...</span>
           </span>
         </div>
         <p class="text-[10px] text-muted-foreground mt-1.5 font-medium truncate hidden sm:block">Public community discussions and live option flow forecasts</p>
@@ -41,6 +41,11 @@
       <button type="button" data-emoji="📊 Chart Set" class="quick-emoji-btn px-2.5 py-1 bg-muted/20 hover:bg-muted border border-border/40 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">📊 Chart Set</button>
       <button type="button" data-emoji="💸 Decay" class="quick-emoji-btn px-2.5 py-1 bg-muted/20 hover:bg-muted border border-border/40 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">💸 Decay</button>
       <button type="button" data-emoji="🐋 Whale Order" class="quick-emoji-btn px-2.5 py-1 bg-muted/20 hover:bg-muted border border-border/40 text-[10px] font-bold text-foreground rounded-full transition-all cursor-pointer shadow-3xs hover:scale-105 active:scale-95 shrink-0">🐋 Whale</button>
+    </div>
+
+    <!-- TYPING INDICATOR -->
+    <div class="max-w-3xl mx-auto w-full px-4 h-4">
+      <p id="chat-typing-indicator" class="text-[11px] text-muted-foreground/60 italic opacity-0 transition-opacity duration-200 font-semibold"></p>
     </div>
 
     <!-- ChatGPT STYLE INPUT BOX -->
@@ -78,6 +83,9 @@
 
 <script>
   import "emoji-picker-element";
+  import * as Ably from 'ably';
+  import { ChatClient } from '@ably/chat';
+  import { PUBLIC_ABLY_KEY, PUBLIC_SERVER_URL } from 'astro:env/client';
   import { authClient } from "../../lib/auth-client";
   import { toast } from "../../lib/dashboard-store";
 
@@ -91,7 +99,13 @@
 
   let myName = "Hiver";
   let myInitials = "H";
+  let myEmail = "";
   let avatarColorClass = "bg-primary";
+
+  // Ably References
+  let realtimeClient: Ably.Realtime | null = null;
+  let chatClient: ChatClient | null = null;
+  let room: any = null;
 
   // Messages Database
   type Msg = {
@@ -105,19 +119,15 @@
     isMe: boolean;
   };
 
-  const messages: Msg[] = [
-    { id: "1", sender: "Hiver", role: "Admin", avatar: "H", avatarColor: "bg-primary", text: "Welcome everyone to the HiverLMS Group Chat! This is your live trading desk floor. Discuss charts, option chains, breakouts, and general market setups.", time: "10:30 AM", isMe: false },
-    { id: "2", sender: "Prakash Nayak", role: "Trader", avatar: "PN", avatarColor: "bg-emerald-500", text: "Nifty options open interest shows strong put writing defending the 22,000 zone. Breakout targets look solid around 22,120 index level. Anyone in call options?", time: "10:32 AM", isMe: false },
-    { id: "3", sender: "Amber Bull", avatar: "AB", avatarColor: "bg-amber-500", text: "Already in! Bought 22,000 CE calls during the morning dip. Volume pattern on the 15-minute timeframe is verifying strong bullish continuation.", time: "10:35 AM", isMe: false },
-    { id: "4", sender: "Emerald Bear", avatar: "EB", avatarColor: "bg-teal-500", text: "Nice entry. Deciding to sell weekly options straddles. Premium decay is looking premium today.", time: "10:39 AM", isMe: false }
-  ];
+  let messages: Msg[] = [];
 
-  // Fetch active user session
+  // Fetch active user session & Bootstrap Ably
   async function loadUser() {
     try {
       const { data: session } = await authClient.getSession();
       if (session?.user) {
         myName = session.user.name || "Hiver";
+        myEmail = session.user.email || "";
         myInitials = myName.split(" ").map(n => n[0]).join("").toUpperCase();
 
         // Retrieve current avatar theme color to match settings
@@ -140,9 +150,197 @@
           el.className = `chat-my-avatar w-9 h-9 rounded-full text-white font-bold text-xs flex items-center justify-center shrink-0 border border-primary/25 shadow-xs select-none ${avatarColorClass}`;
           el.textContent = myInitials;
         });
+
+        // Initialize Ably Chat once we have the user identity
+        await initAbly(myEmail || session.user.id || "anonymous-user");
       }
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  // Initialize Ably Realtime and Ably Chat SDK
+  async function initAbly(clientId: string) {
+    if (realtimeClient) return;
+
+    try {
+      realtimeClient = new Ably.Realtime({
+        authCallback: async (tokenParams, callback) => {
+          try {
+            const res = await fetch(`${PUBLIC_SERVER_URL}/api/chat/auth`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(tokenParams),
+              credentials: 'include'
+            });
+            if (!res.ok) {
+              throw new Error('System authentication failed');
+            }
+            const tokenRequest = await res.json();
+            callback(null, tokenRequest);
+          } catch (err: any) {
+            console.error('Ably authCallback error:', err);
+            callback(err, null);
+          }
+        },
+        clientId: clientId,
+      });
+
+      realtimeClient.connection.on("connected", () => {
+        console.log("Ably Chat connection established.");
+      });
+
+      realtimeClient.connection.on("failed", (err) => {
+        console.error("Ably Chat connection failed:", err);
+        toast.error("Failed to connect to real-time server.");
+      });
+
+      chatClient = new ChatClient(realtimeClient);
+      room = await chatClient.rooms.get("global-trading-desk");
+
+      await room.attach();
+
+      // Clear static dummy list to replace with live/history
+      messages.length = 0;
+
+      // Subscribe to live room messages
+      const { historyBeforeSubscribe } = room.messages.subscribe((event: any) => {
+        handleIncomingMessage(event);
+      });
+
+      // Fetch message history for the room (up to 30 messages)
+      try {
+        const historicalMessages = await historyBeforeSubscribe({ limit: 30 });
+        if (historicalMessages && historicalMessages.items) {
+          const sortedItems = [...historicalMessages.items].reverse();
+          sortedItems.forEach((msg: any) => {
+            messages.push(mapAblyMessageToMsg(msg));
+          });
+          renderMessages();
+        }
+      } catch (histError) {
+        console.error("Failed to load history, falling back to empty state:", histError);
+        renderMessages();
+      }
+
+      // Enter the presence set so we are visible to others
+      await room.presence.enter({
+        sender: myName,
+        avatar: myInitials,
+        avatarColor: avatarColorClass,
+        role: myEmail === 'admin@hiver.com' ? 'Admin' : 'Trader'
+      });
+
+      // Listen to presence events to track active participants
+      room.presence.subscribe(() => {
+        updateOnlineCount();
+      });
+
+      // Run initial online count update
+      updateOnlineCount();
+
+      // Subscribe to typing events
+      room.typing.subscribe((event: any) => {
+        updateTypingIndicator(event);
+      });
+
+    } catch (err) {
+      console.error("Ably Chat setup error:", err);
+    }
+  }
+
+  // Map Ably Message to our internal UI Msg representation
+  function mapAblyMessageToMsg(message: any): Msg {
+    const metadata = message.metadata || {};
+    const isMe = message.clientId === (realtimeClient?.auth?.clientId || myEmail);
+    return {
+      id: message.serial,
+      sender: metadata.sender || message.clientId || "Anonymous",
+      role: metadata.role || (message.clientId === 'admin@hiver.com' ? 'Admin' : undefined),
+      avatar: metadata.avatar || "U",
+      avatarColor: metadata.avatarColor || "bg-primary",
+      text: message.text || "",
+      time: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isMe
+    };
+  }
+
+  // Handle incoming message events (Create, Update, Delete)
+  function handleIncomingMessage(event: any) {
+    const type = event.type;
+    switch (type) {
+      case "message.created": {
+        const newMsg = mapAblyMessageToMsg(event.message);
+        if (!messages.some(m => m.id === newMsg.id)) {
+          messages.push(newMsg);
+          if (messages.length > 100) {
+            messages.shift();
+          }
+          renderMessages();
+        }
+        break;
+      }
+      case "message.updated": {
+        const idx = messages.findIndex(m => m.id === event.message.serial);
+        if (idx !== -1) {
+          const oldMsg = messages[idx];
+          if (!event.message.version || event.message.version.serial > (oldMsg as any).versionSerial) {
+            messages[idx] = mapAblyMessageToMsg(event.message);
+            renderMessages();
+          }
+        }
+        break;
+      }
+      case "message.deleted": {
+        messages = messages.filter(m => m.id !== event.message.serial);
+        renderMessages();
+        break;
+      }
+    }
+  }
+
+  // Update dynamic header text with actual number of present users
+  async function updateOnlineCount() {
+    if (!room) return;
+    try {
+      const presentMembers = await room.presence.get();
+      const uniqueClients = new Set();
+      presentMembers.forEach((member: any) => {
+        uniqueClients.add(member.clientId);
+      });
+
+      const count = uniqueClients.size;
+      const countEl = document.getElementById("online-count");
+      if (countEl) {
+        countEl.textContent = `${count} online`;
+      }
+    } catch (err) {
+      console.error("Error retrieving presence count:", err);
+    }
+  }
+
+  // Update typing indicator box above input pill
+  function updateTypingIndicator(event: any) {
+    const indicatorEl = document.getElementById("chat-typing-indicator");
+    if (!indicatorEl) return;
+
+    const otherTypers = (event.currentTypers || []).filter(
+      (typer: any) => typer.clientId !== (realtimeClient?.auth?.clientId || myEmail)
+    );
+
+    if (otherTypers.length === 0) {
+      indicatorEl.textContent = "";
+      indicatorEl.classList.add("opacity-0");
+    } else if (otherTypers.length === 1) {
+      const rawName = otherTypers[0].clientId.split("@")[0] || "Someone";
+      const name = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+      indicatorEl.textContent = `${name} is typing...`;
+      indicatorEl.classList.remove("opacity-0");
+    } else {
+      indicatorEl.textContent = `${otherTypers.length} people are typing...`;
+      indicatorEl.classList.remove("opacity-0");
     }
   }
 
@@ -220,24 +418,50 @@
   }
 
   // Handle send message
-  inputForm.addEventListener("submit", (e) => {
+  inputForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = msgInput.value.trim();
     if (!text) return;
 
-    const newMsg: Msg = {
-      id: Date.now().toString(),
-      sender: myName,
-      avatar: myInitials,
-      avatarColor: avatarColorClass,
-      text,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      isMe: true
-    };
-
-    messages.push(newMsg);
     msgInput.value = "";
-    renderMessages();
+
+    if (room) {
+      try {
+        await room.messages.send({
+          text,
+          metadata: {
+            sender: myName,
+            avatar: myInitials,
+            avatarColor: avatarColorClass,
+            role: myEmail === 'admin@hiver.com' ? 'Admin' : 'Trader'
+          }
+        });
+        room.typing.stop();
+      } catch (err) {
+        console.error("Failed to send message over Ably:", err);
+        toast.error("Failed to send message. Please try again.");
+      }
+    } else {
+      // Fallback local array
+      const newMsg: Msg = {
+        id: Date.now().toString(),
+        sender: myName,
+        avatar: myInitials,
+        avatarColor: avatarColorClass,
+        text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isMe: true
+      };
+      messages.push(newMsg);
+      renderMessages();
+    }
+  });
+
+  // Track keystrokes for typing status
+  msgInput.addEventListener("input", () => {
+    if (room) {
+      room.typing.keystroke();
+    }
   });
 
   // Quick trade emoji tray listener
@@ -248,46 +472,11 @@
       const emoji = btn.getAttribute("data-emoji")!;
       msgInput.value += (msgInput.value ? " " : "") + emoji;
       msgInput.focus();
+      if (room) {
+        room.typing.keystroke();
+      }
     });
   });
-
-  // Real-time Group Chat Simulation (Receives trading signals/tips from mock members over time)
-  const simulatedComments = [
-    { sender: "Reliance Speculator", avatar: "RS", avatarColor: "bg-blue-500", text: "Reliance is breaking out of its range! Solid bull candles on high volume. This should easily drag Nifty above 22,050." },
-    { sender: "Prakash Nayak", role: "Trader", avatar: "PN", avatarColor: "bg-emerald-500", text: "Closed remaining CE calls at +40%! Spectacular morning move. Taking a break now to avoid overtrading." },
-    { sender: "Emerald Bear", avatar: "EB", avatarColor: "bg-teal-500", text: "Just closed my straddles. Decay was massive in the first hour. Decent green profits today." },
-    { sender: "Rose Scalp", avatar: "RS", avatarColor: "bg-rose-500", text: "Look at the 15-minute chart of Nifty. Clean bull flag breakout. Targets are fully aligned for another leg up." },
-    { sender: "Sapphire Options", avatar: "SO", avatarColor: "bg-purple-500", text: "Open interest shows 22,100 has huge call writing. Unlikely to cross 22,100 in this session. Be cautious on longs there." }
-  ];
-
-  function startChatSimulation() {
-    setInterval(() => {
-      const chatView = document.getElementById("view-chat")!;
-      // Only simulate if chat view is active/visible
-      if (chatView.classList.contains("hidden")) return;
-
-      // Pick a random comment
-      const comment = simulatedComments[Math.floor(Math.random() * simulatedComments.length)];
-      
-      const newMsg = {
-        id: Date.now().toString(),
-        sender: comment.sender,
-        role: (comment as any).role,
-        avatar: comment.avatar,
-        avatarColor: comment.avatarColor,
-        text: comment.text,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isMe: false
-      };
-
-      // Append simulation message
-      if (messages.length > 30) {
-        messages.shift();
-      }
-      messages.push(newMsg);
-      renderMessages();
-    }, 20000); // simulation sends message every 20 seconds
-  }
 
   // Run on dashboard navigation triggers to sync details
   const chatNavBtn = document.getElementById("nav-chat");
@@ -298,7 +487,7 @@
     });
   }
 
-  // 3. Emoji Picker Toggle & Select Listeners
+  // Emoji Picker Toggle & Select Listeners
   if (emojiToggleBtn && emojiPickerContainer && emojiPickerElement) {
     emojiToggleBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -310,6 +499,9 @@
       const emojiUnicode = e.detail.unicode;
       msgInput.value += emojiUnicode;
       msgInput.focus();
+      if (room) {
+        room.typing.keystroke();
+      }
     });
 
     // Close on clicking outside
@@ -324,5 +516,4 @@
   // Load initially
   loadUser();
   renderMessages();
-  startChatSimulation();
 </script>

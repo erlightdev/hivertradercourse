@@ -19,6 +19,7 @@ export const env = createEnv({
 		SMTP_PASS: z.string().min(1),
 		GOOGLE_CLIENT_ID: z.string().min(1),
 		GOOGLE_CLIENT_SECRET: z.string().min(1),
+		ABLY_API_KEY: z.string().min(1),
 	},
 	runtimeEnv: process.env,
 	skipValidation: !!process.env.SKIP_ENV_VALIDATION,
