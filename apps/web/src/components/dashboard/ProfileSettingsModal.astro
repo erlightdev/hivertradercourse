@@ -136,19 +136,80 @@
           <!-- CURRENT PASSWORD -->
           <div id="current-password-container" class="space-y-1.5">
             <label for="profile-input-curpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Current Password</label>
-            <input type="password" id="profile-input-curpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Old password" />
+            <div class="relative">
+              <input type="password" id="profile-input-curpass" class="w-full pl-3 pr-10 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Old password" />
+              <button type="button" class="password-toggle-btn absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground cursor-pointer" aria-label="Toggle password visibility">
+                <svg class="eye-icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c3.79 0 7.27 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-3.79 0-7.27-2.943-9.542-7z" />
+                </svg>
+                <svg class="eye-off-icon w-4 h-4 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <!-- NEW PASSWORD -->
           <div class="space-y-1.5">
             <label id="new-password-label" for="profile-input-newpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">New Password</label>
-            <input type="password" id="profile-input-newpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Minimum 8 characters" />
+            <div class="relative">
+              <input type="password" id="profile-input-newpass" class="w-full pl-3 pr-10 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Minimum 8 characters" />
+              <button type="button" class="password-toggle-btn absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground cursor-pointer" aria-label="Toggle password visibility">
+                <svg class="eye-icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c3.79 0 7.27 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-3.79 0-7.27-2.943-9.542-7z" />
+                </svg>
+                <svg class="eye-off-icon w-4 h-4 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                </svg>
+              </button>
+            </div>
+            
+            <!-- PASSWORD STRENGTH METER -->
+            <div id="password-strength-container" class="mt-2.5 space-y-1.5 hidden">
+              <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <span>Password Strength</span>
+                <span id="password-strength-label" class="text-rose-500">Weak</span>
+              </div>
+              <div class="grid grid-cols-4 gap-1.5 h-1">
+                <div class="strength-bar-segment h-full rounded-full bg-muted transition-all duration-300"></div>
+                <div class="strength-bar-segment h-full rounded-full bg-muted transition-all duration-300"></div>
+                <div class="strength-bar-segment h-full rounded-full bg-muted transition-all duration-300"></div>
+                <div class="strength-bar-segment h-full rounded-full bg-muted transition-all duration-300"></div>
+              </div>
+              <ul class="text-[9px] text-muted-foreground/85 font-semibold space-y-1 mt-1.5 leading-normal">
+                <li id="req-length" class="flex items-center gap-1.5 text-rose-500/90 transition-colors">
+                  <span class="indicator-icon">✕</span>
+                  <span>At least 8 characters</span>
+                </li>
+                <li id="req-number" class="flex items-center gap-1.5 text-rose-500/90 transition-colors">
+                  <span class="indicator-icon">✕</span>
+                  <span>Contains numbers or symbols</span>
+                </li>
+                <li id="req-complexity" class="flex items-center gap-1.5 text-rose-500/90 transition-colors">
+                  <span class="indicator-icon">✕</span>
+                  <span>Contains uppercase & lowercase</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <!-- CONFIRM PASSWORD -->
           <div class="space-y-1.5">
             <label id="confirm-password-label" for="profile-input-confpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Confirm New Password</label>
-            <input type="password" id="profile-input-confpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Verify your password" />
+            <div class="relative">
+              <input type="password" id="profile-input-confpass" class="w-full pl-3 pr-10 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Verify your password" />
+              <button type="button" class="password-toggle-btn absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground cursor-pointer" aria-label="Toggle password visibility">
+                <svg class="eye-icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c3.79 0 7.27 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-3.79 0-7.27-2.943-9.542-7z" />
+                </svg>
+                <svg class="eye-off-icon w-4 h-4 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div class="pt-2">
@@ -533,6 +594,7 @@
         currentPasswordInput.value = "";
         newPasswordInput.value = "";
         confirmPasswordInput.value = "";
+        document.getElementById("password-strength-container")?.classList.add("hidden");
 
         userHasPassword = true;
 
@@ -583,6 +645,7 @@
         currentPasswordInput.value = "";
         newPasswordInput.value = "";
         confirmPasswordInput.value = "";
+        document.getElementById("password-strength-container")?.classList.add("hidden");
 
         toast.success("Password changed successfully.");
       } catch (err: any) {
@@ -632,6 +695,103 @@
       }
     });
   });
+
+  // 1. Password Visibility Toggle
+  const toggleButtons = document.querySelectorAll(".password-toggle-btn");
+  toggleButtons.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const input = btn.previousElementSibling as HTMLInputElement;
+      if (!input) return;
+
+      const eyeIcon = btn.querySelector(".eye-icon")!;
+      const eyeOffIcon = btn.querySelector(".eye-off-icon")!;
+
+      if (input.type === "password") {
+        input.type = "text";
+        eyeIcon.classList.add("hidden");
+        eyeOffIcon.classList.remove("hidden");
+      } else {
+        input.type = "password";
+        eyeOffIcon.classList.add("hidden");
+        eyeIcon.classList.remove("hidden");
+      }
+    });
+  });
+
+  // 2. Password Strength Meter
+  const strengthContainer = document.getElementById("password-strength-container")!;
+  const strengthLabel = document.getElementById("password-strength-label")!;
+  const strengthBars = document.querySelectorAll(".strength-bar-segment") as NodeListOf<HTMLDivElement>;
+
+  const reqLength = document.getElementById("req-length")!;
+  const reqNumber = document.getElementById("req-number")!;
+  const reqComplexity = document.getElementById("req-complexity")!;
+
+  if (newPasswordInput) {
+    newPasswordInput.addEventListener("input", () => {
+      const val = newPasswordInput.value;
+      if (!val) {
+        strengthContainer.classList.add("hidden");
+        return;
+      }
+
+      strengthContainer.classList.remove("hidden");
+
+      // Check rules
+      const hasLength = val.length >= 8;
+      const hasNumOrSymbol = /[0-9!@#$%^&*(),.?":{}|<>_+-]/.test(val);
+      const hasComplexity = /[a-z]/.test(val) && /[A-Z]/.test(val);
+
+      // Helper to update requirement list item UI
+      const updateRequirement = (el: HTMLElement, met: boolean) => {
+        const iconSpan = el.querySelector(".indicator-icon")!;
+        if (met) {
+          el.className = "flex items-center gap-1.5 text-emerald-500 transition-colors";
+          iconSpan.textContent = "✓";
+        } else {
+          el.className = "flex items-center gap-1.5 text-rose-500/90 transition-colors";
+          iconSpan.textContent = "✕";
+        }
+      };
+
+      updateRequirement(reqLength, hasLength);
+      updateRequirement(reqNumber, hasNumOrSymbol);
+      updateRequirement(reqComplexity, hasComplexity);
+
+      // Score evaluation (0 to 3)
+      let score = 0;
+      if (hasLength) score++;
+      if (hasNumOrSymbol) score++;
+      if (hasComplexity) score++;
+
+      // Update strength visual segments and labels
+      strengthBars.forEach(bar => {
+        bar.className = "strength-bar-segment h-full rounded-full bg-muted transition-all duration-300";
+      });
+
+      if (score === 1) {
+        strengthLabel.textContent = "Weak";
+        strengthLabel.className = "text-rose-500";
+        strengthBars[0].className = "strength-bar-segment h-full rounded-full bg-rose-500 transition-all duration-300";
+      } else if (score === 2) {
+        strengthLabel.textContent = "Medium";
+        strengthLabel.className = "text-amber-500";
+        strengthBars[0].className = "strength-bar-segment h-full rounded-full bg-amber-500 transition-all duration-300";
+        strengthBars[1].className = "strength-bar-segment h-full rounded-full bg-amber-500 transition-all duration-300";
+        strengthBars[2].className = "strength-bar-segment h-full rounded-full bg-amber-500 transition-all duration-300";
+      } else if (score === 3) {
+        strengthLabel.textContent = "Strong";
+        strengthLabel.className = "text-emerald-500";
+        strengthBars.forEach(bar => {
+          bar.className = "strength-bar-segment h-full rounded-full bg-emerald-500 transition-all duration-300";
+        });
+      } else {
+        strengthLabel.textContent = "Weak";
+        strengthLabel.className = "text-rose-500";
+      }
+    });
+  }
 
   // Load select dropdowns values
   const storedCurrency = localStorage.getItem("pref-currency") || "INR";
