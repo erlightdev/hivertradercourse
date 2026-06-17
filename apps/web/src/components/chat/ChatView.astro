@@ -193,9 +193,7 @@
                 <span class="text-[8px] text-muted-foreground/50 font-bold">${msg.time}</span>
                 <span class="text-[10px] font-bold text-foreground/80">You</span>
               </div>
-              <div class="px-3.5 py-1.5 rounded-2xl rounded-tr-none bg-gradient-to-b from-[#e88c73] via-[#df775b] to-[#c8664d] text-white text-[13px] font-semibold leading-snug shadow-3xs max-w-md whitespace-pre-wrap">
-                ${msg.text}
-              </div>
+              <div class="px-3.5 py-1.5 rounded-2xl rounded-tr-none bg-gradient-to-b from-[#e88c73] via-[#df775b] to-[#c8664d] text-white text-[13px] font-semibold leading-snug shadow-3xs max-w-md whitespace-pre-wrap">${msg.text}</div>
             </div>
             <div class="w-6.5 h-6.5 rounded-full ${msg.avatarColor} text-white text-[9px] font-bold flex items-center justify-center border border-primary/20 shadow-3xs select-none shrink-0">${msg.avatar}</div>
           </div>
@@ -209,9 +207,7 @@
                 ${msg.role ? `<span class="px-1 py-0.2 bg-primary/10 text-primary text-[6px] font-extrabold rounded uppercase leading-none border border-primary/10 shrink-0">${msg.role}</span>` : ""}
                 <span class="text-[8px] text-muted-foreground/50 font-bold">${msg.time}</span>
               </div>
-              <div class="px-3.5 py-1.5 rounded-2xl rounded-tl-none font-semibold text-[13px] leading-snug shadow-3xs whitespace-pre-wrap max-w-md ${getSenderTint(msg.sender)}">
-                ${msg.text}
-              </div>
+              <div class="px-3.5 py-1.5 rounded-2xl rounded-tl-none font-semibold text-[13px] leading-snug shadow-3xs whitespace-pre-wrap max-w-md ${getSenderTint(msg.sender)}">${msg.text}</div>
             </div>
           </div>
         `;
