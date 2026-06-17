@@ -344,9 +344,13 @@ import BlogTagsView from "../components/blog/BlogTagsView.astro";
     blogPanel.classList.add("w-56", "border-border");
     blogArrow.classList.add("rotate-180");
     
+    // Check if the primary sidebar is collapsed before opening secondary panel so we can restore it on close
     if (sidebar.classList.contains("collapsed")) {
+      localStorage.setItem("sidebar-was-collapsed-before-blog", "true");
       sidebar.classList.remove("collapsed");
       localStorage.setItem("sidebar-collapsed", "false");
+    } else {
+      localStorage.setItem("sidebar-was-collapsed-before-blog", "false");
     }
     localStorage.setItem("blog-panel-open", "true");
   }
@@ -356,6 +360,14 @@ import BlogTagsView from "../components/blog/BlogTagsView.astro";
     blogPanel.classList.add("w-0", "border-border/0");
     blogArrow.classList.remove("rotate-180");
     localStorage.setItem("blog-panel-open", "false");
+
+    // Restore the primary sidebar's collapsed icon state if it was originally collapsed
+    const wasCollapsedBefore = localStorage.getItem("sidebar-was-collapsed-before-blog") === "true";
+    if (wasCollapsedBefore) {
+      sidebar.classList.add("collapsed");
+      localStorage.setItem("sidebar-collapsed", "true");
+    }
+    localStorage.removeItem("sidebar-was-collapsed-before-blog");
   }
 
   // Tiptap editor variables
