@@ -179,6 +179,7 @@
 </div>
 
 <script>
+  import { PUBLIC_SERVER_URL } from "astro:env/client";
   import { authClient, getAccountStatus, discardUnverifiedAccount } from "../lib/auth-client";
   import { toast } from "../lib/toast";
 
@@ -460,6 +461,13 @@
           reEnable();
           return;
         }
+
+        // Mark the password as set on the server
+        await fetch(`${PUBLIC_SERVER_URL}/api/mark-password-set`, {
+          method: "POST",
+          credentials: "include"
+        });
+
         toast.success("Account created successfully!");
         window.location.href = "/dashboard";
         return;
@@ -473,7 +481,13 @@
           password: passwordVal,
         },
         {
-          onSuccess: () => {
+          onSuccess: async () => {
+            // Mark the password as set on the server
+            await fetch(`${PUBLIC_SERVER_URL}/api/mark-password-set`, {
+              method: "POST",
+              credentials: "include"
+            });
+
             toast.success("Account created successfully!");
             window.location.href = "/dashboard";
           },

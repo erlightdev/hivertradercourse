@@ -80,6 +80,7 @@ app.post("/api/account-status", async (c) => {
 		where: { email },
 		select: {
 			emailVerified: true,
+			passwordSet: true,
 			accounts: {
 				select: {
 					providerId: true,
@@ -98,9 +99,7 @@ app.post("/api/account-status", async (c) => {
 		});
 	}
 
-	const hasPassword = user.accounts.some(
-		(a) => a.providerId === "credential" && a.password !== null && a.password !== "",
-	);
+	const hasPassword = user.passwordSet;
 	const hasGoogle = user.accounts.some((a) => a.providerId === "google");
 
 	return c.json({
@@ -210,6 +209,29 @@ app.post("/api/set-initial-password", async (c) => {
 			},
 		});
 	}
+
+	await prisma.user.update({
+		where: { id: userId },
+		data: { passwordSet: true },
+	});
+
+	return c.json({ success: true });
+});
+
+app.post("/api/mark-password-set", async (c) => {
+	if (isRateLimited(clientIp(c))) {
+		return c.json({ error: "Too many requests. Please slow down." }, 429);
+	}
+
+	const session = await auth.api.getSession({ headers: c.req.raw.headers });
+	if (!session?.user) {
+		return c.json({ error: "Unauthorized" }, 401);
+	}
+
+	await prisma.user.update({
+		where: { id: session.user.id },
+		data: { passwordSet: true },
+	});
 
 	return c.json({ success: true });
 });
