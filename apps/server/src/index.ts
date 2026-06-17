@@ -175,12 +175,13 @@ app.post("/api/set-initial-password", async (c) => {
 	}
 
 	const userId = session.user.id;
-	const existing = await prisma.account.findFirst({
-		where: { userId, providerId: "credential" },
+	const dbUser = await prisma.user.findUnique({
+		where: { id: userId },
+		select: { passwordSet: true },
 	});
 
-	// If a password already exists, this is the wrong endpoint — use reset.
-	if (existing?.password) {
+	// If the user has already chosen and configured their password, they must use changePassword/reset
+	if (dbUser?.passwordSet) {
 		return c.json(
 			{
 				error:
@@ -189,6 +190,10 @@ app.post("/api/set-initial-password", async (c) => {
 			409,
 		);
 	}
+
+	const existing = await prisma.account.findFirst({
+		where: { userId, providerId: "credential" },
+	});
 
 	const ctx = await auth.$context;
 	const hash = await ctx.password.hash(password);
