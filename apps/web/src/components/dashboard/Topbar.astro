@@ -1,0 +1,310 @@
+---
+// Topbar Component
+---
+<!-- TOP NAVBAR -->
+<header class="h-16 border-b border-border bg-card flex items-center justify-between px-4 md:px-6 shrink-0 z-20">
+  
+  <!-- Left Section: Collapse Toggle & Search -->
+  <div class="flex items-center gap-4 flex-1">
+    <!-- Sidebar Outer Collapse Toggle -->
+    <button id="sidebar-collapse-toggle-outer" class="p-2 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground cursor-pointer" aria-label="Toggle sidebar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+        <path d="M9 3v18"></path>
+      </svg>
+    </button>
+    
+    <!-- Search Bar -->
+    <div class="relative w-full max-w-sm hidden sm:block">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-4 w-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+        </svg>
+      </div>
+      <input type="text" id="navbar-search" class="block w-full pl-9 pr-12 py-2 text-sm bg-muted/30 border border-border rounded-sm focus:ring-1 focus:ring-foreground focus:outline-hidden font-medium placeholder-muted-foreground/80 text-foreground cursor-pointer select-none" placeholder="Search..." readonly />
+      <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+        <kbd class="px-1.5 py-0.5 rounded border border-border/80 bg-card text-[9px] font-mono text-muted-foreground/75 font-semibold">⌘K</kbd>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Section: Actions & Utilities -->
+  <div class="flex items-center gap-3">
+    
+    <!-- Connect Wrapper -->
+    <div class="relative">
+      <button id="connect-btn" class="btn-snake-border flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border bg-muted/30 hover:bg-muted/50 text-foreground font-semibold text-xs transition-all cursor-pointer shadow-3xs">
+        <span class="snake-line"></span>
+        <span class="snake-line"></span>
+        <span class="snake-line"></span>
+        <span class="snake-line"></span>
+        <svg class="w-3.5 h-3.5 shrink-0 z-10 text-foreground/85" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+        <span class="z-10">Community Connect</span>
+        <svg id="connect-arrow" class="w-3 h-3 text-foreground/60 transition-transform duration-200 shrink-0 z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+
+      <!-- Connect Dropdown -->
+      <div id="connect-dropdown" class="absolute right-0 mt-2 w-64 bg-card/95 backdrop-blur-md border border-border/80 rounded-sm shadow-xl p-1.5 hidden z-50">
+        <!-- WhatsApp -->
+        <a href="https://wa.me/9800000000" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-emerald-500/10 transition-all border border-transparent hover:border-emerald-500/10 cursor-pointer group">
+          <div class="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/15">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 360 362" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#25D366" fill-rule="evenodd" d="M307.546 52.566C273.709 18.684 228.706.017 180.756 0 81.951 0 1.538 80.404 1.504 179.235c-.017 31.594 8.242 62.432 23.928 89.609L0 361.736l95.024-24.925c26.179 14.285 55.659 21.805 85.655 21.814h.077c98.788 0 179.21-80.413 179.244-179.244.017-47.898-18.608-92.926-52.454-126.807v-.008Zm-126.79 275.788h-.06c-26.73-.008-52.952-7.194-75.831-20.765l-5.44-3.231-56.391 14.791 15.05-54.981-3.542-5.638c-14.912-23.721-22.793-51.139-22.776-79.286.035-82.14 66.867-148.973 149.051-148.973 39.793.017 77.198 15.53 105.328 43.695 28.131 28.157 43.61 65.596 43.593 105.398-.035 82.149-66.867 148.982-148.982 148.982v.008Zm81.719-111.577c-4.478-2.243-26.497-13.073-30.606-14.568-4.108-1.496-7.09-2.243-10.073 2.243-2.982 4.487-11.568 14.577-14.181 17.559-2.613 2.991-5.226 3.361-9.704 1.117-4.477-2.243-18.908-6.97-36.02-22.226-13.313-11.878-22.304-26.54-24.916-31.027-2.613-4.486-.275-6.91 1.959-9.136 2.011-2.011 4.478-5.234 6.721-7.847 2.244-2.613 2.983-4.486 4.478-7.469 1.496-2.991.748-5.603-.369-7.847-1.118-2.243-10.073-24.289-13.812-33.253-3.636-8.732-7.331-7.546-10.073-7.692-2.613-.13-5.595-.155-8.586-.155-2.991 0-7.839 1.118-11.947 5.604-4.108 4.486-15.677 15.324-15.677 37.361s16.047 43.344 18.29 46.335c2.243 2.991 31.585 48.225 76.51 67.632 10.684 4.615 19.029 7.374 25.535 9.437 10.727 3.412 20.49 2.931 28.208 1.779 8.604-1.289 26.498-10.838 30.228-21.298 3.73-10.46 3.73-19.433 2.613-21.298-1.117-1.865-4.108-2.991-8.586-5.234l.008-.017Z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-xs font-bold text-foreground leading-none">WhatsApp Support</p>
+            <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Direct chat with our trading desk</p>
+          </div>
+        </a>
+        <!-- Telegram -->
+        <a href="https://t.me/hivertrader" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-sky-500/10 transition-all border border-transparent hover:border-sky-500/10 cursor-pointer group">
+          <div class="w-8 h-8 rounded-full bg-sky-500/10 text-sky-500 flex items-center justify-center shrink-0 border border-sky-500/15">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+              <defs>
+                <linearGradient id="telegram-grad-new" x1="50%" x2="50%" y1="0%" y2="100%">
+                  <stop offset="0%" stop-color="#2AABEE"/>
+                  <stop offset="100%" stop-color="#229ED9"/>
+                </linearGradient>
+              </defs>
+              <path fill="url(#telegram-grad-new)" d="M128 0C94.06 0 61.48 13.494 37.5 37.49A128.038 128.038 0 0 0 0 128c0 33.934 13.5 66.514 37.5 90.51C61.48 242.506 94.06 256 128 256s66.52-13.494 90.5-37.49c24-23.996 37.5-56.576 37.5-90.51 0-33.934-13.5-66.514-37.5-90.51C194.52 13.494 161.94 0 128 0Z"/>
+              <path fill="#FFF" d="M57.94 126.648c37.32-16.256 62.2-26.974 74.64-32.152 35.56-14.786 42.94-17.354 47.76-17.441 1.06-.017 3.42.245 4.96 1.49 1.28 1.05 1.64 2.47 1.82 3.467.16.996.38 3.266.2 5.038-1.92 20.24-10.26 69.356-14.5 92.026-1.78 9.592-5.32 12.808-8.74 13.122-7.44.684-13.08-4.912-20.28-9.63-11.26-7.386-17.62-11.982-28.56-19.188-12.64-8.328-4.44-12.906 2.76-20.386 1.88-1.958 34.64-31.748 35.26-34.45.08-.338.16-1.598-.6-2.262-.74-.666-1.84-.438-2.64-.258-1.14.256-19.12 12.152-54 35.686-5.1 3.508-9.72 5.218-13.88 5.128-4.56-.098-13.36-2.584-19.9-4.708-8-2.606-14.38-3.984-13.82-8.41.28-2.304 3.46-4.662 9.52-7.072Z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-xs font-bold text-foreground leading-none">Telegram Channel</p>
+            <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Instant updates & daily signals</p>
+          </div>
+        </a>
+        <!-- Discord -->
+        <a href="https://discord.gg/hivertrader" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-indigo-500/10 transition-all border border-transparent hover:border-indigo-500/10 cursor-pointer group">
+          <div class="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0 border border-indigo-500/15">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 256 199" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+              <path d="M216.856 16.597A208.502 208.502 0 0 0 164.042 0c-2.275 4.113-4.933 9.645-6.766 14.046-19.692-2.961-39.203-2.961-58.533 0-1.832-4.4-4.55-9.933-6.846-14.046a207.809 207.809 0 0 0-52.855 16.638C5.618 67.147-3.443 116.4 1.087 164.956c22.169 16.555 43.653 26.612 64.775 33.193A161.094 161.094 0 0 0 79.735 175.3a136.413 136.413 0 0 1-21.846-10.632 108.636 108.636 0 0 0 5.356-4.237c42.122 19.702 87.89 19.702 129.51 0a131.66 131.66 0 0 0 5.355 4.237 136.07 136.07 0 0 1-21.886 10.653c4.006 8.02 8.638 15.67 13.873 22.848 21.142-6.58 42.646-16.637 64.815-33.213 5.316-56.288-9.08-105.09-38.056-148.36ZM85.474 135.095c-12.645 0-23.015-11.805-23.015-26.18s10.149-26.2 23.015-26.2c12.867 0 23.236 11.804 23.015 26.2.02 14.375-10.148 26.18-23.015 26.18Zm85.051 0c-12.645 0-23.014-11.805-23.014-26.18s10.148-26.2 23.014-26.2c12.867 0 23.236 11.804 23.015 26.2 0 14.375-10.148 26.18-23.015 26.18Z" fill="#5865F2"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-xs font-bold text-foreground leading-none">Discord Server</p>
+            <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Join the community discussion</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Invite & Earn Wrapper -->
+    <div class="relative">
+      <button id="invite-earn-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-xs transition-all cursor-pointer shadow-3xs">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        <span class="hidden md:inline">Invite & Earn</span>
+        <span class="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground font-bold text-[9px] shadow-3xs leading-none">₹250</span>
+      </button>
+
+      <!-- Invite & Earn Dropdown -->
+      <div id="invite-earn-dropdown" class="absolute right-0 mt-2 w-80 bg-card border border-border rounded-sm shadow-lg p-4 hidden z-50">
+        <h3 class="font-bold text-sm text-foreground mb-1.5">Invite Friends & Earn Credits</h3>
+        <p class="text-[11px] text-muted-foreground leading-relaxed mb-3">
+          Share your referral link with friends. You will earn <span class="text-primary font-bold">₹250 credits</span> when they complete registration, and they get a starting bonus of ₹100!
+        </p>
+        
+        <!-- Credit Balance block -->
+        <div class="bg-muted/40 rounded-lg p-3 mb-3 border border-border/40 flex justify-between items-center">
+          <div>
+            <p class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Referral Balance</p>
+            <p class="text-lg font-bold text-foreground">₹250 <span class="text-xs font-semibold text-muted-foreground">Credits</span></p>
+          </div>
+          <button class="px-2.5 py-1 bg-primary text-primary-foreground hover:bg-primary/95 text-[10px] font-bold rounded-md transition-colors cursor-pointer">
+            Redeem
+          </button>
+        </div>
+
+        <!-- Referral Code Field -->
+        <div class="space-y-1.5">
+          <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Your Referral Link</label>
+          <div class="flex gap-1.5">
+            <input type="text" id="referral-link-input" readonly value="https://hiverlms.com/invite/PN250" class="flex-1 px-2.5 py-1.5 text-xs bg-muted/60 border border-border rounded-md text-muted-foreground select-all focus:outline-hidden font-medium" />
+            <button id="copy-referral-btn" class="px-3 py-1.5 bg-secondary text-secondary-foreground hover:bg-muted font-bold text-xs rounded-md border border-border transition-colors cursor-pointer flex-shrink-0">
+              Copy
+            </button>
+          </div>
+          <span id="copy-toast" class="text-[10px] text-emerald-500 font-semibold hidden">Link copied to clipboard!</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Notifications Wrapper -->
+    <div class="relative">
+      <button id="notifications-bell-btn" class="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-xl transition-all cursor-pointer relative" aria-label="Notifications">
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <!-- Unread notification badge dot -->
+        <span id="bell-unread-dot" class="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full border border-card shadow-3xs animate-pulse"></span>
+      </button>
+
+      <!-- Notifications Dropdown -->
+      <div id="notifications-dropdown" class="absolute right-0 mt-2 w-96 bg-card border border-border rounded-sm shadow-lg p-1.5 hidden z-50">
+        <div class="px-3 py-2 flex items-center justify-between border-b border-border/40 mb-1">
+          <span class="font-bold text-xs text-foreground">Notifications</span>
+          <button id="mark-all-read-btn" class="text-[10px] font-bold text-primary hover:underline cursor-pointer">
+            Mark all as read
+          </button>
+        </div>
+
+        <!-- Notifications list -->
+        <div class="max-h-[260px] overflow-y-auto space-y-0.5 scrollbar-thin">
+          
+          <!-- Notification Item 1: Referral Credited -->
+          <div class="p-2.5 rounded-lg hover:bg-muted/40 transition-colors border border-transparent hover:border-border/20 flex gap-2.5 items-start">
+            <div class="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/15">
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-foreground leading-tight">Referral Reward Credited! 🎉</p>
+              <p class="text-[10px] text-muted-foreground mt-1 leading-relaxed">Your friend signed up! <span class="text-emerald-500 font-bold">₹250</span> has been added to your credits.</p>
+              <p class="text-[9px] text-muted-foreground/60 font-semibold mt-1">2 hours ago</p>
+            </div>
+          </div>
+
+          <!-- Notification Item 2: Signup Bonus -->
+          <div class="p-2.5 rounded-lg hover:bg-muted/40 transition-colors border border-transparent hover:border-border/20 flex gap-2.5 items-start">
+            <div class="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/15">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="8"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-foreground leading-tight">Welcome Credits Credited</p>
+              <p class="text-[10px] text-muted-foreground mt-1 leading-relaxed">You received a welcome signup bonus of <span class="text-primary font-bold">₹100 credits</span>!</p>
+              <p class="text-[9px] text-muted-foreground/60 font-semibold mt-1">1 day ago</p>
+            </div>
+          </div>
+
+          <!-- Notification Item 3: Invite reminder -->
+          <div class="p-2.5 rounded-lg hover:bg-muted/40 transition-colors border border-transparent hover:border-border/20 flex gap-2.5 items-start">
+            <div class="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/15">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-foreground leading-tight">Invite & Earn ₹250!</p>
+              <p class="text-[10px] text-muted-foreground mt-1 leading-relaxed">Invite friends to HiverLMS. Earn credits to unlock premium simulators & features.</p>
+              <p class="text-[9px] text-muted-foreground/60 font-semibold mt-1">3 days ago</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Notifications footer -->
+        <div class="border-t border-border/40 mt-1 pt-1.5 pb-0.5 px-3">
+          <button class="w-full text-center text-xs font-bold text-primary hover:underline hover:text-primary/95 transition-all cursor-pointer py-1.5 rounded-md hover:bg-muted/30">
+            See All Notifications
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Theme Switcher -->
+    <button id="theme-toggle" class="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-xl transition-all cursor-pointer" aria-label="Toggle theme">
+      <!-- Moon icon (visible in light mode) -->
+      <svg id="theme-toggle-moon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+      </svg>
+      <!-- Sun icon (visible in dark mode) -->
+      <svg id="theme-toggle-sun" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="5"></circle>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+      </svg>
+    </button>
+
+    <!-- Create Course Button -->
+    <button id="create-course-btn" class="flex items-center gap-1.5 px-4 py-1.5 rounded-sm bg-gradient-to-b from-[#e88c73] via-[#df775b] to-[#c8664d] hover:brightness-105 active:translate-y-[2px] active:border-b-[1px] active:mb-[1px] active:shadow-xs text-white font-bold text-xs shadow-[0_3px_5px_rgba(223,119,91,0.25)] hover:shadow-[0_4px_7px_rgba(223,119,91,0.35)] transition-all duration-100 cursor-pointer border-t border-t-white/30 border-x border-x-[#df775b]/60 border-b-[3px] border-b-[#9e412a] select-none">
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      <span>Create Course</span>
+    </button>
+
+    <!-- Vertical Divider -->
+    <div class="h-5 w-[1px] bg-border mx-1"></div>
+
+    <!-- User Profile Avatar and Dropdown Wrapper -->
+    <div class="relative">
+      <button id="top-user-avatar-btn" class="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center shrink-0 border border-primary/20 text-xs shadow-sm cursor-pointer relative" aria-label="User menu">
+        <span id="top-avatar-fallback">H</span>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <div id="top-profile-dropdown" class="absolute right-0 mt-2 w-64 bg-card border border-border rounded-sm shadow-lg p-1.5 hidden z-50">
+        
+        <!-- Header with Avatar, Name, Email -->
+        <div class="p-3 flex items-center gap-3 border-b border-border/40 mb-1">
+          <div class="w-10 h-10 rounded-full bg-primary text-white font-bold flex items-center justify-center shrink-0 border border-primary/20 text-sm shadow-sm" id="top-dropdown-avatar-fallback">
+            H
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs font-bold text-foreground truncate leading-none" id="top-profile-name">Hiver</p>
+            <p class="text-[10px] text-muted-foreground truncate mt-1 leading-none" id="top-profile-email">admin@hiver.com.np</p>
+          </div>
+        </div>
+
+        <!-- Account & Settings Items -->
+        <div class="py-0.5">
+          <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
+            <svg class="w-4 h-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Account
+          </a>
+          <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
+            <svg class="w-4 h-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Settings
+          </a>
+        </div>
+
+        <div class="border-b border-border/40 my-1"></div>
+
+        <!-- Plan & Billing Item -->
+        <div class="py-0.5">
+          <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
+            <svg class="w-4 h-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+              <line x1="2" y1="10" y2="10"></line>
+            </svg>
+            Plan & Billing
+          </a>
+        </div>
+
+        <div class="border-b border-border/40 my-1"></div>
+
+        <!-- Log out Item -->
+        <div class="py-0.5">
+          <button id="top-logout-btn" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold text-destructive hover:bg-destructive/10 transition-colors text-left cursor-pointer">
+            <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Log out
+          </button>
+        </div>
+
+      </div>
+    </div>
+    
+  </div>
+</header>

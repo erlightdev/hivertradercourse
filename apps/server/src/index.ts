@@ -12,7 +12,7 @@ app.use(
 	"/*",
 	cors({
 		origin: env.CORS_ORIGIN,
-		allowMethods: ["GET", "POST", "OPTIONS"],
+		allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 		allowHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
 	}),
@@ -203,6 +203,412 @@ app.post("/api/set-initial-password", async (c) => {
 	}
 
 	return c.json({ success: true });
+});
+
+// Helper to get session user
+const getSessionUser = async (c: any) => {
+	try {
+		const session = await auth.api.getSession({ headers: c.req.raw.headers });
+		return session?.user || null;
+	} catch (e) {
+		console.error("Session fetch error:", e);
+		return null;
+	}
+};
+
+// ===========================================================================
+// Blog Posts CRUD
+// ===========================================================================
+
+app.get("/api/posts", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	try {
+		const posts = await prisma.post.findMany({
+			include: {
+				author: { select: { id: true, name: true, email: true } },
+				categories: true,
+				tags: true,
+			},
+			orderBy: { createdAt: "desc" },
+		});
+		return c.json(posts);
+	} catch (e: any) {
+		return c.json({ error: e.message || "Failed to fetch posts" }, 500);
+	}
+});
+
+app.get("/api/posts/:id", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const id = c.req.param("id");
+	try {
+		const post = await prisma.post.findUnique({
+			where: { id },
+			include: {
+				author: { select: { id: true, name: true, email: true } },
+				categories: true,
+				tags: true,
+			},
+		});
+		if (!post) return c.json({ error: "Post not found" }, 404);
+		return c.json(post);
+	} catch (e: any) {
+		return c.json({ error: e.message || "Failed to fetch post" }, 500);
+	}
+});
+
+// List users (for author selection in the editor)
+app.get("/api/users", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	try {
+		const users = await prisma.user.findMany({
+			select: { id: true, name: true, email: true },
+			orderBy: { name: "asc" },
+		});
+		return c.json(users);
+	} catch (e: any) {
+		return c.json({ error: e.message || "Failed to fetch users" }, 500);
+	}
+});
+
+app.post("/api/posts", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	let body: any;
+	try {
+		body = await c.req.json();
+	} catch {
+		return c.json({ error: "Invalid JSON body" }, 400);
+	}
+
+	const { title, slug, content, published, categoryIds, tagIds, authorId, metaTitle, metaDescription, ogImage, canonicalUrl, focusKeyword, robotsMeta } = body;
+	if (!title || !slug) {
+		return c.json({ error: "Title and slug are required" }, 400);
+	}
+
+	try {
+		const post = await prisma.post.create({
+			data: {
+				title,
+				slug,
+				content: content || "",
+				published: !!published,
+				trashed: false,
+				authorId: authorId || user.id,
+				metaTitle: metaTitle || null,
+				metaDescription: metaDescription || null,
+				ogImage: ogImage || null,
+				canonicalUrl: canonicalUrl || null,
+				focusKeyword: focusKeyword || null,
+				robotsMeta: robotsMeta || "index, follow",
+				categories:
+					categoryIds && categoryIds.length > 0
+						? {
+								connect: categoryIds.map((id: string) => ({ id })),
+							}
+						: undefined,
+				tags:
+					tagIds && tagIds.length > 0
+						? {
+								connect: tagIds.map((id: string) => ({ id })),
+							}
+						: undefined,
+			},
+			include: {
+				categories: true,
+				tags: true,
+			},
+		});
+		return c.json(post, 201);
+	} catch (e: any) {
+		if (e.code === "P2002") {
+			return c.json({ error: "A post with this slug already exists" }, 409);
+		}
+		return c.json({ error: e.message || "Could not create post" }, 500);
+	}
+});
+
+app.put("/api/posts/:id", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const id = c.req.param("id");
+	let body: any;
+	try {
+		body = await c.req.json();
+	} catch {
+		return c.json({ error: "Invalid JSON body" }, 400);
+	}
+
+	const { title, slug, content, published, trashed, categoryIds, tagIds, authorId, metaTitle, metaDescription, ogImage, canonicalUrl, focusKeyword, robotsMeta } = body;
+	if ((title !== undefined && !title) || (slug !== undefined && !slug)) {
+		return c.json({ error: "Title and slug cannot be empty" }, 400);
+	}
+
+	try {
+		const existing = await prisma.post.findUnique({
+			where: { id },
+		});
+		if (!existing) return c.json({ error: "Post not found" }, 404);
+
+		const post = await prisma.post.update({
+			where: { id },
+			data: {
+				title: title !== undefined ? title : existing.title,
+				slug: slug !== undefined ? slug : existing.slug,
+				content: content !== undefined ? content : existing.content,
+				published: published !== undefined ? !!published : existing.published,
+				trashed: trashed !== undefined ? !!trashed : existing.trashed,
+				metaTitle: metaTitle !== undefined ? (metaTitle || null) : existing.metaTitle,
+				metaDescription: metaDescription !== undefined ? (metaDescription || null) : existing.metaDescription,
+				ogImage: ogImage !== undefined ? (ogImage || null) : existing.ogImage,
+				canonicalUrl: canonicalUrl !== undefined ? (canonicalUrl || null) : existing.canonicalUrl,
+				focusKeyword: focusKeyword !== undefined ? (focusKeyword || null) : existing.focusKeyword,
+				robotsMeta: robotsMeta !== undefined ? (robotsMeta || "index, follow") : existing.robotsMeta,
+				authorId: authorId !== undefined && authorId ? authorId : existing.authorId,
+				categories: categoryIds
+					? {
+							set: categoryIds.map((id: string) => ({ id })),
+						}
+					: undefined,
+				tags: tagIds
+					? {
+							set: tagIds.map((id: string) => ({ id })),
+						}
+					: undefined,
+			},
+			include: {
+				author: { select: { id: true, name: true, email: true } },
+				categories: true,
+				tags: true,
+			},
+		});
+		return c.json(post);
+	} catch (e: any) {
+		if (e.code === "P2002") {
+			return c.json({ error: "A post with this slug already exists" }, 409);
+		}
+		return c.json({ error: e.message || "Could not update post" }, 500);
+	}
+});
+
+app.delete("/api/posts/:id", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const id = c.req.param("id");
+	try {
+		await prisma.post.delete({ where: { id } });
+		return c.json({ success: true });
+	} catch (e: any) {
+		return c.json({ error: e.message || "Could not delete post" }, 500);
+	}
+});
+
+// ===========================================================================
+// Categories CRUD
+// ===========================================================================
+
+app.get("/api/categories", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	try {
+		const categories = await prisma.category.findMany({
+			include: {
+				_count: { select: { posts: true } },
+			},
+			orderBy: { name: "asc" },
+		});
+		return c.json(categories);
+	} catch (e: any) {
+		return c.json({ error: e.message || "Failed to fetch categories" }, 500);
+	}
+});
+
+app.post("/api/categories", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	let body: any;
+	try {
+		body = await c.req.json();
+	} catch {
+		return c.json({ error: "Invalid JSON body" }, 400);
+	}
+
+	const { name, slug } = body;
+	if (!name || !slug) {
+		return c.json({ error: "Name and slug are required" }, 400);
+	}
+
+	try {
+		const category = await prisma.category.create({
+			data: { name, slug },
+		});
+		return c.json(category, 201);
+	} catch (e: any) {
+		if (e.code === "P2002") {
+			return c.json(
+				{ error: "A category with this name or slug already exists" },
+				409,
+			);
+		}
+		return c.json({ error: e.message || "Could not create category" }, 500);
+	}
+});
+
+app.put("/api/categories/:id", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const id = c.req.param("id");
+	let body: any;
+	try {
+		body = await c.req.json();
+	} catch {
+		return c.json({ error: "Invalid JSON body" }, 400);
+	}
+
+	const { name, slug } = body;
+	if (!name || !slug) {
+		return c.json({ error: "Name and slug are required" }, 400);
+	}
+
+	try {
+		const category = await prisma.category.update({
+			where: { id },
+			data: { name, slug },
+		});
+		return c.json(category);
+	} catch (e: any) {
+		if (e.code === "P2002") {
+			return c.json(
+				{ error: "A category with this name or slug already exists" },
+				409,
+			);
+		}
+		return c.json({ error: e.message || "Could not update category" }, 500);
+	}
+});
+
+app.delete("/api/categories/:id", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const id = c.req.param("id");
+	try {
+		await prisma.category.delete({ where: { id } });
+		return c.json({ success: true });
+	} catch (e: any) {
+		return c.json({ error: e.message || "Could not delete category" }, 500);
+	}
+});
+
+// ===========================================================================
+// Tags CRUD
+// ===========================================================================
+
+app.get("/api/tags", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	try {
+		const tags = await prisma.tag.findMany({
+			include: {
+				_count: { select: { posts: true } },
+			},
+			orderBy: { name: "asc" },
+		});
+		return c.json(tags);
+	} catch (e: any) {
+		return c.json({ error: e.message || "Failed to fetch tags" }, 500);
+	}
+});
+
+app.post("/api/tags", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	let body: any;
+	try {
+		body = await c.req.json();
+	} catch {
+		return c.json({ error: "Invalid JSON body" }, 400);
+	}
+
+	const { name, slug } = body;
+	if (!name || !slug) {
+		return c.json({ error: "Name and slug are required" }, 400);
+	}
+
+	try {
+		const tag = await prisma.tag.create({
+			data: { name, slug },
+		});
+		return c.json(tag, 201);
+	} catch (e: any) {
+		if (e.code === "P2002") {
+			return c.json(
+				{ error: "A tag with this name or slug already exists" },
+				409,
+			);
+		}
+		return c.json({ error: e.message || "Could not create tag" }, 500);
+	}
+});
+
+app.put("/api/tags/:id", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const id = c.req.param("id");
+	let body: any;
+	try {
+		body = await c.req.json();
+	} catch {
+		return c.json({ error: "Invalid JSON body" }, 400);
+	}
+
+	const { name, slug } = body;
+	if (!name || !slug) {
+		return c.json({ error: "Name and slug are required" }, 400);
+	}
+
+	try {
+		const tag = await prisma.tag.update({
+			where: { id },
+			data: { name, slug },
+		});
+		return c.json(tag);
+	} catch (e: any) {
+		if (e.code === "P2002") {
+			return c.json(
+				{ error: "A tag with this name or slug already exists" },
+				409,
+			);
+		}
+		return c.json({ error: e.message || "Could not update tag" }, 500);
+	}
+});
+
+app.delete("/api/tags/:id", async (c) => {
+	const user = await getSessionUser(c);
+	if (!user) return c.json({ error: "Unauthorized" }, 401);
+
+	const id = c.req.param("id");
+	try {
+		await prisma.tag.delete({ where: { id } });
+		return c.json({ success: true });
+	} catch (e: any) {
+		return c.json({ error: e.message || "Could not delete tag" }, 500);
+	}
 });
 
 app.get("/", (c) => {

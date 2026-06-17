@@ -10,10 +10,10 @@
 		}
 	},
 	"scripts": {
-		"db:push": "prisma db push",
-		"db:generate": "prisma generate",
-		"db:migrate": "prisma migrate dev",
-		"postinstall": "prisma generate",
+		"db:push": "prisma db push --schema=prisma/schema",
+		"db:generate": "prisma generate --schema=prisma/schema",
+		"db:migrate": "prisma migrate dev --schema=prisma/schema",
+		"postinstall": "prisma generate --schema=prisma/schema",
 		"db:studio": "prisma studio",
 		"db:start": "docker compose up -d",
 		"db:watch": "docker compose up",

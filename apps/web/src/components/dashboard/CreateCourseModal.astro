@@ -1,0 +1,48 @@
+---
+// CreateCourseModal Component
+---
+<!-- Create Course Modal Overlay -->
+<div id="create-course-modal-overlay" class="fixed inset-0 z-[100] bg-background/80 backdrop-blur-xs hidden justify-center items-center">
+  <div id="create-course-modal-content" class="relative w-full max-w-md bg-card text-card-foreground border border-border rounded-sm shadow-xl p-5 scale-95 opacity-0 transition-all duration-200 ease-out">
+    <div class="flex items-center justify-between border-b border-border/40 pb-3 mb-4">
+      <h3 class="font-bold text-sm text-foreground">Create New Course</h3>
+      <button id="close-create-course-btn" class="p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-all cursor-pointer" type="button">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <form id="create-course-form" class="space-y-4">
+      <div class="space-y-1.5">
+        <label for="course-title" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Course Title</label>
+        <input type="text" id="course-title" placeholder="e.g. Technical Analysis Masterclass" required class="w-full px-3 py-2 text-xs bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium" />
+      </div>
+      
+      <div class="space-y-1.5">
+        <label for="course-category" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Category</label>
+        <select id="course-category" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium">
+          <option value="trading">Trading Strategies</option>
+          <option value="crypto">Cryptocurrency</option>
+          <option value="forex">Forex Trading</option>
+          <option value="basics">Market Basics</option>
+        </select>
+      </div>
+      
+      <div class="space-y-1.5">
+        <label for="course-description" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Description</label>
+        <textarea id="course-description" rows="3" placeholder="Brief outline of course content and learning goals..." class="w-full px-3 py-2 text-xs bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium resize-none"></textarea>
+      </div>
+      
+      <div class="flex justify-end gap-2 pt-2 border-t border-border/40">
+        <button type="button" id="cancel-create-course-btn" class="px-3.5 py-2 hover:bg-muted text-xs font-bold rounded-sm border border-border transition-colors cursor-pointer text-muted-foreground hover:text-foreground">
+          Cancel
+        </button>
+        <button type="submit" class="px-4 py-2 bg-gradient-to-b from-[#e88c73] via-[#df775b] to-[#c8664d] hover:brightness-105 active:translate-y-[2px] active:border-b-[1px] active:mb-[1px] active:shadow-xs text-white font-bold text-xs rounded-sm shadow-[0_3px_5px_rgba(223,119,91,0.25)] hover:shadow-[0_4px_7px_rgba(223,119,91,0.35)] transition-all duration-100 cursor-pointer border-t border-t-white/30 border-x border-x-[#df775b]/60 border-b-[3px] border-b-[#9e412a] select-none">
+          Create Course
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

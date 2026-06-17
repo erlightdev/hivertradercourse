@@ -1,0 +1,141 @@
+---
+// SeoSheet Component
+---
+<!-- SEO Settings Sheet (Right Slide-Over) -->
+<div id="seo-sheet-overlay" class="fixed inset-0 z-40 bg-black/40 hidden"></div>
+<div id="seo-sheet-panel" class="fixed top-0 right-0 z-50 h-full w-full max-w-lg bg-card border-l border-border shadow-xl hidden overflow-y-auto">
+  <div class="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-card z-10">
+    <div class="flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <h3 class="text-base font-bold text-foreground">SEO Settings</h3>
+    </div>
+    <button id="btn-seo-sheet-close" type="button" class="p-1.5 hover:bg-muted rounded-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="p-6 space-y-6">
+    <!-- Meta Title -->
+    <div class="space-y-1.5">
+      <div class="flex items-center justify-between">
+        <label for="seo-meta-title" class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Meta Title</label>
+        <span class="text-xs text-muted-foreground"><span id="seo-meta-title-count">0</span>/60</span>
+      </div>
+      <input type="text" id="seo-meta-title" placeholder="Enter SEO title (recommended ≤ 60 chars)" class="w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium placeholder:text-muted-foreground/60" maxlength="120" />
+      <p class="text-[11px] text-muted-foreground/70">If empty, the post title will be used.</p>
+    </div>
+
+    <!-- Meta Description -->
+    <div class="space-y-1.5">
+      <div class="flex items-center justify-between">
+        <label for="seo-meta-description" class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Meta Description</label>
+        <span class="text-xs text-muted-foreground"><span id="seo-meta-desc-count">0</span>/160</span>
+      </div>
+      <textarea id="seo-meta-description" rows="3" placeholder="Brief summary for search engines (recommended ≤ 160 chars)" class="w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium placeholder:text-muted-foreground/60 resize-none" maxlength="320"></textarea>
+    </div>
+
+    <!-- Focus Keyword -->
+    <div class="space-y-1.5">
+      <label for="seo-focus-keyword" class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Focus Keyword</label>
+      <input type="text" id="seo-focus-keyword" placeholder="e.g. trading strategies" class="w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium placeholder:text-muted-foreground/60" />
+    </div>
+
+    <!-- Canonical URL -->
+    <div class="space-y-1.5">
+      <label for="seo-canonical-url" class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Canonical URL</label>
+      <input type="url" id="seo-canonical-url" placeholder="https://example.com/blog/..." class="w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-mono font-medium placeholder:text-muted-foreground/60" />
+    </div>
+
+    <!-- OG Image -->
+    <div class="space-y-1.5">
+      <label for="seo-og-image" class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Social Image (OG Image URL)</label>
+      <input type="url" id="seo-og-image" placeholder="https://example.com/image.jpg" class="w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-mono font-medium placeholder:text-muted-foreground/60" />
+      <p class="text-[11px] text-muted-foreground/70">Recommended: 1200 × 630px. Used by Facebook, LinkedIn, X.</p>
+    </div>
+
+    <!-- Robots Meta -->
+    <div class="space-y-1.5">
+      <label for="seo-robots-meta" class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Robots Meta</label>
+      <select id="seo-robots-meta" class="w-full px-3.5 py-2.5 text-sm bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium cursor-pointer">
+        <option value="index, follow">Index, Follow (Default)</option>
+        <option value="noindex, follow">No Index, Follow</option>
+        <option value="index, nofollow">Index, No Follow</option>
+        <option value="noindex, nofollow">No Index, No Follow</option>
+      </select>
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-border"></div>
+
+    <!-- Social Previews -->
+    <div class="space-y-4">
+      <h4 class="text-xs font-bold text-muted-foreground uppercase tracking-wider">Social Previews</h4>
+
+      <!-- Google SERP Preview -->
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          Google
+        </div>
+        <div class="p-4 bg-white dark:bg-[#202124] rounded-sm border border-border/50 space-y-1">
+          <div id="seo-preview-google-url" class="text-xs text-[#70757a] dark:text-[#bdc1c6] font-mono truncate">example.com › blog › your-post</div>
+          <div id="seo-preview-google-title" class="text-base text-[#1a0dab] dark:text-[#8ab4f8] font-medium leading-snug hover:underline cursor-pointer truncate">Your Post Title</div>
+          <div id="seo-preview-google-desc" class="text-[13px] text-[#4d5156] dark:text-[#bdc1c6] leading-relaxed line-clamp-2">Your meta description will appear here...</div>
+        </div>
+      </div>
+
+      <!-- Facebook / Open Graph Preview -->
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          Facebook
+        </div>
+        <div class="rounded-sm border border-border/50 overflow-hidden bg-[#f0f2f5] dark:bg-[#242526]">
+          <div id="seo-preview-fb-image" class="w-full h-[168px] bg-muted/50 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground/40"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+          <div class="px-3 py-2.5 space-y-0.5">
+            <div id="seo-preview-fb-domain" class="text-[11px] text-[#65676b] dark:text-[#b0b3b8] font-medium uppercase tracking-wide">EXAMPLE.COM</div>
+            <div id="seo-preview-fb-title" class="text-sm text-[#050505] dark:text-[#e4e6eb] font-semibold leading-snug truncate">Your Post Title</div>
+            <div id="seo-preview-fb-desc" class="text-[13px] text-[#65676b] dark:text-[#b0b3b8] leading-snug line-clamp-1">Your meta description...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- X / Twitter Preview -->
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          X (Twitter)
+        </div>
+        <div class="rounded-sm border border-border/50 overflow-hidden bg-white dark:bg-[#15202b]">
+          <div id="seo-preview-x-image" class="w-full h-[132px] bg-muted/50 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground/40"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+          <div class="px-3 py-2 space-y-0.5">
+            <div id="seo-preview-x-title" class="text-sm text-foreground font-semibold leading-snug truncate">Your Post Title</div>
+            <div id="seo-preview-x-desc" class="text-[13px] text-muted-foreground leading-snug line-clamp-2">Your meta description...</div>
+            <div id="seo-preview-x-domain" class="text-xs text-muted-foreground/70 font-medium">example.com</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LinkedIn Preview -->
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </div>
+        <div class="rounded-sm border border-border/50 overflow-hidden bg-white dark:bg-[#1b1f23]">
+          <div id="seo-preview-li-image" class="w-full h-[132px] bg-muted/50 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground/40"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+          <div class="px-3 py-2.5 space-y-0.5">
+            <div id="seo-preview-li-title" class="text-sm text-foreground font-semibold leading-snug truncate">Your Post Title</div>
+            <div id="seo-preview-li-domain" class="text-xs text-muted-foreground/70 font-medium">example.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

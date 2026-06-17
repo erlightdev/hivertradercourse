@@ -12,6 +12,17 @@
 	"dependencies": {
 		"@astrojs/node": "^10.0.0-beta.9",
 		"@hivertradercourse/env": "*",
+		"@tiptap/core": "^3.27.0",
+		"@tiptap/extension-bubble-menu": "^3.27.0",
+		"@tiptap/extension-drag-handle": "^3.27.0",
+		"@tiptap/extension-highlight": "^3.27.0",
+		"@tiptap/extension-image": "^3.27.0",
+		"@tiptap/extension-subscript": "^3.27.0",
+		"@tiptap/extension-superscript": "^3.27.0",
+		"@tiptap/extension-text-align": "^3.27.0",
+		"@tiptap/extensions": "^3.27.0",
+		"@tiptap/starter-kit": "^3.27.0",
+		"@tiptap/suggestion": "^3.27.0",
 		"astro": "^6.0.1",
 		"better-auth": "1.6.11",
 		"dotenv": "^17.2.2",
@@ -20,6 +31,7 @@
 	"devDependencies": {
 		"@astrojs/check": "^0.9.9",
 		"@hivertradercourse/config": "*",
+		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.1.18",
 		"tailwindcss": "^4.1.18",
 		"typescript": "^6.0.3"

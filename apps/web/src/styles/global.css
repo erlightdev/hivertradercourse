@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "tailwind-scrollbar";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -39,7 +40,7 @@
 	--font-sans: Inter, sans-serif;
 	--font-serif: Source Serif 4, serif;
 	--font-mono: JetBrains Mono, monospace;
-	--radius: 0.75rem;
+	--radius: 0.375rem;
 	--shadow-x: 0;
 	--shadow-y: 1px;
 	--shadow-blur: 3px;
@@ -98,7 +99,7 @@
 	--font-sans: Inter, sans-serif;
 	--font-serif: Source Serif 4, serif;
 	--font-mono: JetBrains Mono, monospace;
-	--radius: 0.75rem;
+	--radius: 0.375rem;
 	--shadow-x: 0;
 	--shadow-y: 1px;
 	--shadow-blur: 3px;
@@ -194,7 +195,8 @@
 	0% {
 		left: -100%;
 	}
-	50%, 100% {
+	50%,
+	100% {
 		left: 100%;
 	}
 }
@@ -203,7 +205,8 @@
 	0% {
 		top: -100%;
 	}
-	50%, 100% {
+	50%,
+	100% {
 		top: 100%;
 	}
 }
@@ -212,7 +215,8 @@
 	0% {
 		right: -100%;
 	}
-	50%, 100% {
+	50%,
+	100% {
 		right: 100%;
 	}
 }
@@ -221,7 +225,8 @@
 	0% {
 		bottom: -100%;
 	}
-	50%, 100% {
+	50%,
+	100% {
 		bottom: 100%;
 	}
 }
@@ -281,3 +286,308 @@
 	animation-delay: 1.5s !important;
 }
 
+/* SEO Sheet Animations */
+@keyframes slide-in-right {
+	from { transform: translateX(100%); }
+	to { transform: translateX(0); }
+}
+
+@keyframes slide-out-right {
+	from { transform: translateX(0); }
+	to { transform: translateX(100%); }
+}
+
+@keyframes fade-in-overlay {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.seo-sheet-enter {
+	animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.seo-sheet-exit {
+	animation: slide-out-right 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.seo-overlay-enter {
+	animation: fade-in-overlay 0.2s ease forwards;
+}
+
+/* Tiptap Content Editor — readability */
+.tiptap-editor {
+	font-size: 1rem;
+	line-height: 1.75;
+	color: var(--foreground);
+}
+
+/* Remove top/bottom margin on the first/last block so content hugs the padding */
+.tiptap-editor > :first-child {
+	margin-top: 0;
+}
+.tiptap-editor > :last-child {
+	margin-bottom: 0;
+}
+
+/* Comfortable heading scale */
+.tiptap-editor h1 {
+	font-size: 1.875rem;
+	line-height: 1.2;
+	font-weight: 700;
+	margin: 1.4em 0 0.6em;
+}
+.tiptap-editor h2 {
+	font-size: 1.5rem;
+	line-height: 1.25;
+	font-weight: 700;
+	margin: 1.3em 0 0.5em;
+}
+.tiptap-editor h3 {
+	font-size: 1.25rem;
+	line-height: 1.3;
+	font-weight: 600;
+	margin: 1.2em 0 0.45em;
+}
+
+.tiptap-editor p {
+	margin: 0.75em 0;
+}
+
+/* Lists — restore bullets/numbers and indentation */
+.tiptap-editor ul {
+	list-style: disc;
+	padding-left: 1.6em;
+	margin: 0.75em 0;
+}
+.tiptap-editor ol {
+	list-style: decimal;
+	padding-left: 1.6em;
+	margin: 0.75em 0;
+}
+.tiptap-editor li {
+	margin: 0.3em 0;
+}
+.tiptap-editor li > p {
+	margin: 0;
+}
+
+/* Blockquote */
+.tiptap-editor blockquote {
+	border-left: 3px solid var(--primary);
+	padding-left: 1em;
+	margin: 1em 0;
+	color: var(--muted-foreground);
+	font-style: italic;
+}
+
+/* Inline code + code blocks */
+.tiptap-editor code {
+	background: var(--muted);
+	padding: 0.15em 0.35em;
+	border-radius: 0.25rem;
+	font-size: 0.875em;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.tiptap-editor pre {
+	background: var(--muted);
+	color: var(--foreground);
+	border: 1px solid var(--border);
+	border-radius: 0.5rem;
+	padding: 0.9em 1.1em;
+	margin: 1em 0;
+	overflow-x: auto;
+	font-size: 0.875rem;
+	line-height: 1.6;
+}
+.tiptap-editor pre code {
+	background: transparent;
+	padding: 0;
+	font-size: inherit;
+}
+
+.tiptap-editor hr {
+	border: none;
+	border-top: 1px solid var(--border);
+	margin: 1.5em 0;
+}
+
+/* Placeholder (shown on empty blocks, Notion-style) */
+.tiptap-editor .is-empty::before,
+.tiptap-editor p.is-editor-empty:first-child::before {
+	content: attr(data-placeholder);
+	float: left;
+	height: 0;
+	pointer-events: none;
+	color: var(--muted-foreground);
+	opacity: 0.5;
+}
+
+/* Highlight mark */
+.tiptap-editor mark {
+	background-color: #fde68a;
+	color: inherit;
+	border-radius: 0.25em;
+	padding: 0.05em 0.2em;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+}
+.dark .tiptap-editor mark {
+	background-color: #a16207;
+	color: #fff;
+}
+
+/* ---- Notion-style Bubble Menu ---- */
+.bubble-menu {
+	z-index: 50;
+	transition: opacity 0.12s ease;
+}
+.bubble-menu .bubble-btn.is-active,
+.bubble-menu .bubble-btn.bg-muted {
+	background: var(--muted);
+	color: var(--foreground);
+}
+
+/* ---- Slash command menu ---- */
+.slash-menu {
+	position: fixed;
+	z-index: 60;
+	width: 280px;
+	max-height: 320px;
+	overflow-y: auto;
+	padding: 0.375rem;
+	background: var(--popover, var(--card));
+	color: var(--popover-foreground, var(--foreground));
+	border: 1px solid var(--border);
+	border-radius: 0.625rem;
+	box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.3), 0 2px 8px -2px rgb(0 0 0 / 0.15);
+	animation: fade-in-overlay 0.12s ease;
+}
+.slash-item {
+	display: flex;
+	align-items: center;
+	gap: 0.625rem;
+	width: 100%;
+	padding: 0.45rem 0.5rem;
+	border-radius: 0.45rem;
+	text-align: left;
+	cursor: pointer;
+	color: var(--foreground);
+	transition: background 0.1s ease;
+}
+.slash-item.is-selected,
+.slash-item:hover {
+	background: var(--muted);
+}
+.slash-item-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	flex-shrink: 0;
+	border: 1px solid var(--border);
+	border-radius: 0.4rem;
+	background: var(--card);
+	color: var(--muted-foreground);
+}
+.slash-item.is-selected .slash-item-icon {
+	color: var(--foreground);
+}
+.slash-item-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+.slash-item-title {
+	font-size: 0.8125rem;
+	font-weight: 600;
+	line-height: 1.2;
+}
+.slash-item-desc {
+	font-size: 0.6875rem;
+	color: var(--muted-foreground);
+	line-height: 1.3;
+}
+.slash-empty {
+	padding: 0.6rem 0.5rem;
+	font-size: 0.75rem;
+	color: var(--muted-foreground);
+}
+
+/* ---- Drag handle + add-block button ---- */
+.drag-handle-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 1px;
+	padding-right: 2px;
+}
+.drag-handle-plus,
+.drag-handle-grip {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.4rem;
+	height: 1.5rem;
+	border-radius: 0.35rem;
+	color: var(--muted-foreground);
+	transition: background 0.1s ease, color 0.1s ease;
+}
+.drag-handle-plus {
+	cursor: pointer;
+}
+.drag-handle-grip {
+	cursor: grab;
+}
+.drag-handle-grip:active {
+	cursor: grabbing;
+}
+.drag-handle-plus:hover,
+.drag-handle-grip:hover {
+	background: var(--muted);
+	color: var(--foreground);
+}
+
+/* ---- Category / Tags multi-select ---- */
+@keyframes dropdown-in {
+	from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+	to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.dropdown-menu:not(.hidden) {
+	animation: dropdown-in 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+	transform-origin: top;
+}
+.dropdown-menu .category-item.is-selected,
+.dropdown-menu .tag-item.is-selected {
+	background: color-mix(in oklab, var(--primary) 10%, transparent);
+}
+
+/* Selected chips */
+.chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.15rem 0.25rem 0.15rem 0.55rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--foreground);
+	background: var(--muted);
+	border: 1px solid var(--border);
+	border-radius: 9999px;
+	max-width: 100%;
+}
+.chip-remove {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1rem;
+	height: 1rem;
+	border-radius: 9999px;
+	color: var(--muted-foreground);
+	cursor: pointer;
+	transition: background 0.1s ease, color 0.1s ease;
+}
+.chip-remove:hover {
+	background: var(--destructive, #ef4444);
+	color: #fff;
+}

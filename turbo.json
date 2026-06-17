@@ -1,6 +1,21 @@
 {
 	"$schema": "https://turbo.build/schema.json",
 	"ui": "tui",
+	"globalEnv": [
+		"DATABASE_URL",
+		"BETTER_AUTH_SECRET",
+		"BETTER_AUTH_URL",
+		"CORS_ORIGIN",
+		"EMAIL_FROM",
+		"SMTP_HOST",
+		"SMTP_PORT",
+		"SMTP_SECURE",
+		"SMTP_USER",
+		"SMTP_PASS",
+		"GOOGLE_CLIENT_ID",
+		"GOOGLE_CLIENT_SECRET",
+		"NODE_ENV"
+	],
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],

@@ -1,554 +1,64 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Sidebar from "../components/dashboard/Sidebar.astro";
+import BlogPanel from "../components/blog/BlogPanel.astro";
+import Topbar from "../components/dashboard/Topbar.astro";
+import CommandDialog from "../components/dashboard/CommandDialog.astro";
+import CreateCourseModal from "../components/dashboard/CreateCourseModal.astro";
+import CoursesView from "../components/courses/CoursesView.astro";
+import AnalyticsView from "../components/analytics/AnalyticsView.astro";
+import ProjectsView from "../components/projects/ProjectsView.astro";
+import LiveSessionView from "../components/live-session/LiveSessionView.astro";
+import ChatView from "../components/chat/ChatView.astro";
+import BlogPostsView from "../components/blog/BlogPostsView.astro";
+import BlogEditorView from "../components/blog/BlogEditorView.astro";
+import SeoSheet from "../components/blog/SeoSheet.astro";
+import BlogCategoriesView from "../components/blog/BlogCategoriesView.astro";
+import BlogTagsView from "../components/blog/BlogTagsView.astro";
 ---
 
 <Layout title="Dashboard - Hiver" hideHeader={true}>
   <!-- Main Dashboard Wrapper -->
   <div id="dashboard-root" class="hidden h-screen w-screen flex bg-background text-foreground overflow-hidden font-sans select-none antialiased">
     
-    <!-- LEFT SIDEBAR -->
-    <aside id="sidebar" class="w-64 border-r border-border bg-muted/20 flex flex-col justify-between shrink-0 h-full transition-all duration-300 z-30">
-      
-      <!-- Top Brand Header -->
-      <div>
-        <div class="h-16 flex items-center px-4 border-b border-border">
-          <a href="/" class="flex items-center gap-2.5 select-none outline-hidden">
-            <img
-              src="/logo.png"
-              class="w-8 h-8 object-contain"
-              alt="HiverLMS Logo"
-            />
-            <span class="font-bold text-lg text-foreground tracking-tight sidebar-text">HiverLMS</span>
-          </a>
-        </div>
-        
-        <!-- Navigation Menu -->
-        <div class="p-3">
-          <p class="text-[11px] font-bold text-muted-foreground uppercase tracking-widest px-3.5 mb-2.5 sidebar-text">Overview</p>
-          <nav class="space-y-1">
-            
-            <!-- Dashboard Link (Active initially) -->
-            <a href="#" id="nav-dashboard" class="sidebar-item active w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-bold text-foreground bg-muted/80 transition-colors">
-              <div class="flex items-center gap-3">
-                <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                  <path d="m12 14 5-5"></path>
-                  <circle cx="12" cy="12" r="1"></circle>
-                </svg>
-                <span class="sidebar-text">Dashboard</span>
-              </div>
-            </a>
-            
-            <!-- Courses Link -->
-            <a href="#" id="nav-courses" class="sidebar-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <div class="flex items-center gap-3">
-                <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="9" y1="9" x2="15" y2="9"></line>
-                  <line x1="9" y1="13" x2="15" y2="13"></line>
-                  <line x1="9" y1="17" x2="15" y2="17"></line>
-                  <line x1="5" y1="9" x2="5" y2="9.01"></line>
-                  <line x1="5" y1="13" x2="5" y2="13.01"></line>
-                  <line x1="5" y1="17" x2="5" y2="17.01"></line>
-                </svg>
-                <span class="sidebar-text">Courses</span>
-              </div>
-            </a>
-            
-            <!-- Analytics Link -->
-            <a href="#" id="nav-analytics" class="sidebar-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <div class="flex items-center gap-3">
-                <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <line x1="18" x2="18" y1="20" y2="10"></line>
-                  <line x1="12" x2="12" y1="20" y2="4"></line>
-                  <line x1="6" x2="6" y1="20" y2="14"></line>
-                </svg>
-                <span class="sidebar-text">Analytics</span>
-              </div>
-            </a>
-            
-            <!-- Projects Link -->
-            <a href="#" id="nav-projects" class="sidebar-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <div class="flex items-center gap-3">
-                <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <span class="sidebar-text">Projects</span>
-              </div>
-            </a>
-            
-            <!-- 1:1 Live Session Link -->
-            <a href="#" id="nav-live-session" class="sidebar-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-bold text-primary hover:bg-muted/50 border border-primary/20 transition-all shadow-3xs">
-              <div class="flex items-center gap-3">
-                <svg class="w-4 h-4 shrink-0 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                <span class="sidebar-text">1:1 Live Session</span>
-              </div>
-              <span class="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold sidebar-text shadow-3xs flex items-center gap-1 leading-none">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                LIVE
-              </span>
-            </a>
-            
-            <!-- Chat Link -->
-            <a href="#" id="nav-chat" class="sidebar-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <div class="flex items-center gap-3">
-                <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <span class="sidebar-text">Chat</span>
-              </div>
-              <span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold sidebar-text shadow-3xs">3</span>
-            </a>
+    <Sidebar />
 
-            <!-- Blog Link (triggers WordPress-like adjacent sidebar panel) -->
-            <a href="#" id="blog-submenu-btn" class="sidebar-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <div class="flex items-center gap-3">
-                <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 4a2 2 0 00-2 2v8a2 2 0 002 2h2a2 2 0 002-2V14a2 2 0 00-2-2h-2m-11-4h4m-4 4h4m-4 4h4" />
-                </svg>
-                <span class="sidebar-text">Blog</span>
-              </div>
-              <svg id="blog-arrow" class="w-3.5 h-3.5 text-muted-foreground shrink-0 transition-transform duration-200 sidebar-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-            
-          </nav>
-        </div>
-      </div>
-      
-      <!-- Bottom Section: Unlock Card & Profile -->
-      <div class="p-3 border-t border-border space-y-3">
-        
-        <!-- Promo card "Unlock Everything" -->
-        <div id="unlock-card" class="bg-card border border-border rounded-xl p-4 text-left relative overflow-hidden sidebar-text">
-          <p class="font-bold text-sm text-foreground leading-tight">Unlock Everything</p>
-          <p class="text-xs text-muted-foreground mt-2 leading-relaxed">
-            Get instant access to all premium dashboards, templates, and UI components. Pay once, use forever in unlimited projects.
-          </p>
-          <button class="w-full flex items-center justify-center gap-2 mt-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 font-bold rounded-lg text-xs transition-colors cursor-pointer shadow-2xs">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Get Full Access
-          </button>
-        </div>
-
-        <!-- User Profile footer block -->
-        <div class="relative">
-          <button id="profile-block-btn" class="w-full flex items-center justify-between p-2 rounded-xl hover:bg-muted/60 transition-colors text-left border border-transparent hover:border-border cursor-pointer">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center shrink-0 border border-primary/20 text-xs shadow-sm" id="avatar-fallback">
-                H
-              </div>
-              <div class="min-w-0 sidebar-text">
-                <p class="text-xs font-semibold text-foreground truncate leading-none" id="profile-name">Hiver</p>
-                <p class="text-[10px] text-muted-foreground truncate mt-1.5 leading-none" id="profile-email">admin@hiver.com.np</p>
-              </div>
-            </div>
-            <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0 sidebar-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-            </svg>
-          </button>
-
-          <!-- Profile drop-up menu matching the screenshot, positioned to the right of the sidebar -->
-          <div id="profile-dropup-menu" class="absolute bottom-0 left-full ml-3 w-56 bg-card border border-border rounded-sm shadow-lg p-1.5 hidden z-[60]">
-            <div class="px-3 py-2 border-b border-border/40 mb-1.5">
-              <p class="text-xs font-bold text-foreground leading-none" id="menu-user-name">Hiver</p>
-              <p class="text-[10px] text-muted-foreground mt-1 leading-none" id="menu-user-email">admin@hiver.com.np</p>
-            </div>
-            
-            <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              Account
-            </a>
-            <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-                <line x1="2" x2="22" y1="10" y2="10"></line>
-              </svg>
-              Billing
-            </a>
-            <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              Notifications
-            </a>
-            <button id="menu-logout-btn" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold text-destructive hover:bg-destructive/10 transition-colors text-left border-t border-border/40 mt-1 cursor-pointer">
-              <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Log out
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </aside>
-
-    <!-- SECONDARY SIDEBAR: BLOG PANEL -->
-    <aside id="blog-panel" class="w-0 overflow-hidden bg-card/40 border-r border-border/0 flex flex-col justify-between shrink-0 h-full transition-all duration-300 z-25">
-      <div>
-        <div class="h-16 flex items-center justify-between px-4 border-b border-border">
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-primary shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 4a2 2 0 00-2 2v8a2 2 0 002 2h2a2 2 0 002-2V14a2 2 0 00-2-2h-2m-11-4h4m-4 4h4m-4 4h4" />
-            </svg>
-            <span class="font-bold text-sm text-foreground tracking-tight">Blog Manager</span>
-          </div>
-          <button id="blog-panel-close" class="p-1 hover:bg-muted rounded text-muted-foreground hover:text-foreground cursor-pointer flex items-center justify-center animate-none transition-colors" aria-label="Close blog panel">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 6 6 18M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-        <div class="p-3">
-          <p class="text-[11px] font-bold text-muted-foreground uppercase tracking-widest px-3.5 mb-2.5">Publishing</p>
-          <nav class="space-y-1">
-            <a href="#" id="nav-blog-posts" class="sidebar-submenu-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span>All Posts</span>
-            </a>
-            <a href="#" id="nav-blog-categories" class="sidebar-submenu-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-              <span>Categories</span>
-            </a>
-            <a href="#" id="nav-blog-tags" class="sidebar-submenu-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-              <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M6 20h4a2 2 0 001.414-.586l7-7a2 2 0 000-2.828l-4-4a2 2 0 00-2.828 0l-7 7A2 2 0 002 10v4a2 2 0 002 2z" />
-              </svg>
-              <span>Tags</span>
-            </a>
-          </nav>
-        </div>
-      </div>
-    </aside>
+    <BlogPanel />
 
     <!-- RIGHT CONTENT AREA -->
     <div class="flex-1 flex flex-col overflow-hidden h-full">
       
-      <!-- TOP NAVBAR -->
-      <header class="h-16 border-b border-border bg-card flex items-center justify-between px-4 md:px-6 shrink-0 z-20">
-        
-        <!-- Left Section: Collapse Toggle & Search -->
-        <div class="flex items-center gap-4 flex-1">
-          <!-- Sidebar Outer Collapse Toggle -->
-          <button id="sidebar-collapse-toggle-outer" class="p-2 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground cursor-pointer" aria-label="Toggle sidebar">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-              <path d="M9 3v18"></path>
-            </svg>
-          </button>
-          
-          <!-- Search Bar -->
-          <div class="relative w-full max-w-sm hidden sm:block">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="h-4 w-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
-              </svg>
-            </div>
-            <input type="text" id="navbar-search" class="block w-full pl-9 pr-12 py-2 text-sm bg-muted/30 border border-border rounded-sm focus:ring-1 focus:ring-foreground focus:outline-hidden font-medium placeholder-muted-foreground/80 text-foreground cursor-pointer select-none" placeholder="Search..." readonly />
-            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <kbd class="px-1.5 py-0.5 rounded border border-border/80 bg-card text-[9px] font-mono text-muted-foreground/75 font-semibold">⌘K</kbd>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Section: Actions & Utilities -->
-        <div class="flex items-center gap-3">
-          
-          <!-- Connect Wrapper -->
-          <div class="relative">
-            <button id="connect-btn" class="btn-snake-border flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-border bg-muted/30 hover:bg-muted/50 text-foreground font-semibold text-xs transition-all cursor-pointer shadow-3xs">
-              <span class="snake-line"></span>
-              <span class="snake-line"></span>
-              <span class="snake-line"></span>
-              <span class="snake-line"></span>
-              <svg class="w-3.5 h-3.5 shrink-0 z-10 text-foreground/85" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-              </svg>
-              <span class="z-10">Community Connect</span>
-              <svg id="connect-arrow" class="w-3 h-3 text-foreground/60 transition-transform duration-200 shrink-0 z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-
-            <!-- Connect Dropdown -->
-            <div id="connect-dropdown" class="absolute right-0 mt-2 w-64 bg-card/95 backdrop-blur-md border border-border/80 rounded-sm shadow-xl p-1.5 hidden z-50">
-              <!-- WhatsApp -->
-              <a href="https://wa.me/9800000000" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-emerald-500/10 transition-all border border-transparent hover:border-emerald-500/10 cursor-pointer group">
-                <div class="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/15">
-                  <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 360 362" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="#25D366" fill-rule="evenodd" d="M307.546 52.566C273.709 18.684 228.706.017 180.756 0 81.951 0 1.538 80.404 1.504 179.235c-.017 31.594 8.242 62.432 23.928 89.609L0 361.736l95.024-24.925c26.179 14.285 55.659 21.805 85.655 21.814h.077c98.788 0 179.21-80.413 179.244-179.244.017-47.898-18.608-92.926-52.454-126.807v-.008Zm-126.79 275.788h-.06c-26.73-.008-52.952-7.194-75.831-20.765l-5.44-3.231-56.391 14.791 15.05-54.981-3.542-5.638c-14.912-23.721-22.793-51.139-22.776-79.286.035-82.14 66.867-148.973 149.051-148.973 39.793.017 77.198 15.53 105.328 43.695 28.131 28.157 43.61 65.596 43.593 105.398-.035 82.149-66.867 148.982-148.982 148.982v.008Zm81.719-111.577c-4.478-2.243-26.497-13.073-30.606-14.568-4.108-1.496-7.09-2.243-10.073 2.243-2.982 4.487-11.568 14.577-14.181 17.559-2.613 2.991-5.226 3.361-9.704 1.117-4.477-2.243-18.908-6.97-36.02-22.226-13.313-11.878-22.304-26.54-24.916-31.027-2.613-4.486-.275-6.91 1.959-9.136 2.011-2.011 4.478-5.234 6.721-7.847 2.244-2.613 2.983-4.486 4.478-7.469 1.496-2.991.748-5.603-.369-7.847-1.118-2.243-10.073-24.289-13.812-33.253-3.636-8.732-7.331-7.546-10.073-7.692-2.613-.13-5.595-.155-8.586-.155-2.991 0-7.839 1.118-11.947 5.604-4.108 4.486-15.677 15.324-15.677 37.361s16.047 43.344 18.29 46.335c2.243 2.991 31.585 48.225 76.51 67.632 10.684 4.615 19.029 7.374 25.535 9.437 10.727 3.412 20.49 2.931 28.208 1.779 8.604-1.289 26.498-10.838 30.228-21.298 3.73-10.46 3.73-19.433 2.613-21.298-1.117-1.865-4.108-2.991-8.586-5.234l.008-.017Z" clip-rule="evenodd" />
-                  </svg>
-                </div>
-                <div class="flex-1">
-                  <p class="text-xs font-bold text-foreground leading-none">WhatsApp Support</p>
-                  <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Direct chat with our trading desk</p>
-                </div>
-              </a>
-              <!-- Telegram -->
-              <a href="https://t.me/hivertrader" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-sky-500/10 transition-all border border-transparent hover:border-sky-500/10 cursor-pointer group">
-                <div class="w-8 h-8 rounded-full bg-sky-500/10 text-sky-500 flex items-center justify-center shrink-0 border border-sky-500/15">
-                  <svg class="w-4 h-4 shrink-0" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
-                    <defs>
-                      <linearGradient id="telegram-grad-new" x1="50%" x2="50%" y1="0%" y2="100%">
-                        <stop offset="0%" stop-color="#2AABEE"/>
-                        <stop offset="100%" stop-color="#229ED9"/>
-                      </linearGradient>
-                    </defs>
-                    <path fill="url(#telegram-grad-new)" d="M128 0C94.06 0 61.48 13.494 37.5 37.49A128.038 128.038 0 0 0 0 128c0 33.934 13.5 66.514 37.5 90.51C61.48 242.506 94.06 256 128 256s66.52-13.494 90.5-37.49c24-23.996 37.5-56.576 37.5-90.51 0-33.934-13.5-66.514-37.5-90.51C194.52 13.494 161.94 0 128 0Z"/>
-                    <path fill="#FFF" d="M57.94 126.648c37.32-16.256 62.2-26.974 74.64-32.152 35.56-14.786 42.94-17.354 47.76-17.441 1.06-.017 3.42.245 4.96 1.49 1.28 1.05 1.64 2.47 1.82 3.467.16.996.38 3.266.2 5.038-1.92 20.24-10.26 69.356-14.5 92.026-1.78 9.592-5.32 12.808-8.74 13.122-7.44.684-13.08-4.912-20.28-9.63-11.26-7.386-17.62-11.982-28.56-19.188-12.64-8.328-4.44-12.906 2.76-20.386 1.88-1.958 34.64-31.748 35.26-34.45.08-.338.16-1.598-.6-2.262-.74-.666-1.84-.438-2.64-.258-1.14.256-19.12 12.152-54 35.686-5.1 3.508-9.72 5.218-13.88 5.128-4.56-.098-13.36-2.584-19.9-4.708-8-2.606-14.38-3.984-13.82-8.41.28-2.304 3.46-4.662 9.52-7.072Z"/>
-                  </svg>
-                </div>
-                <div class="flex-1">
-                  <p class="text-xs font-bold text-foreground leading-none">Telegram Channel</p>
-                  <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Instant updates & daily signals</p>
-                </div>
-              </a>
-              <!-- Discord -->
-              <a href="https://discord.gg/hivertrader" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-2 rounded-sm hover:bg-indigo-500/10 transition-all border border-transparent hover:border-indigo-500/10 cursor-pointer group">
-                <div class="w-8 h-8 rounded-full bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0 border border-indigo-500/15">
-                  <svg class="w-4 h-4 shrink-0" viewBox="0 0 256 199" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
-                    <path d="M216.856 16.597A208.502 208.502 0 0 0 164.042 0c-2.275 4.113-4.933 9.645-6.766 14.046-19.692-2.961-39.203-2.961-58.533 0-1.832-4.4-4.55-9.933-6.846-14.046a207.809 207.809 0 0 0-52.855 16.638C5.618 67.147-3.443 116.4 1.087 164.956c22.169 16.555 43.653 26.612 64.775 33.193A161.094 161.094 0 0 0 79.735 175.3a136.413 136.413 0 0 1-21.846-10.632 108.636 108.636 0 0 0 5.356-4.237c42.122 19.702 87.89 19.702 129.51 0a131.66 131.66 0 0 0 5.355 4.237 136.07 136.07 0 0 1-21.886 10.653c4.006 8.02 8.638 15.67 13.873 22.848 21.142-6.58 42.646-16.637 64.815-33.213 5.316-56.288-9.08-105.09-38.056-148.36ZM85.474 135.095c-12.645 0-23.015-11.805-23.015-26.18s10.149-26.2 23.015-26.2c12.867 0 23.236 11.804 23.015 26.2.02 14.375-10.148 26.18-23.015 26.18Zm85.051 0c-12.645 0-23.014-11.805-23.014-26.18s10.148-26.2 23.014-26.2c12.867 0 23.236 11.804 23.015 26.2 0 14.375-10.148 26.18-23.015 26.18Z" fill="#5865F2"/>
-                  </svg>
-                </div>
-                <div class="flex-1">
-                  <p class="text-xs font-bold text-foreground leading-none">Discord Server</p>
-                  <p class="text-[9px] text-muted-foreground mt-1 leading-normal font-semibold">Join the community discussion</p>
-                </div>
-              </a>
-            </div>
-          </div>
-
-          <!-- Invite & Earn Wrapper -->
-          <div class="relative">
-            <button id="invite-earn-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-xs transition-all cursor-pointer shadow-3xs">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"></line>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-              </svg>
-              <span class="hidden md:inline">Invite & Earn</span>
-              <span class="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground font-bold text-[9px] shadow-3xs leading-none">₹250</span>
-            </button>
-
-            <!-- Invite & Earn Dropdown -->
-            <div id="invite-earn-dropdown" class="absolute right-0 mt-2 w-80 bg-card border border-border rounded-sm shadow-lg p-4 hidden z-50">
-              <h3 class="font-bold text-sm text-foreground mb-1.5">Invite Friends & Earn Credits</h3>
-              <p class="text-[11px] text-muted-foreground leading-relaxed mb-3">
-                Share your referral link with friends. You will earn <span class="text-primary font-bold">₹250 credits</span> when they complete registration, and they get a starting bonus of ₹100!
-              </p>
-              
-              <!-- Credit Balance block -->
-              <div class="bg-muted/40 rounded-lg p-3 mb-3 border border-border/40 flex justify-between items-center">
-                <div>
-                  <p class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Referral Balance</p>
-                  <p class="text-lg font-bold text-foreground">₹250 <span class="text-xs font-semibold text-muted-foreground">Credits</span></p>
-                </div>
-                <button class="px-2.5 py-1 bg-primary text-primary-foreground hover:bg-primary/95 text-[10px] font-bold rounded-md transition-colors cursor-pointer">
-                  Redeem
-                </button>
-              </div>
-
-              <!-- Referral Code Field -->
-              <div class="space-y-1.5">
-                <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Your Referral Link</label>
-                <div class="flex gap-1.5">
-                  <input type="text" id="referral-link-input" readonly value="https://hiverlms.com/invite/PN250" class="flex-1 px-2.5 py-1.5 text-xs bg-muted/60 border border-border rounded-md text-muted-foreground select-all focus:outline-hidden font-medium" />
-                  <button id="copy-referral-btn" class="px-3 py-1.5 bg-secondary text-secondary-foreground hover:bg-muted font-bold text-xs rounded-md border border-border transition-colors cursor-pointer flex-shrink-0">
-                    Copy
-                  </button>
-                </div>
-                <span id="copy-toast" class="text-[10px] text-emerald-500 font-semibold hidden">Link copied to clipboard!</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Notifications Wrapper -->
-          <div class="relative">
-            <button id="notifications-bell-btn" class="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-xl transition-all cursor-pointer relative" aria-label="Notifications">
-              <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <!-- Unread notification badge dot -->
-              <span id="bell-unread-dot" class="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full border border-card shadow-3xs animate-pulse"></span>
-            </button>
-
-            <!-- Notifications Dropdown -->
-            <div id="notifications-dropdown" class="absolute right-0 mt-2 w-96 bg-card border border-border rounded-sm shadow-lg p-1.5 hidden z-50">
-              <div class="px-3 py-2 flex items-center justify-between border-b border-border/40 mb-1">
-                <span class="font-bold text-xs text-foreground">Notifications</span>
-                <button id="mark-all-read-btn" class="text-[10px] font-bold text-primary hover:underline cursor-pointer">
-                  Mark all as read
-                </button>
-              </div>
-
-              <!-- Notifications list -->
-              <div class="max-h-[260px] overflow-y-auto space-y-0.5 scrollbar-thin">
-                
-                <!-- Notification Item 1: Referral Credited -->
-                <div class="p-2.5 rounded-lg hover:bg-muted/40 transition-colors border border-transparent hover:border-border/20 flex gap-2.5 items-start">
-                  <div class="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 border border-emerald-500/15">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                  <div class="min-w-0">
-                    <p class="text-xs font-bold text-foreground leading-tight">Referral Reward Credited! 🎉</p>
-                    <p class="text-[10px] text-muted-foreground mt-1 leading-relaxed">Your friend signed up! <span class="text-emerald-500 font-bold">₹250</span> has been added to your credits.</p>
-                    <p class="text-[9px] text-muted-foreground/60 font-semibold mt-1">2 hours ago</p>
-                  </div>
-                </div>
-
-                <!-- Notification Item 2: Signup Bonus -->
-                <div class="p-2.5 rounded-lg hover:bg-muted/40 transition-colors border border-transparent hover:border-border/20 flex gap-2.5 items-start">
-                  <div class="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/15">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <circle cx="12" cy="12" r="8"></circle>
-                      <line x1="12" y1="8" x2="12" y2="16"></line>
-                      <line x1="8" y1="12" x2="16" y2="12"></line>
-                    </svg>
-                  </div>
-                  <div class="min-w-0">
-                    <p class="text-xs font-bold text-foreground leading-tight">Welcome Credits Credited</p>
-                    <p class="text-[10px] text-muted-foreground mt-1 leading-relaxed">You received a welcome signup bonus of <span class="text-primary font-bold">₹100 credits</span>!</p>
-                    <p class="text-[9px] text-muted-foreground/60 font-semibold mt-1">1 day ago</p>
-                  </div>
-                </div>
-
-                <!-- Notification Item 3: Invite reminder -->
-                <div class="p-2.5 rounded-lg hover:bg-muted/40 transition-colors border border-transparent hover:border-border/20 flex gap-2.5 items-start">
-                  <div class="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/15">
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="22" y1="2" x2="11" y2="13"></line>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
-                  </div>
-                  <div class="min-w-0">
-                    <p class="text-xs font-bold text-foreground leading-tight">Invite & Earn ₹250!</p>
-                    <p class="text-[10px] text-muted-foreground mt-1 leading-relaxed">Invite friends to HiverLMS. Earn credits to unlock premium simulators & features.</p>
-                    <p class="text-[9px] text-muted-foreground/60 font-semibold mt-1">3 days ago</p>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Notifications footer -->
-              <div class="border-t border-border/40 mt-1 pt-1.5 pb-0.5 px-3">
-                <button class="w-full text-center text-xs font-bold text-primary hover:underline hover:text-primary/95 transition-all cursor-pointer py-1.5 rounded-md hover:bg-muted/30">
-                  See All Notifications
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Theme Switcher -->
-          <button id="theme-toggle" class="p-2 text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-xl transition-all cursor-pointer" aria-label="Toggle theme">
-            <!-- Moon icon (visible in light mode) -->
-            <svg id="theme-toggle-moon" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
-            </svg>
-            <!-- Sun icon (visible in dark mode) -->
-            <svg id="theme-toggle-sun" class="w-5 h-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <circle cx="12" cy="12" r="5"></circle>
-              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-            </svg>
-          </button>
-
-          <!-- Create Course Button -->
-          <button id="create-course-btn" class="flex items-center gap-1.5 px-4 py-1.5 rounded-sm bg-gradient-to-b from-[#e88c73] via-[#df775b] to-[#c8664d] hover:brightness-105 active:translate-y-[2px] active:border-b-[1px] active:mb-[1px] active:shadow-xs text-white font-bold text-xs shadow-[0_3px_5px_rgba(223,119,91,0.25)] hover:shadow-[0_4px_7px_rgba(223,119,91,0.35)] transition-all duration-100 cursor-pointer border-t border-t-white/30 border-x border-x-[#df775b]/60 border-b-[3px] border-b-[#9e412a] select-none">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            <span>Create Course</span>
-          </button>
-
-          <!-- Vertical Divider -->
-          <div class="h-5 w-[1px] bg-border mx-1"></div>
-
-          <!-- User Profile Avatar and Dropdown Wrapper -->
-          <div class="relative">
-            <button id="top-user-avatar-btn" class="w-8 h-8 rounded-full bg-primary text-white font-bold flex items-center justify-center shrink-0 border border-primary/20 text-xs shadow-sm cursor-pointer relative" aria-label="User menu">
-              <span id="top-avatar-fallback">H</span>
-            </button>
-
-            <!-- Dropdown Menu -->
-            <div id="top-profile-dropdown" class="absolute right-0 mt-2 w-64 bg-card border border-border rounded-sm shadow-lg p-1.5 hidden z-50">
-              
-              <!-- Header with Avatar, Name, Email -->
-              <div class="p-3 flex items-center gap-3 border-b border-border/40 mb-1">
-                <div class="w-10 h-10 rounded-full bg-primary text-white font-bold flex items-center justify-center shrink-0 border border-primary/20 text-sm shadow-sm" id="top-dropdown-avatar-fallback">
-                  H
-                </div>
-                <div class="min-w-0">
-                  <p class="text-xs font-bold text-foreground truncate leading-none" id="top-profile-name">Hiver</p>
-                  <p class="text-[10px] text-muted-foreground truncate mt-1 leading-none" id="top-profile-email">admin@hiver.com.np</p>
-                </div>
-              </div>
-
-              <!-- Account & Settings Items -->
-              <div class="py-0.5">
-                <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-                  <svg class="w-4 h-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  Account
-                </a>
-                <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-                  <svg class="w-4 h-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Settings
-                </a>
-              </div>
-
-              <div class="border-b border-border/40 my-1"></div>
-
-              <!-- Plan & Billing Item -->
-              <div class="py-0.5">
-                <a href="#" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
-                  <svg class="w-4 h-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-                    <line x1="2" y1="10" y2="10"></line>
-                  </svg>
-                  Plan & Billing
-                </a>
-              </div>
-
-              <div class="border-b border-border/40 my-1"></div>
-
-              <!-- Log out Item -->
-              <div class="py-0.5">
-                <button id="top-logout-btn" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold text-destructive hover:bg-destructive/10 transition-colors text-left cursor-pointer">
-                  <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  Log out
-                </button>
-              </div>
-
-            </div>
-          </div>
-          
-        </div>
-      </header>
+      <Topbar />
 
       <!-- EMPTY DASHBOARD CANVAS -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 bg-muted/10">
         
         <!-- Dashboard Header (Title only) -->
-        <div>
+        <div class="flex items-center justify-between border-b border-border/40 pb-4">
           <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-foreground" id="dashboard-title">Dashboard</h1>
         </div>
+
+        <!-- Default Dashboard View -->
+        <div id="view-default" class="mt-6">
+        </div>
+
+        <CoursesView />
+
+        <AnalyticsView />
+
+        <ProjectsView />
+
+        <LiveSessionView />
+
+        <ChatView />
+
+        <BlogPostsView />
+
+        <BlogEditorView />
+
+        <BlogCategoriesView />
+
+        <BlogTagsView />
 
       </main>
     </div>
@@ -568,214 +78,35 @@ import Layout from "../layouts/Layout.astro";
     <p class="text-sm font-semibold text-muted-foreground">Access denied. Redirecting to login...</p>
   </div>
 
-  <!-- Shadcn Command Dialog Overlay -->
-  <div id="command-dialog-overlay" class="fixed inset-0 z-[100] bg-background/80 backdrop-blur-xs hidden justify-center pt-[15vh]">
-    <!-- Modal Card Box -->
-    <div id="command-dialog-content" class="relative w-full max-w-lg bg-card text-card-foreground border border-border rounded-lg shadow-lg overflow-hidden flex flex-col scale-95 opacity-0 transition-all duration-200 ease-out max-h-[450px]">
-      
-      <!-- Top Input Panel -->
-      <div class="flex items-center border-b border-border px-3 shrink-0">
-        <svg class="mr-2 h-4 w-4 shrink-0 opacity-50 text-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
-        </svg>
-        <input type="text" id="command-search-input" class="flex h-11 w-full bg-transparent py-3 text-xs outline-hidden placeholder:text-muted-foreground/60 text-foreground font-medium" placeholder="Type a command or search..." autocomplete="off" spellcheck="false" />
-        <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border/80 bg-muted px-1.5 font-mono text-[9px] font-medium text-muted-foreground/75 opacity-100">ESC</kbd>
+  <!-- Sonner-style Toaster Container -->
+  <div id="toaster-container" class="fixed bottom-4 right-4 z-[110] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- Shadcn-style Custom Dialog Overlay (AlertDialog) -->
+  <div id="custom-dialog-overlay" class="fixed inset-0 bg-background/85 backdrop-blur-xs z-[105] hidden items-center justify-center animate-fade-in">
+    <div id="custom-dialog-content" class="bg-card border border-border rounded-sm shadow-lg max-w-md w-full p-6 space-y-4 scale-95 opacity-0 transition-all duration-200">
+      <div class="space-y-1.5">
+        <h3 id="custom-dialog-title" class="text-sm font-bold text-foreground">Confirm Action</h3>
+        <p id="custom-dialog-description" class="text-xs text-muted-foreground leading-relaxed"></p>
       </div>
-      
-      <!-- Scrollable List -->
-      <div id="command-results-list" class="max-h-[300px] overflow-y-auto p-1.5 space-y-1">
-        
-        <!-- Navigation Group -->
-        <div class="command-group" data-group="navigation">
-          <div class="px-2 py-1.5 text-[9px] font-bold text-muted-foreground/50 uppercase tracking-widest">Navigation</div>
-          <div class="space-y-0.5">
-            
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-dashboard">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                  <path d="m12 14 5-5"></path>
-                  <circle cx="12" cy="12" r="1"></circle>
-                </svg>
-                <span>Dashboard</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Overview</span>
-            </button>
-            
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-courses">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="9" y1="9" x2="15" y2="9"></line>
-                  <line x1="9" y1="13" x2="15" y2="13"></line>
-                  <line x1="9" y1="17" x2="15" y2="17"></line>
-                </svg>
-                <span>Courses</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Overview</span>
-            </button>
-            
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-analytics">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <line x1="18" x2="18" y1="20" y2="10"></line>
-                  <line x1="12" x2="12" y1="20" y2="4"></line>
-                  <line x1="6" x2="6" y1="20" y2="14"></line>
-                </svg>
-                <span>Analytics</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Overview</span>
-            </button>
-            
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-projects">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <span>Projects</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Overview</span>
-            </button>
-            
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-live-session">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                <span>1:1 Live Session</span>
-              </div>
-              <span class="text-[10px] font-mono text-primary/80">Premium</span>
-            </button>
-            
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav" data-target="nav-chat">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <span>Chat</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Overview</span>
-            </button>
-
-            <!-- Blog Submenu Commands -->
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav-sub" data-target="nav-blog-posts" data-parent="blog-panel">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1" />
-                </svg>
-                <span>Blog: All Posts</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Submenu</span>
-            </button>
-
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav-sub" data-target="nav-blog-categories" data-parent="blog-panel">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1" />
-                </svg>
-                <span>Blog: Categories</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Submenu</span>
-            </button>
-
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="nav-sub" data-target="nav-blog-tags" data-parent="blog-panel">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1" />
-                </svg>
-                <span>Blog: Tags</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Submenu</span>
-            </button>
-            
-          </div>
-        </div>
-        
-        <!-- Settings Group -->
-        <div class="command-group" data-group="settings">
-          <div class="px-2 py-1.5 text-[9px] font-bold text-muted-foreground/50 uppercase tracking-widest border-t border-border/40 mt-1.5">Settings</div>
-          <div class="space-y-0.5">
-            
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="theme">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="4"></circle>
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
-                </svg>
-                <span>Toggle Theme</span>
-              </div>
-              <span class="text-[10px] font-mono text-muted-foreground/40">Appearance</span>
-            </button>
-            
-            <button class="command-item w-full flex items-center justify-between px-2 py-2 rounded-sm text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer text-left outline-hidden" data-action="logout">
-              <div class="flex items-center gap-2.5">
-                <svg class="w-3.5 h-3.5 text-destructive" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                <span class="text-destructive">Log Out</span>
-              </div>
-              <span class="text-[10px] font-mono text-destructive/40">Session</span>
-            </button>
-            
-          </div>
-        </div>
-
-        <!-- No Results Found -->
-        <div id="command-no-results" class="py-6 text-center text-xs text-muted-foreground/60 hidden">
-          No results found.
-        </div>
-
+      <div id="custom-dialog-input-container" class="hidden space-y-1.5">
+        <input type="text" id="custom-dialog-input" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium" />
       </div>
-      
-    </div>
-  </div>
-
-  <!-- Create Course Modal Overlay -->
-  <div id="create-course-modal-overlay" class="fixed inset-0 z-[100] bg-background/80 backdrop-blur-xs hidden justify-center items-center">
-    <div id="create-course-modal-content" class="relative w-full max-w-md bg-card text-card-foreground border border-border rounded-sm shadow-xl p-5 scale-95 opacity-0 transition-all duration-200 ease-out">
-      <div class="flex items-center justify-between border-b border-border/40 pb-3 mb-4">
-        <h3 class="font-bold text-sm text-foreground">Create New Course</h3>
-        <button id="close-create-course-btn" class="p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-all cursor-pointer" type="button">
-          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button id="custom-dialog-cancel" class="px-4 py-2 hover:bg-muted text-xs font-bold rounded-sm border border-border transition-colors cursor-pointer text-muted-foreground hover:text-foreground">
+          Cancel
+        </button>
+        <button id="custom-dialog-confirm" class="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/95 text-xs font-bold rounded-sm transition-colors cursor-pointer shadow-sm">
+          Confirm
         </button>
       </div>
-      
-      <form id="create-course-form" class="space-y-4">
-        <div class="space-y-1.5">
-          <label for="course-title" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Course Title</label>
-          <input type="text" id="course-title" placeholder="e.g. Technical Analysis Masterclass" required class="w-full px-3 py-2 text-xs bg-muted/30 border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium" />
-        </div>
-        
-        <div class="space-y-1.5">
-          <label for="course-category" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Category</label>
-          <select id="course-category" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold">
-            <option value="trading">Trading Strategies</option>
-            <option value="crypto">Cryptocurrency</option>
-            <option value="forex">Forex Trading</option>
-            <option value="basics">Market Basics</option>
-          </select>
-        </div>
-        
-        <div class="space-y-1.5">
-          <label for="course-description" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Description</label>
-          <textarea id="course-description" rows="3" placeholder="Brief outline of course content and learning goals..." class="w-full px-3 py-2 text-xs bg-muted/30 border border-border rounded-sm focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-medium resize-none"></textarea>
-        </div>
-        
-        <div class="flex justify-end gap-2 pt-2 border-t border-border/40">
-          <button type="button" id="cancel-create-course-btn" class="px-3.5 py-2 hover:bg-muted text-xs font-bold rounded-sm border border-border transition-colors cursor-pointer text-muted-foreground hover:text-foreground">
-            Cancel
-          </button>
-          <button type="submit" class="px-4 py-2 bg-gradient-to-b from-[#e88c73] via-[#df775b] to-[#c8664d] hover:brightness-105 active:translate-y-[2px] active:border-b-[1px] active:mb-[1px] active:shadow-xs text-white font-bold text-xs rounded-sm shadow-[0_3px_5px_rgba(223,119,91,0.25)] hover:shadow-[0_4px_7px_rgba(223,119,91,0.35)] transition-all duration-100 cursor-pointer border-t border-t-white/30 border-x border-x-[#df775b]/60 border-b-[3px] border-b-[#9e412a] select-none">
-            Create Course
-          </button>
-        </div>
-      </form>
     </div>
   </div>
+
+  <CommandDialog />
+
+  <CreateCourseModal />
+
+  <SeoSheet />
 </Layout>
 
 <!-- Core Styles Overrides -->
@@ -807,11 +138,106 @@ import Layout from "../layouts/Layout.astro";
     background-color: var(--muted) !important;
     color: var(--foreground) !important;
   }
+
+  /* Tiptap editor placeholder & prose styling */
+  .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: var(--muted-foreground);
+    opacity: 0.6;
+    pointer-events: none;
+    height: 0;
+  }
+  .ProseMirror {
+    outline: none;
+    min-height: 320px;
+  }
+  .ProseMirror h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .ProseMirror h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 0.875rem;
+    margin-bottom: 0.4rem;
+  }
+  .ProseMirror h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 0.75rem;
+    margin-bottom: 0.3rem;
+  }
+  .ProseMirror ul {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .ProseMirror ol {
+    list-style-type: decimal;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .ProseMirror blockquote {
+    border-left: 3px solid var(--primary);
+    padding-left: 1rem;
+    color: var(--muted-foreground);
+    font-style: italic;
+    margin: 1rem 0;
+  }
+  .ProseMirror pre {
+    background: var(--muted);
+    padding: 0.75rem 1rem;
+    border-radius: 0.125rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+  .ProseMirror code {
+    background: var(--muted);
+    padding: 0.15rem 0.3rem;
+    border-radius: 0.125rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+  }
+  .ProseMirror a {
+    color: var(--primary);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .ProseMirror img {
+    border-radius: 0.125rem;
+    max-height: 300px;
+    object-fit: cover;
+    margin: 1rem 0;
+  }
 </style>
 
 <!-- Client State Script -->
 <script>
   import { authClient } from "../lib/auth-client";
+  import { PUBLIC_SERVER_URL } from "astro:env/client";
+  import { Editor, Extension } from "@tiptap/core";
+  import StarterKit from "@tiptap/starter-kit";
+  import Image from "@tiptap/extension-image";
+  import { Placeholder } from "@tiptap/extensions";
+  import BubbleMenu from "@tiptap/extension-bubble-menu";
+  import DragHandle from "@tiptap/extension-drag-handle";
+  import Highlight from "@tiptap/extension-highlight";
+  import TextAlign from "@tiptap/extension-text-align";
+  import Subscript from "@tiptap/extension-subscript";
+  import Superscript from "@tiptap/extension-superscript";
+  import Suggestion from "@tiptap/suggestion";
+  import { blogStore, toast, dialog } from "../lib/dashboard-store";
+
+  // Expose store and utils globally
+  (window as any).blogStore = blogStore;
+  (window as any).toast = toast;
+  (window as any).dialog = dialog;
+  (window as any).showView = showView;
 
   // Selectors
   const root = document.getElementById("dashboard-root")!;
@@ -886,7 +312,377 @@ import Layout from "../layouts/Layout.astro";
   const cancelCreateCourseBtn = document.getElementById("cancel-create-course-btn")!;
   const createCourseForm = document.getElementById("create-course-form") as HTMLFormElement;
 
-  let currentUser: any = null;
+  // Blog views control
+  const views = [
+    "view-default",
+    "view-courses",
+    "view-analytics",
+    "view-projects",
+    "view-live-session",
+    "view-chat",
+    "view-blog-posts",
+    "view-blog-editor",
+    "view-blog-categories",
+    "view-blog-tags"
+  ];
+
+  function showView(viewId: string) {
+    views.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        if (id === viewId) {
+          el.classList.remove("hidden");
+        } else {
+          el.classList.add("hidden");
+        }
+      }
+    });
+  }
+
+  function openBlogPanel() {
+    blogPanel.classList.remove("w-0", "border-border/0");
+    blogPanel.classList.add("w-56", "border-border");
+    blogArrow.classList.add("rotate-180");
+    
+    if (sidebar.classList.contains("collapsed")) {
+      sidebar.classList.remove("collapsed");
+      localStorage.setItem("sidebar-collapsed", "false");
+    }
+    localStorage.setItem("blog-panel-open", "true");
+  }
+
+  function closeBlogPanel() {
+    blogPanel.classList.remove("w-56", "border-border");
+    blogPanel.classList.add("w-0", "border-border/0");
+    blogArrow.classList.remove("rotate-180");
+    localStorage.setItem("blog-panel-open", "false");
+  }
+
+  // Tiptap editor variables
+  let editor: Editor | null = null;
+  let currentHoverPos: number | null = null;
+
+  // Slash-command block menu items
+  const ICONS = {
+    h1: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="m17 12 3-2v8"/></svg>',
+    h2: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1"/></svg>',
+    h3: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2"/><path d="M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2"/></svg>',
+    bullet: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>',
+    ordered: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="21" y1="6" y2="6"/><line x1="10" x2="21" y1="12" y2="12"/><line x1="10" x2="21" y1="18" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>',
+    quote: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6H3"/><path d="M21 12H8"/><path d="M21 18H8"/><path d="M3 12v6"/></svg>',
+    code: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    divider: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="12" y2="12"/></svg>',
+    image: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
+  };
+
+  const slashItems = [
+    { title: "Heading 1", desc: "Big section heading", icon: ICONS.h1, command: ({ editor, range }: any) => editor.chain().focus().deleteRange(range).setNode("heading", { level: 1 }).run() },
+    { title: "Heading 2", desc: "Medium section heading", icon: ICONS.h2, command: ({ editor, range }: any) => editor.chain().focus().deleteRange(range).setNode("heading", { level: 2 }).run() },
+    { title: "Heading 3", desc: "Small section heading", icon: ICONS.h3, command: ({ editor, range }: any) => editor.chain().focus().deleteRange(range).setNode("heading", { level: 3 }).run() },
+    { title: "Bullet List", desc: "Simple bulleted list", icon: ICONS.bullet, command: ({ editor, range }: any) => editor.chain().focus().deleteRange(range).toggleBulletList().run() },
+    { title: "Numbered List", desc: "Ordered list", icon: ICONS.ordered, command: ({ editor, range }: any) => editor.chain().focus().deleteRange(range).toggleOrderedList().run() },
+    { title: "Quote", desc: "Capture a quotation", icon: ICONS.quote, command: ({ editor, range }: any) => editor.chain().focus().deleteRange(range).toggleBlockquote().run() },
+    { title: "Code Block", desc: "Code snippet with syntax", icon: ICONS.code, command: ({ editor, range }: any) => editor.chain().focus().deleteRange(range).toggleCodeBlock().run() },
+    { title: "Divider", desc: "Horizontal rule", icon: ICONS.divider, command: ({ editor, range }: any) => editor.chain().focus().deleteRange(range).setHorizontalRule().run() },
+    { title: "Image", desc: "Embed an image by URL", icon: ICONS.image, command: async ({ editor, range }: any) => {
+        editor.chain().focus().deleteRange(range).run();
+        const url = await dialog.prompt("Insert Image", "Enter the image source URL:");
+        if (url) editor.chain().focus().setImage({ src: url }).run();
+      } },
+  ];
+
+  // Slash command extension (vanilla suggestion-based)
+  const SlashCommand = Extension.create<{ suggestion: Record<string, any> }>({
+    name: "slashCommand",
+    addOptions() {
+      return {
+        suggestion: {
+          char: "/",
+          command: ({ editor, range, props }: any) => props.command({ editor, range }),
+        },
+      };
+    },
+    addProseMirrorPlugins() {
+      return [Suggestion({ editor: this.editor, ...this.options.suggestion })];
+    },
+  });
+
+  function buildSlashRender() {
+    let popup: HTMLElement | null = null;
+    let items: any[] = [];
+    let selected = 0;
+    let activeProps: any = null;
+
+    const draw = () => {
+      if (!popup) return;
+      popup.innerHTML = "";
+      if (items.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "slash-empty";
+        empty.textContent = "No matching blocks";
+        popup.appendChild(empty);
+        return;
+      }
+      items.forEach((item, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "slash-item" + (i === selected ? " is-selected" : "");
+        btn.innerHTML = `<span class="slash-item-icon">${item.icon}</span><span class="slash-item-text"><span class="slash-item-title">${item.title}</span><span class="slash-item-desc">${item.desc}</span></span>`;
+        btn.addEventListener("mousedown", (e) => { e.preventDefault(); pick(i); });
+        btn.addEventListener("mouseenter", () => { selected = i; mark(); });
+        popup!.appendChild(btn);
+      });
+    };
+
+    const mark = () => {
+      popup?.querySelectorAll(".slash-item").forEach((el, i) => el.classList.toggle("is-selected", i === selected));
+    };
+
+    const pick = (i: number) => {
+      const item = items[i];
+      if (item && activeProps) activeProps.command(item);
+    };
+
+    const place = (props: any) => {
+      if (!popup) return;
+      const rect = props.clientRect?.();
+      if (!rect) return;
+      const menuW = 280;
+      const left = Math.min(rect.left, window.innerWidth - menuW - 16);
+      popup.style.left = `${Math.max(8, left)}px`;
+      popup.style.top = `${rect.bottom + 6}px`;
+    };
+
+    return {
+      onStart: (props: any) => {
+        activeProps = props;
+        items = props.items;
+        selected = 0;
+        popup = document.createElement("div");
+        popup.className = "slash-menu";
+        document.body.appendChild(popup);
+        draw();
+        place(props);
+      },
+      onUpdate: (props: any) => {
+        activeProps = props;
+        items = props.items;
+        selected = 0;
+        draw();
+        place(props);
+      },
+      onKeyDown: (props: any) => {
+        const key = props.event.key;
+        if (key === "ArrowDown") { selected = (selected + 1) % Math.max(items.length, 1); mark(); return true; }
+        if (key === "ArrowUp") { selected = (selected - 1 + items.length) % Math.max(items.length, 1); mark(); return true; }
+        if (key === "Enter") { pick(selected); return true; }
+        if (key === "Escape") { popup?.remove(); popup = null; return true; }
+        return false;
+      },
+      onExit: () => { popup?.remove(); popup = null; },
+    };
+  }
+
+  // Open the slash block menu below the hovered block (used by + buttons)
+  function openBlockMenuAtHover() {
+    if (!editor) return;
+    if (currentHoverPos == null) {
+      editor.chain().focus().insertContent("/").run();
+      return;
+    }
+    const node = editor.state.doc.nodeAt(currentHoverPos);
+    const after = currentHoverPos + (node ? node.nodeSize : 1);
+    editor.chain().focus().insertContentAt(after, { type: "paragraph" }).setTextSelection(after + 1).insertContent("/").run();
+  }
+
+  function initTiptap() {
+    if (editor) return;
+
+    editor = new Editor({
+      element: document.getElementById("editor-content-tiptap")!,
+      extensions: [
+        StarterKit.configure({
+          link: {
+            openOnClick: false,
+            HTMLAttributes: {
+              class: "text-primary underline underline-offset-2 cursor-pointer",
+            },
+          },
+        }),
+        Highlight.configure({
+          HTMLAttributes: { class: "rounded px-0.5" },
+        }),
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+        }),
+        Subscript,
+        Superscript,
+        Image.configure({
+          HTMLAttributes: {
+            class: "rounded-lg max-h-[360px] object-cover my-4",
+          },
+        }),
+        Placeholder.configure({
+          placeholder: ({ node }: any) =>
+            node.type.name === "heading" ? "Heading" : "Write something, or press '/' for blocks…",
+        }),
+        BubbleMenu.configure({
+          element: document.getElementById("editor-bubble-menu")!,
+          options: { placement: "top", offset: 8 },
+        }),
+        DragHandle.configure({
+          render: () => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "drag-handle-wrapper";
+
+            const plus = document.createElement("button");
+            plus.type = "button";
+            plus.className = "drag-handle-plus";
+            plus.title = "Add block below";
+            plus.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>';
+            plus.addEventListener("mousedown", (e) => e.preventDefault());
+            plus.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); openBlockMenuAtHover(); });
+
+            const grip = document.createElement("div");
+            grip.className = "drag-handle-grip";
+            grip.title = "Drag to move";
+            grip.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>';
+
+            wrapper.appendChild(plus);
+            wrapper.appendChild(grip);
+            return wrapper;
+          },
+          onNodeChange: ({ pos }: any) => {
+            currentHoverPos = typeof pos === "number" ? pos : null;
+          },
+        }),
+        SlashCommand.configure({
+          suggestion: {
+            char: "/",
+            command: ({ editor, range, props }: any) => props.command({ editor, range }),
+            items: ({ query }: any) =>
+              slashItems.filter((i) => i.title.toLowerCase().includes((query || "").toLowerCase())),
+            render: buildSlashRender,
+          },
+        }),
+      ],
+      editorProps: {
+        attributes: {
+          class: "tiptap-editor focus:outline-hidden min-h-[340px] px-1 py-1 prose prose-base dark:prose-invert max-w-none",
+        },
+      },
+    });
+
+    // Share editor instance globally
+    (window as any).editor = editor;
+
+    // Top toolbar button clicks
+    const toolbar = document.getElementById("editor-toolbar")!;
+    toolbar.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (!editor) return;
+        await runEditorCommand(btn.getAttribute("data-cmd"));
+        updateToolbarStates();
+      });
+    });
+
+    // Bubble menu button clicks
+    const bubble = document.getElementById("editor-bubble-menu")!;
+    bubble.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("mousedown", (e) => e.preventDefault());
+      btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (!editor) return;
+        await runEditorCommand(btn.getAttribute("data-bubble"));
+        updateToolbarStates();
+      });
+    });
+
+    editor.on("selectionUpdate", updateToolbarStates);
+    editor.on("transaction", updateToolbarStates);
+  }
+
+  // Share initTiptap globally
+  (window as any).initTiptap = initTiptap;
+
+  async function runEditorCommand(cmd: string | null) {
+    if (!editor || !cmd) return;
+    if (cmd === "bold") editor.chain().focus().toggleBold().run();
+    else if (cmd === "italic") editor.chain().focus().toggleItalic().run();
+    else if (cmd === "underline") editor.chain().focus().toggleUnderline().run();
+    else if (cmd === "strike") editor.chain().focus().toggleStrike().run();
+    else if (cmd === "code") editor.chain().focus().toggleCode().run();
+    else if (cmd === "highlight") editor.chain().focus().toggleHighlight().run();
+    else if (cmd === "superscript") editor.chain().focus().toggleSuperscript().run();
+    else if (cmd === "subscript") editor.chain().focus().toggleSubscript().run();
+    else if (cmd === "h1") editor.chain().focus().toggleHeading({ level: 1 }).run();
+    else if (cmd === "h2") editor.chain().focus().toggleHeading({ level: 2 }).run();
+    else if (cmd === "h3") editor.chain().focus().toggleHeading({ level: 3 }).run();
+    else if (cmd === "bulletList") editor.chain().focus().toggleBulletList().run();
+    else if (cmd === "orderedList") editor.chain().focus().toggleOrderedList().run();
+    else if (cmd === "blockquote") editor.chain().focus().toggleBlockquote().run();
+    else if (cmd === "codeBlock") editor.chain().focus().toggleCodeBlock().run();
+    else if (cmd === "alignLeft") editor.chain().focus().setTextAlign("left").run();
+    else if (cmd === "alignCenter") editor.chain().focus().setTextAlign("center").run();
+    else if (cmd === "alignRight") editor.chain().focus().setTextAlign("right").run();
+    else if (cmd === "alignJustify") editor.chain().focus().setTextAlign("justify").run();
+    else if (cmd === "undo") editor.chain().focus().undo().run();
+    else if (cmd === "redo") editor.chain().focus().redo().run();
+    else if (cmd === "slash") editor.chain().focus().insertContent("/").run();
+    else if (cmd === "link") {
+      const url = await dialog.prompt("Add Link", "Enter the destination URL:");
+      if (url) editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+      else if (url === "") editor.chain().focus().extendMarkRange("link").unsetLink().run();
+    } else if (cmd === "image") {
+      const url = await dialog.prompt("Insert Image", "Enter the image source URL:");
+      if (url) editor.chain().focus().setImage({ src: url }).run();
+    }
+  }
+
+  function updateToolbarStates() {
+    const ed = editor;
+    if (!ed) return;
+    const stateMap: Record<string, () => boolean> = {
+      bold: () => ed.isActive("bold"),
+      italic: () => ed.isActive("italic"),
+      underline: () => ed.isActive("underline"),
+      strike: () => ed.isActive("strike"),
+      code: () => ed.isActive("code"),
+      highlight: () => ed.isActive("highlight"),
+      superscript: () => ed.isActive("superscript"),
+      subscript: () => ed.isActive("subscript"),
+      h1: () => ed.isActive("heading", { level: 1 }),
+      h2: () => ed.isActive("heading", { level: 2 }),
+      h3: () => ed.isActive("heading", { level: 3 }),
+      bulletList: () => ed.isActive("bulletList"),
+      orderedList: () => ed.isActive("orderedList"),
+      blockquote: () => ed.isActive("blockquote"),
+      codeBlock: () => ed.isActive("codeBlock"),
+      link: () => ed.isActive("link"),
+      alignLeft: () => ed.isActive({ textAlign: "left" }),
+      alignCenter: () => ed.isActive({ textAlign: "center" }),
+      alignRight: () => ed.isActive({ textAlign: "right" }),
+      alignJustify: () => ed.isActive({ textAlign: "justify" }),
+    };
+
+    const apply = (el: Element, cmd: string | null) => {
+      if (!cmd) return;
+      const fn = stateMap[cmd];
+      if (!fn) return; 
+      const active = fn();
+      if (active) {
+        el.classList.add("bg-muted", "text-foreground");
+        el.classList.remove("text-muted-foreground");
+      } else {
+        el.classList.remove("bg-muted", "text-foreground");
+        el.classList.add("text-muted-foreground");
+      }
+    };
+
+    document.getElementById("editor-toolbar")?.querySelectorAll("button").forEach(btn => apply(btn, btn.getAttribute("data-cmd")));
+    document.getElementById("editor-bubble-menu")?.querySelectorAll("button").forEach(btn => apply(btn, btn.getAttribute("data-bubble")));
+  }
 
   async function init() {
     let retries = 0;
@@ -903,7 +699,8 @@ import Layout from "../layouts/Layout.astro";
           return;
         }
 
-        currentUser = session.user;
+        const currentUser = session.user;
+        (window as any).currentUser = currentUser;
 
         // Populate user info (using logged-in details, fallback to Hiver)
         const uName = currentUser.name || "Hiver";
@@ -932,7 +729,36 @@ import Layout from "../layouts/Layout.astro";
         setupListeners();
         updateThemeIcons();
 
-        // Show Dashboard
+        // Restore sidebar collapsed state
+        const sidebarCollapsed = localStorage.getItem("sidebar-collapsed") === "true";
+        if (sidebarCollapsed) {
+          sidebar.classList.add("collapsed");
+        } else {
+          sidebar.classList.remove("collapsed");
+        }
+
+        // Restore active navigation item and blog panel state
+        const activeNavItemId = localStorage.getItem("active-nav-item") || "nav-dashboard";
+        const blogPanelOpen = localStorage.getItem("blog-panel-open") === "true";
+
+        if (activeNavItemId) {
+          const activeNavItem = document.getElementById(activeNavItemId);
+          if (activeNavItem) {
+            if (activeNavItem.classList.contains("sidebar-submenu-item")) {
+              if (blogPanelOpen && !sidebarCollapsed) {
+                openBlogPanel();
+              }
+              activeNavItem.click();
+            } else {
+              activeNavItem.click();
+            }
+          } else {
+            showView("view-default");
+          }
+        } else {
+          showView("view-default");
+        }
+
         loading.classList.add("hidden");
         root.classList.remove("hidden");
       } catch (error) {
@@ -1030,6 +856,7 @@ import Layout from "../layouts/Layout.astro";
     // 1. Sidebar collapse toggle
     const toggleSidebar = () => {
       const isCollapsed = sidebar.classList.toggle("collapsed");
+      localStorage.setItem("sidebar-collapsed", isCollapsed ? "true" : "false");
       if (isCollapsed) {
         closeBlogPanel();
       }
@@ -1227,7 +1054,6 @@ import Layout from "../layouts/Layout.astro";
 
     // 6. Search input binding for keyboard shortcut focus
     window.addEventListener("keydown", (e) => {
-      // Focus on Cmd+K or Ctrl+K or / key
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         openCommand();
@@ -1273,22 +1099,6 @@ import Layout from "../layouts/Layout.astro";
         }
       }
     });
-
-    function openBlogPanel() {
-      blogPanel.classList.remove("w-0", "border-border/0");
-      blogPanel.classList.add("w-56", "border-border");
-      blogArrow.classList.add("rotate-180");
-      
-      if (sidebar.classList.contains("collapsed")) {
-        sidebar.classList.remove("collapsed");
-      }
-    }
-
-    function closeBlogPanel() {
-      blogPanel.classList.remove("w-56", "border-border");
-      blogPanel.classList.add("w-0", "border-border/0");
-      blogArrow.classList.remove("rotate-180");
-    }
 
     // Blog submenu toggle click listener
     blogBtn.addEventListener("click", (e) => {
@@ -1346,6 +1156,7 @@ import Layout from "../layouts/Layout.astro";
     items.forEach(item => {
       if (item.id === "blog-submenu-btn") return; // Skip default active state handler for blog toggle button
       item.addEventListener("click", (e) => {
+        localStorage.setItem("active-nav-item", item.id);
         // Close the blog panel when clicking any other navigation item
         closeBlogPanel();
 
@@ -1379,6 +1190,19 @@ import Layout from "../layouts/Layout.astro";
         if (textSpan) {
           document.getElementById("dashboard-title")!.textContent = textSpan.textContent;
         }
+
+        const viewMapping: Record<string, string> = {
+          "nav-dashboard": "view-default",
+          "nav-courses": "view-courses",
+          "nav-analytics": "view-analytics",
+          "nav-projects": "view-projects",
+          "nav-live-session": "view-live-session",
+          "nav-chat": "view-chat"
+        };
+        const targetView = viewMapping[item.id];
+        if (targetView) {
+          showView(targetView);
+        }
       });
     });
 
@@ -1387,6 +1211,7 @@ import Layout from "../layouts/Layout.astro";
     subItems.forEach(subItem => {
       subItem.addEventListener("click", (e) => {
         e.preventDefault();
+        localStorage.setItem("active-nav-item", subItem.id);
         
         // Clear active states from all regular items
         items.forEach(el => {
@@ -1418,8 +1243,339 @@ import Layout from "../layouts/Layout.astro";
         if (textSpan) {
           document.getElementById("dashboard-title")!.textContent = "Blog: " + textSpan.textContent;
         }
+
+        if (subItem.id === "nav-blog-posts") {
+          showView("view-blog-posts");
+          blogStore.loadPosts();
+          blogStore.loadCategories();
+          blogStore.loadTags();
+          blogStore.loadUsers();
+        } else if (subItem.id === "nav-blog-categories") {
+          showView("view-blog-categories");
+          blogStore.loadCategories();
+        } else if (subItem.id === "nav-blog-tags") {
+          showView("view-blog-tags");
+          blogStore.loadTags();
+        }
       });
     });
+
+    // Blog editor and form listeners
+    const btnNew = document.getElementById("btn-new-post");
+    if (btnNew) {
+      btnNew.addEventListener("click", () => {
+        blogStore.createPost();
+      });
+    }
+
+    const btnBack = document.getElementById("btn-editor-back");
+    if (btnBack) {
+      btnBack.addEventListener("click", () => {
+        showView("view-blog-posts");
+        blogStore.loadPosts();
+      });
+    }
+
+    const btnCancel = document.getElementById("btn-editor-cancel");
+    if (btnCancel) {
+      btnCancel.addEventListener("click", () => {
+        showView("view-blog-posts");
+        blogStore.loadPosts();
+      });
+    }
+
+    const btnSave = document.getElementById("btn-editor-save");
+    if (btnSave) {
+      btnSave.addEventListener("click", () => {
+        blogStore.savePost();
+      });
+    }
+
+    const btnPublish = document.getElementById("btn-editor-publish");
+    if (btnPublish) {
+      btnPublish.addEventListener("click", () => {
+        blogStore.savePost(true);
+      });
+    }
+
+    // Slugify Title on the fly + URL Preview
+    const titleInput = document.getElementById("post-title-input") as HTMLInputElement;
+    const slugInput = document.getElementById("post-slug-input") as HTMLInputElement;
+    
+    const updateSlugPreview = () => {
+      const previewLink = document.getElementById("post-slug-preview-link") as HTMLAnchorElement;
+      if (slugInput && previewLink) {
+        const slugVal = slugInput.value.trim();
+        previewLink.textContent = `/blog/${slugVal}`;
+        previewLink.href = `/blog/${slugVal}`;
+      }
+    };
+
+    if (titleInput && slugInput) {
+      titleInput.addEventListener("input", () => {
+        if (!blogStore.state.currentEditingPostId) {
+          slugInput.value = titleInput.value
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+          updateSlugPreview();
+        }
+      });
+      slugInput.addEventListener("input", updateSlugPreview);
+    }
+
+    // SEO Sheet wiring
+    const btnEditorSeo = document.getElementById("btn-editor-seo");
+    if (btnEditorSeo) {
+      btnEditorSeo.addEventListener("click", () => blogStore.openSeoSheet());
+    }
+    const btnSeoClose = document.getElementById("btn-seo-sheet-close");
+    if (btnSeoClose) {
+      btnSeoClose.addEventListener("click", () => blogStore.closeSeoSheet());
+    }
+    const seoOverlay = document.getElementById("seo-sheet-overlay");
+    if (seoOverlay) {
+      seoOverlay.addEventListener("click", () => blogStore.closeSeoSheet());
+    }
+    // Live previews + character counters as the user types
+    ["seo-meta-title", "seo-meta-description", "seo-canonical-url", "seo-og-image"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("input", () => blogStore.updateSeoPreviews());
+    });
+    // Esc closes the sheet when it's open
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      const panel = document.getElementById("seo-sheet-panel");
+      if (panel && !panel.classList.contains("hidden")) blogStore.closeSeoSheet();
+    });
+
+    // Category Creation
+    const catForm = document.getElementById("category-form");
+    if (catForm) {
+      catForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = (document.getElementById("category-name") as HTMLInputElement).value.trim();
+        const slug = (document.getElementById("category-slug") as HTMLInputElement).value.trim();
+        if (!name || !slug) return;
+        
+        const success = await blogStore.createCategory(name, slug);
+        if (success) {
+          (document.getElementById("category-name") as HTMLInputElement).value = "";
+          (document.getElementById("category-slug") as HTMLInputElement).value = "";
+        }
+      });
+    }
+
+    const catNameInput = document.getElementById("category-name") as HTMLInputElement;
+    const catSlugInput = document.getElementById("category-slug") as HTMLInputElement;
+    if (catNameInput && catSlugInput) {
+      catNameInput.addEventListener("input", () => {
+        catSlugInput.value = catNameInput.value
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+      });
+    }
+
+    // Tag Creation
+    const tagForm = document.getElementById("tag-form");
+    if (tagForm) {
+      tagForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = (document.getElementById("tag-name") as HTMLInputElement).value.trim();
+        const slug = (document.getElementById("tag-slug") as HTMLInputElement).value.trim();
+        if (!name || !slug) return;
+
+        const success = await blogStore.createTag(name, slug);
+        if (success) {
+          (document.getElementById("tag-name") as HTMLInputElement).value = "";
+          (document.getElementById("tag-slug") as HTMLInputElement).value = "";
+        }
+      });
+    }
+
+    const tagNameInput = document.getElementById("tag-name") as HTMLInputElement;
+    const tagSlugInput = document.getElementById("tag-slug") as HTMLInputElement;
+    if (tagNameInput && tagSlugInput) {
+      tagNameInput.addEventListener("input", () => {
+        tagSlugInput.value = tagNameInput.value
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+      });
+    }
+
+    // Search and Status filters using Shadcn Custom Dropdown UI
+    const blogSearch = document.getElementById("blog-search") as HTMLInputElement;
+    if (blogSearch) {
+      blogSearch.addEventListener("input", () => {
+        blogStore.setFilters(blogSearch.value, blogStore.state.statusFilter);
+      });
+    }
+
+    // Setup Custom Dropdowns Interactivity
+    const setupDropdowns = () => {
+      const btnStatus = document.getElementById("btn-status-dropdown");
+      const menuStatus = document.getElementById("dropdown-status-menu");
+      const btnStatusTrash = document.getElementById("btn-status-trash");
+
+      if (btnStatus && menuStatus) {
+        btnStatus.addEventListener("click", (e) => {
+          e.stopPropagation();
+          menuStatus.classList.toggle("hidden");
+          setTimeout(() => {
+            menuStatus.classList.toggle("scale-95");
+            menuStatus.classList.toggle("opacity-0");
+            menuStatus.classList.toggle("scale-100");
+            menuStatus.classList.toggle("opacity-100");
+          }, 10);
+        });
+
+        menuStatus.querySelectorAll(".status-option").forEach(opt => {
+          opt.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const val = opt.getAttribute("data-value")!;
+            const label = opt.querySelector("span")!.textContent!;
+            
+            document.getElementById("selected-status-label")!.textContent = label;
+            blogStore.state.statusFilter = val;
+
+            menuStatus.querySelectorAll(".check-icon").forEach(chk => chk.classList.add("hidden"));
+            opt.querySelector(".check-icon")!.classList.remove("hidden");
+
+            if (btnStatusTrash) {
+              if (val === "trash") {
+                btnStatusTrash.classList.remove("bg-card", "border-border", "text-foreground");
+                btnStatusTrash.classList.add("bg-destructive/10", "border-destructive/20", "text-destructive");
+              } else {
+                btnStatusTrash.classList.remove("bg-destructive/10", "border-destructive/20", "text-destructive");
+                btnStatusTrash.classList.add("bg-card", "border-border", "text-foreground");
+              }
+            }
+
+            menuStatus.classList.remove("scale-100", "opacity-100");
+            menuStatus.classList.add("scale-95", "opacity-0");
+            setTimeout(() => {
+              menuStatus.classList.add("hidden");
+            }, 150);
+
+            blogStore.setFilters(blogSearch ? blogSearch.value : "", val);
+          });
+        });
+      }
+
+      if (btnStatusTrash) {
+        btnStatusTrash.addEventListener("click", () => {
+          const isCurrentlyTrash = blogStore.state.statusFilter === "trash";
+          const newVal = isCurrentlyTrash ? "all" : "trash";
+          
+          blogStore.state.statusFilter = newVal;
+
+          if (newVal === "trash") {
+            btnStatusTrash.classList.remove("bg-card", "border-border", "text-foreground");
+            btnStatusTrash.classList.add("bg-destructive/10", "border-destructive/20", "text-destructive");
+            
+            document.getElementById("selected-status-label")!.textContent = "Trash";
+            menuStatus?.querySelectorAll(".check-icon").forEach(chk => chk.classList.add("hidden"));
+            (menuStatus?.querySelector('[data-value="trash"]') as HTMLElement)?.querySelector(".check-icon")?.classList.remove("hidden");
+          } else {
+            btnStatusTrash.classList.remove("bg-destructive/10", "border-destructive/20", "text-destructive");
+            btnStatusTrash.classList.add("bg-card", "border-border", "text-foreground");
+            
+            document.getElementById("selected-status-label")!.textContent = "All Status";
+            menuStatus?.querySelectorAll(".check-icon").forEach(chk => chk.classList.add("hidden"));
+            (menuStatus?.querySelector('[data-value="all"]') as HTMLElement)?.querySelector(".check-icon")?.classList.remove("hidden");
+          }
+
+          blogStore.setFilters(blogSearch ? blogSearch.value : "", newVal);
+        });
+      }
+
+      const btnCategory = document.getElementById("btn-category-dropdown");
+      const menuCategory = document.getElementById("dropdown-category-menu");
+      const chevronCategory = document.getElementById("chevron-category");
+      const btnTags = document.getElementById("btn-tags-dropdown");
+      const menuTags = document.getElementById("dropdown-tags-menu");
+      const chevronTags = document.getElementById("chevron-tags");
+
+      const closeMultiSelect = (menu: HTMLElement | null, chevron: HTMLElement | null) => {
+        if (!menu) return;
+        menu.classList.add("hidden");
+        chevron?.classList.remove("rotate-180");
+      };
+
+      const toggleMultiSelect = (menu: HTMLElement | null, chevron: HTMLElement | null) => {
+        if (!menu) return;
+        const willOpen = menu.classList.contains("hidden");
+        closeMultiSelect(menuCategory, chevronCategory);
+        closeMultiSelect(menuTags, chevronTags);
+        if (willOpen) {
+          menu.classList.remove("hidden");
+          chevron?.classList.add("rotate-180");
+        }
+      };
+
+      if (btnCategory && menuCategory) {
+        btnCategory.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleMultiSelect(menuCategory, chevronCategory);
+        });
+      }
+      if (btnTags && menuTags) {
+        btnTags.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleMultiSelect(menuTags, chevronTags);
+        });
+      }
+
+      document.addEventListener("click", () => {
+        if (menuStatus && !menuStatus.classList.contains("hidden")) {
+          menuStatus.classList.remove("scale-100", "opacity-100");
+          menuStatus.classList.add("scale-95", "opacity-0");
+          setTimeout(() => { menuStatus.classList.add("hidden"); }, 150);
+        }
+        closeMultiSelect(menuCategory, chevronCategory);
+        closeMultiSelect(menuTags, chevronTags);
+      });
+
+      const prevBtn = document.getElementById("btn-posts-prev");
+      const nextBtn = document.getElementById("btn-posts-next");
+      if (prevBtn) {
+        prevBtn.addEventListener("click", () => {
+          if (blogStore.state.currentPage > 1) {
+            blogStore.state.currentPage--;
+            blogStore.renderPosts();
+          }
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener("click", () => {
+          let filtered = blogStore.state.posts;
+          const query = blogStore.state.searchQuery;
+          if (query) {
+            filtered = filtered.filter((p: any) => p.title.toLowerCase().includes(query) || p.content?.toLowerCase().includes(query));
+          }
+          const isTrashView = blogStore.state.statusFilter === "trash";
+          if (isTrashView) {
+            filtered = filtered.filter((p: any) => p.trashed === true);
+          } else {
+            filtered = filtered.filter((p: any) => p.trashed === false);
+            if (blogStore.state.statusFilter === "published") {
+              filtered = filtered.filter((p: any) => p.published === true);
+            } else if (blogStore.state.statusFilter === "draft") {
+              filtered = filtered.filter((p: any) => p.published === false);
+            }
+          }
+          const totalPages = Math.ceil(filtered.length / blogStore.state.pageSize);
+          if (blogStore.state.currentPage < totalPages) {
+            blogStore.state.currentPage++;
+            blogStore.renderPosts();
+          }
+        });
+      }
+    };
+
+    setupDropdowns();
   }
 
   function updateThemeIcons() {
