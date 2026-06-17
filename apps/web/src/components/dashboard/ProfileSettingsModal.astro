@@ -134,25 +134,25 @@
           <div class="border-b border-border/40 my-3"></div>
 
           <!-- CURRENT PASSWORD -->
-          <div class="space-y-1.5">
+          <div id="current-password-container" class="space-y-1.5">
             <label for="profile-input-curpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Current Password</label>
             <input type="password" id="profile-input-curpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Old password" />
           </div>
 
           <!-- NEW PASSWORD -->
           <div class="space-y-1.5">
-            <label for="profile-input-newpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">New Password</label>
+            <label id="new-password-label" for="profile-input-newpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">New Password</label>
             <input type="password" id="profile-input-newpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Minimum 8 characters" />
           </div>
 
           <!-- CONFIRM PASSWORD -->
           <div class="space-y-1.5">
-            <label for="profile-input-confpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Confirm New Password</label>
+            <label id="confirm-password-label" for="profile-input-confpass" class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Confirm New Password</label>
             <input type="password" id="profile-input-confpass" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-md focus:ring-1 focus:ring-primary focus:outline-hidden text-foreground font-semibold placeholder:text-muted-foreground/50 transition-all shadow-3xs" placeholder="Verify your password" />
           </div>
 
           <div class="pt-2">
-            <button type="submit" class="w-full py-2 bg-primary text-primary-foreground hover:bg-primary/95 font-bold text-xs rounded-md transition-colors shadow-2xs cursor-pointer">
+            <button type="submit" id="security-submit-btn" class="w-full py-2 bg-primary text-primary-foreground hover:bg-primary/95 font-bold text-xs rounded-md transition-colors shadow-2xs cursor-pointer">
               Update Password
             </button>
           </div>
@@ -242,13 +242,16 @@
 </div>
 
 <script>
-  import { authClient } from "../../lib/auth-client";
+  import { authClient, getAccountStatus, setInitialPassword } from "../../lib/auth-client";
   import { toast } from "../../lib/dashboard-store";
 
   // Elements
   const overlay = document.getElementById("profile-settings-overlay")!;
   const content = document.getElementById("profile-settings-content")!;
   const closeBtn = document.getElementById("profile-settings-close-btn")!;
+
+  // Track if user skipped setting a password during signup
+  let userHasPassword = true;
 
   // Account settings triggers (both Sidebar & Topbar Account buttons)
   const triggers = [
@@ -324,6 +327,26 @@
 
         // Highlight selected theme
         applyAvatarThemeColor(selectedAvatarTheme, initials);
+
+        // Fetch account status to check if user has set a password
+        const accountStatus = await getAccountStatus(user.email);
+        userHasPassword = accountStatus.hasPassword;
+
+        const curPassContainer = document.getElementById("current-password-container");
+        const securitySubmitBtn = document.getElementById("security-submit-btn");
+        const newPassLabel = document.getElementById("new-password-label");
+
+        if (curPassContainer && securitySubmitBtn && newPassLabel) {
+          if (userHasPassword) {
+            curPassContainer.classList.remove("hidden");
+            newPassLabel.textContent = "New Password";
+            securitySubmitBtn.textContent = "Update Password";
+          } else {
+            curPassContainer.classList.add("hidden");
+            newPassLabel.textContent = "Choose Password";
+            securitySubmitBtn.textContent = "Create Password";
+          }
+        }
       }
     } catch (e) {
       console.error("Could not fetch user session for settings", e);
@@ -486,40 +509,85 @@
     const newPassword = newPasswordInput.value;
     const confirmPassword = confirmPasswordInput.value;
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      toast.error("Please fill in all password fields.");
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      toast.error("New password must be at least 8 characters long.");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast.error("New password and confirmation password do not match.");
-      return;
-    }
-
-    try {
-      const { error } = await authClient.changePassword({
-        currentPassword,
-        newPassword,
-        revokeOtherSessions: true
-      });
-
-      if (error) {
-        toast.error(error.message || "Could not change password.");
+    if (!userHasPassword) {
+      // First-time password creation (user skipped it during OTP/signup flow)
+      if (!newPassword || !confirmPassword) {
+        toast.error("Please fill in both password fields.");
         return;
       }
 
-      currentPasswordInput.value = "";
-      newPasswordInput.value = "";
-      confirmPasswordInput.value = "";
+      if (newPassword.length < 8) {
+        toast.error("Password must be at least 8 characters long.");
+        return;
+      }
 
-      toast.success("Password changed successfully.");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to update your account password.");
+      if (newPassword !== confirmPassword) {
+        toast.error("Passwords do not match.");
+        return;
+      }
+
+      try {
+        await setInitialPassword(newPassword);
+
+        // Success - clean up fields and elevate state
+        currentPasswordInput.value = "";
+        newPasswordInput.value = "";
+        confirmPasswordInput.value = "";
+
+        userHasPassword = true;
+
+        // Restore standard password fields layout
+        const curPassContainer = document.getElementById("current-password-container");
+        const securitySubmitBtn = document.getElementById("security-submit-btn");
+        const newPassLabel = document.getElementById("new-password-label");
+
+        if (curPassContainer && securitySubmitBtn && newPassLabel) {
+          curPassContainer.classList.remove("hidden");
+          newPassLabel.textContent = "New Password";
+          securitySubmitBtn.textContent = "Update Password";
+        }
+
+        toast.success("Password created successfully.");
+      } catch (err: any) {
+        toast.error(err.message || "Failed to set your initial password.");
+      }
+    } else {
+      // Standard password update flow
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        toast.error("Please fill in all password fields.");
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        toast.error("New password must be at least 8 characters long.");
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        toast.error("New password and confirmation password do not match.");
+        return;
+      }
+
+      try {
+        const { error } = await authClient.changePassword({
+          currentPassword,
+          newPassword,
+          revokeOtherSessions: true
+        });
+
+        if (error) {
+          toast.error(error.message || "Could not change password.");
+          return;
+        }
+
+        currentPasswordInput.value = "";
+        newPasswordInput.value = "";
+        confirmPasswordInput.value = "";
+
+        toast.success("Password changed successfully.");
+      } catch (err: any) {
+        toast.error(err.message || "Failed to update your account password.");
+      }
     }
   });
 
