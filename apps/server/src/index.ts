@@ -80,7 +80,12 @@ app.post("/api/account-status", async (c) => {
 		where: { email },
 		select: {
 			emailVerified: true,
-			accounts: { select: { providerId: true } },
+			accounts: {
+				select: {
+					providerId: true,
+					password: true,
+				},
+			},
 		},
 	});
 
@@ -93,12 +98,16 @@ app.post("/api/account-status", async (c) => {
 		});
 	}
 
-	const providers = user.accounts.map((a) => a.providerId);
+	const hasPassword = user.accounts.some(
+		(a) => a.providerId === "credential" && a.password !== null && a.password !== "",
+	);
+	const hasGoogle = user.accounts.some((a) => a.providerId === "google");
+
 	return c.json({
 		exists: true,
 		emailVerified: user.emailVerified,
-		hasPassword: providers.includes("credential"),
-		hasGoogle: providers.includes("google"),
+		hasPassword,
+		hasGoogle,
 	});
 });
 
