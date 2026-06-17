@@ -26,6 +26,7 @@
 		"astro": "^6.0.1",
 		"better-auth": "1.6.11",
 		"dotenv": "^17.2.2",
+		"emoji-picker-element": "^1.29.1",
 		"zod": "^4.1.13"
 	},
 	"devDependencies": {
