@@ -19,5 +19,23 @@ services:
       retries: 5
     restart: unless-stopped
 
+  minio:
+    image: quay.io/minio/aistor/minio
+    container_name: hivertradercourse-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_LICENSE: /opt/minio/minio.license
+      MINIO_API_CORS_ALLOW_ORIGIN: "*"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - hivertradercourse_minio_data:/data
+      - ./minio.license:/opt/minio/minio.license:ro
+    restart: unless-stopped
+
 volumes:
   hivertradercourse_postgres_data:
+  hivertradercourse_minio_data:

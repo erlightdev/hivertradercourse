@@ -1,0 +1,71 @@
+// Course Main Entity
+model Course {
+  id               String         @id @default(uuid())
+  title            String
+  slug             String         @unique
+  smallDescription String
+  description      String         // Stored as stringified JSON from Tiptap
+  fileKey          String         // Thumbnail reference in MinIO
+  price            Int            // Stored in cents (e.g., 500 = $5.00)
+  duration         Int            // Total hours
+  level            CourseLevel    @default(BEGINNER)
+  category         String
+  status           CourseStatus   @default(DRAFT)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  
+  chapters         Chapter[]      // One-to-Many relationship
+  enrollments      Enrollment[]
+
+  @@map("course")
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Course Structure Entities
+model Chapter {
+  id        String   @id @default(uuid())
+  title     String
+  position  Int      // For drag-and-drop reordering
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+
+  @@map("chapter")
+}
+
+model Lesson {
+  id           String   @id @default(uuid())
+  title        String
+  description  String?  @db.Text
+  thumbnailKey String?
+  videoKey     String?  // Reference for video in MinIO
+  position     Int
+  chapterId    String
+  chapter      Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@map("lesson")
+}
+
+model Enrollment {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
+  @@map("enrollment")
+}

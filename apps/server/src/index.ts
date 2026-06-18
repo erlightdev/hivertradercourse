@@ -5,6 +5,11 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import * as Ably from "ably";
+import courseRouter from "./routes/courses";
+import reorderRouter from "./routes/reorder";
+import uploadRouter from "./routes/uploads";
+import paymentRouter from "./routes/payments";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
 const app = new Hono();
 
@@ -13,13 +18,52 @@ app.use(
 	"/*",
 	cors({
 		origin: env.CORS_ORIGIN,
-		allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 		allowHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
 	}),
 );
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+
+// Mount course, reordering, upload, and payment routers
+app.route("/api/courses", courseRouter);
+app.route("/api/reorder", reorderRouter);
+app.route("/api/uploads", uploadRouter);
+app.route("/api/payments", paymentRouter);
+
+// Initialize S3 Client for serving files from MinIO
+const s3Client = new S3Client({
+	endpoint: env.MINIO_ENDPOINT,
+	region: "us-east-1",
+	credentials: {
+		accessKeyId: env.MINIO_AWS_ACCESS_KEY_ID,
+		secretAccessKey: env.MINIO_AWS_SECRET_ACCESS_KEY,
+	},
+	forcePathStyle: true,
+});
+
+// Proxy route to stream course assets from MinIO
+app.get("/courses/uploads/*", async (c) => {
+	const key = decodeURIComponent(c.req.path.replace(/^\/courses\/uploads\//, ""));
+	try {
+		const command = new GetObjectCommand({
+			Bucket: env.MINIO_BUCKET_NAME,
+			Key: key,
+		});
+		const response = await s3Client.send(command);
+		if (!response.Body) {
+			return c.text("Not Found", 404);
+		}
+		const contentType = response.ContentType || "application/octet-stream";
+		c.header("Content-Type", contentType);
+		c.header("Cache-Control", "public, max-age=31536000");
+		return c.body(response.Body as any);
+	} catch (err: any) {
+		console.error(`Error serving file ${key}:`, err);
+		return c.text("Not Found", 404);
+	}
+});
 
 // ---------------------------------------------------------------------------
 // Account discovery

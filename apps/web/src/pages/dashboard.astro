@@ -762,15 +762,28 @@ import ProfileSettingsModal from "../components/dashboard/ProfileSettingsModal.a
           sidebar.classList.remove("collapsed");
         }
 
-        // Restore active navigation item and blog panel state
-        const activeNavItemId = localStorage.getItem("active-nav-item") || "nav-dashboard";
-        const blogPanelOpen = localStorage.getItem("blog-panel-open") === "true";
+        // Restore active navigation item from URL hash first, fallback to localStorage
+        const hashToIdMap: Record<string, string> = {
+          "#dashboard": "nav-dashboard",
+          "#courses": "nav-courses",
+          "#analytics": "nav-analytics",
+          "#projects": "nav-projects",
+          "#live-session": "nav-live-session",
+          "#chat": "nav-chat",
+          "#blog-posts": "nav-blog-posts",
+          "#blog-categories": "nav-blog-categories",
+          "#blog-tags": "nav-blog-tags"
+        };
+        
+        const currentHash = window.location.hash;
+        const activeNavItemId = hashToIdMap[currentHash] || localStorage.getItem("active-nav-item") || "nav-dashboard";
+        const blogPanelOpen = localStorage.getItem("blog-panel-open") === "true" || currentHash.startsWith("#blog-");
 
         if (activeNavItemId) {
           const activeNavItem = document.getElementById(activeNavItemId);
           if (activeNavItem) {
             if (activeNavItem.classList.contains("sidebar-submenu-item")) {
-              if (blogPanelOpen && !sidebarCollapsed) {
+              if ((blogPanelOpen || currentHash.startsWith("#blog-")) && !sidebarCollapsed) {
                 openBlogPanel();
               }
               activeNavItem.click();
@@ -959,14 +972,55 @@ import ProfileSettingsModal from "../components/dashboard/ProfileSettingsModal.a
     });
 
     if (createCourseForm) {
-      createCourseForm.addEventListener("submit", (e) => {
+      createCourseForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const title = (document.getElementById("course-title") as HTMLInputElement).value;
         const category = (document.getElementById("course-category") as HTMLSelectElement).value;
+        const description = (document.getElementById("course-description") as HTMLTextAreaElement).value;
         
-        alert(`Success! Course "${title}" (${category}) has been created successfully.`);
-        createCourseForm.reset();
-        closeCreateCourse();
+        try {
+          const emptyTiptapJson = JSON.stringify({
+            type: "doc",
+            content: [{ type: "paragraph", content: [{ type: "text", text: description }] }]
+          });
+
+          const slug = title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+
+          const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title,
+              slug,
+              smallDescription: description.substring(0, 195) + (description.length > 195 ? "..." : ""),
+              description: emptyTiptapJson,
+              fileKey: "placeholder_thumbnail",
+              price: 9900,
+              duration: 10,
+              level: "BEGINNER",
+              category,
+              status: "DRAFT"
+            }),
+            credentials: "include"
+          });
+
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Failed to create course");
+          }
+
+          toast.success("Course created successfully!");
+          createCourseForm.reset();
+          closeCreateCourse();
+          
+          // Dispatch event to trigger CoursesView catalog refresh
+          document.dispatchEvent(new CustomEvent("courses-updated"));
+        } catch (err: any) {
+          toast.error(err.message || "Failed to create course");
+        }
       });
     }
 
@@ -1177,11 +1231,39 @@ import ProfileSettingsModal from "../components/dashboard/ProfileSettingsModal.a
     });
 
     // 9. Navigation active states click highlights
+    const hashToIdMap: Record<string, string> = {
+      "#dashboard": "nav-dashboard",
+      "#courses": "nav-courses",
+      "#analytics": "nav-analytics",
+      "#projects": "nav-projects",
+      "#live-session": "nav-live-session",
+      "#chat": "nav-chat",
+      "#blog-posts": "nav-blog-posts",
+      "#blog-categories": "nav-blog-categories",
+      "#blog-tags": "nav-blog-tags"
+    };
+
     const items = document.querySelectorAll(".sidebar-item");
     items.forEach(item => {
       if (item.id === "blog-submenu-btn") return; // Skip default active state handler for blog toggle button
       item.addEventListener("click", (e) => {
+        e.preventDefault();
         localStorage.setItem("active-nav-item", item.id);
+        
+        // Update URL hash state
+        const hashMapping: Record<string, string> = {
+          "nav-dashboard": "dashboard",
+          "nav-courses": "courses",
+          "nav-analytics": "analytics",
+          "nav-projects": "projects",
+          "nav-live-session": "live-session",
+          "nav-chat": "chat"
+        };
+        const hash = hashMapping[item.id];
+        if (hash) {
+          history.replaceState(null, "", "#" + hash);
+        }
+
         // Close the blog panel when clicking any other navigation item
         closeBlogPanel();
 
@@ -1237,6 +1319,17 @@ import ProfileSettingsModal from "../components/dashboard/ProfileSettingsModal.a
       subItem.addEventListener("click", (e) => {
         e.preventDefault();
         localStorage.setItem("active-nav-item", subItem.id);
+
+        // Update URL hash state
+        const hashMapping: Record<string, string> = {
+          "nav-blog-posts": "blog-posts",
+          "nav-blog-categories": "blog-categories",
+          "nav-blog-tags": "blog-tags"
+        };
+        const hash = hashMapping[subItem.id];
+        if (hash) {
+          history.replaceState(null, "", "#" + hash);
+        }
         
         // Clear active states from all regular items
         items.forEach(el => {
@@ -1283,6 +1376,21 @@ import ProfileSettingsModal from "../components/dashboard/ProfileSettingsModal.a
           blogStore.loadTags();
         }
       });
+    });
+
+    // Handle browser back/forward navigation or manual URL hash changes
+    window.addEventListener("hashchange", () => {
+      const newHash = window.location.hash || "#dashboard";
+      const targetId = hashToIdMap[newHash];
+      if (targetId) {
+        const targetEl = document.getElementById(targetId);
+        if (targetEl && !targetEl.classList.contains("active")) {
+          if (targetId.startsWith("nav-blog-")) {
+            openBlogPanel();
+          }
+          targetEl.click();
+        }
+      }
     });
 
     // Blog editor and form listeners

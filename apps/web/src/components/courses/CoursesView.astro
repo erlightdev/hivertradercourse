@@ -1,5 +1,1278 @@
 ---
-// CoursesView Component (Empty for now)
+// CoursesView Component
 ---
-<div id="view-courses" class="hidden mt-6">
+<div id="view-courses" class="hidden w-full h-full flex flex-col overflow-hidden bg-background">
+  <!-- 1. COURSE LIST PANEL -->
+  <div id="courses-list-panel" class="flex-1 flex flex-col overflow-hidden p-6">
+
+
+    <!-- Empty State -->
+    <div id="courses-empty-state" class="hidden flex-1 flex flex-col items-center justify-center border border-dashed border-border/60 rounded-xl p-8 text-center max-w-lg mx-auto my-12 bg-muted/5">
+      <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      </div>
+      <h3 class="font-bold text-sm text-foreground">No courses found</h3>
+      <p class="text-xs text-muted-foreground mt-1.5 max-w-xs leading-normal">
+        Get started by creating your first course. You can structure it into chapters and lessons later.
+      </p>
+      <button id="courses-empty-create-btn" class="mt-4 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-xs rounded-lg transition-colors cursor-pointer select-none">
+        Create Your First Course
+      </button>
+    </div>
+
+    <!-- Courses Grid -->
+    <div id="courses-grid" class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 content-start gap-6 pb-6 hidden">
+      <!-- Course cards will be injected dynamically -->
+    </div>
+  </div>
+
+  <!-- 2. CURRICULUM BUILDER PANEL -->
+  <div id="courses-builder-panel" class="hidden flex-1 flex flex-col overflow-hidden">
+    <div class="h-16 flex items-center justify-between px-6 border-b border-border/40 shrink-0">
+      <div class="flex items-center gap-3">
+        <button id="builder-back-btn" class="p-2 hover:bg-muted text-muted-foreground hover:text-foreground rounded-lg transition-colors cursor-pointer" aria-label="Back to courses">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+        <div>
+          <h3 id="builder-course-title" class="font-bold text-sm text-foreground">Loading Course...</h3>
+          <p class="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5" id="builder-course-category">Category</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="builder-course-status-badge" class="px-2 py-0.5 rounded-full text-[9px] font-bold border">DRAFT</span>
+      </div>
+    </div>
+
+    <!-- Split Layout Content -->
+    <div class="flex-1 flex overflow-hidden">
+      <!-- Left side: Course Details Forms -->
+      <div class="w-80 border-r border-border/40 p-5 overflow-y-auto shrink-0 space-y-6">
+        <h4 class="text-xs font-bold text-foreground uppercase tracking-wider">Course Settings</h4>
+        
+        <form id="builder-course-form" class="space-y-4">
+          <div class="space-y-1.5">
+            <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Course Title</label>
+            <input type="text" id="builder-title-input" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium" required />
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Slug</label>
+            <input type="text" id="builder-slug-input" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium" required />
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Small Description</label>
+            <textarea id="builder-smalldesc-input" rows="2" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium resize-none" required></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Price (USD)</label>
+              <input type="number" id="builder-price-input" min="0" step="0.01" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium" required />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Duration (Hours)</label>
+              <input type="number" id="builder-duration-input" min="1" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium" required />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Level</label>
+              <select id="builder-level-input" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-lg focus:outline-hidden text-foreground font-medium">
+                <option value="BEGINNER">Beginner</option>
+                <option value="INTERMEDIATE">Intermediate</option>
+                <option value="ADVANCED">Advanced</option>
+              </select>
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Status</label>
+              <select id="builder-status-input" class="w-full px-3 py-2 text-xs bg-card border border-border rounded-lg focus:outline-hidden text-foreground font-medium">
+                <option value="DRAFT">Draft</option>
+                <option value="PUBLISHED">Published</option>
+                <option value="ARCHIVED">Archived</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Category</label>
+            <input type="text" id="builder-category-input" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium" required />
+          </div>
+
+          <!-- Thumbnail Upload Widget -->
+          <div class="space-y-2">
+            <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Course Thumbnail</label>
+            <div class="border border-border/80 rounded-lg p-3 bg-muted/5 space-y-3">
+              <div id="builder-thumb-preview" class="w-full h-24 bg-muted/20 rounded-md flex items-center justify-center text-muted-foreground overflow-hidden">
+                <span class="text-[10px]">No thumbnail uploaded</span>
+              </div>
+              <input type="file" id="builder-thumb-file-input" accept="image/*" class="hidden" />
+              <div class="flex gap-2">
+                <button type="button" id="builder-thumb-upload-btn" class="flex-1 py-1.5 bg-muted hover:bg-muted/80 text-[10px] font-bold border border-border rounded-md transition-colors cursor-pointer text-center select-none">
+                  Choose Image
+                </button>
+              </div>
+              <!-- Progress Bar -->
+              <div id="builder-thumb-progress-container" class="space-y-1 hidden">
+                <div class="flex items-center justify-between text-[9px] font-bold">
+                  <span class="text-primary animate-pulse">Uploading...</span>
+                  <span id="builder-thumb-progress-text">0%</span>
+                </div>
+                <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                  <div id="builder-thumb-progress-bar" class="h-full bg-primary transition-all duration-150" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-2 bg-primary text-primary-foreground hover:bg-primary/95 font-bold text-xs rounded-lg transition-colors cursor-pointer shadow-xs select-none">
+            Save Course Info
+          </button>
+        </form>
+      </div>
+
+      <!-- Right side: Chapters and Lessons curriculum structure builder -->
+      <div class="flex-1 flex flex-col overflow-hidden p-6 bg-muted/5">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-xs font-bold text-foreground uppercase tracking-wider">Curriculum Structure</h4>
+          <button id="builder-add-chapter-btn" class="px-3 py-1.5 bg-muted border border-border hover:bg-muted/80 text-foreground font-bold text-xs rounded-lg transition-colors cursor-pointer select-none">
+            + Add Chapter
+          </button>
+        </div>
+
+        <!-- Chapters List -->
+        <div id="builder-chapters-container" class="flex-1 overflow-y-auto space-y-4 pb-6">
+          <!-- Chapters and lessons dynamically injected -->
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- 3. LESSON DETAILS MODAL -->
+<div id="lesson-modal-overlay" class="fixed inset-0 z-[110] bg-background/80 backdrop-blur-xs hidden justify-center items-center p-4">
+  <div id="lesson-modal-content" class="relative w-full max-w-lg bg-card text-card-foreground border border-border rounded-xl shadow-2xl p-5 scale-95 opacity-0 transition-all duration-200 ease-out flex flex-col max-h-[90vh] overflow-hidden">
+    <div class="flex items-center justify-between border-b border-border/40 pb-3 mb-4 shrink-0">
+      <h3 class="font-bold text-sm text-foreground">Edit Lesson Details</h3>
+      <button id="lesson-modal-close" class="p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-all cursor-pointer" type="button">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <form id="lesson-modal-form" class="space-y-4 flex-1 overflow-y-auto pr-1">
+      <div class="space-y-1.5">
+        <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Lesson Title</label>
+        <input type="text" id="lesson-title-input" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium" required />
+      </div>
+
+      <div class="space-y-1.5">
+        <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Description / Notes</label>
+        <textarea id="lesson-description-input" rows="4" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium resize-y" placeholder="Summarize the core topics covered in this lesson..."></textarea>
+      </div>
+
+      <!-- Media Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Lesson Video Widget -->
+        <div class="space-y-1.5">
+          <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Lesson Video</label>
+          <div class="border border-border/80 rounded-lg p-3 bg-muted/5 space-y-3">
+            <div id="lesson-video-status" class="text-[10px] text-muted-foreground text-center py-4 border border-dashed border-border rounded-md bg-muted/10">
+              No video uploaded
+            </div>
+            <input type="file" id="lesson-video-file-input" accept="video/*" class="hidden" />
+            <button type="button" id="lesson-video-upload-btn" class="w-full py-1.5 bg-muted hover:bg-muted/80 text-[10px] font-bold border border-border rounded-md transition-colors cursor-pointer text-center select-none">
+              Choose Video
+            </button>
+            
+            <!-- Progress Bar -->
+            <div id="lesson-video-progress-container" class="space-y-1 hidden">
+              <div class="flex items-center justify-between text-[9px] font-bold">
+                <span class="text-primary animate-pulse">Uploading Video...</span>
+                <span id="lesson-video-progress-text">0%</span>
+              </div>
+              <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                <div id="lesson-video-progress-bar" class="h-full bg-primary transition-all duration-150" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lesson Thumbnail Widget -->
+        <div class="space-y-1.5">
+          <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Lesson Thumbnail (Optional)</label>
+          <div class="border border-border/80 rounded-lg p-3 bg-muted/5 space-y-3">
+            <div id="lesson-thumb-preview" class="w-full h-16 bg-muted/20 rounded-md flex items-center justify-center text-muted-foreground overflow-hidden">
+              <span class="text-[9px]">No thumbnail</span>
+            </div>
+            <input type="file" id="lesson-thumb-file-input" accept="image/*" class="hidden" />
+            <button type="button" id="lesson-thumb-upload-btn" class="w-full py-1.5 bg-muted hover:bg-muted/80 text-[10px] font-bold border border-border rounded-md transition-colors cursor-pointer text-center select-none">
+              Choose Image
+            </button>
+
+            <!-- Progress Bar -->
+            <div id="lesson-thumb-progress-container" class="space-y-1 hidden">
+              <div class="flex items-center justify-between text-[9px] font-bold">
+                <span class="text-primary animate-pulse">Uploading...</span>
+                <span id="lesson-thumb-progress-text">0%</span>
+              </div>
+              <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                <div id="lesson-thumb-progress-bar" class="h-full bg-primary transition-all duration-150" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-3 border-t border-border/40 shrink-0">
+        <button type="button" id="lesson-modal-cancel" class="px-3.5 py-2 hover:bg-muted text-xs font-bold rounded-lg border border-border transition-colors cursor-pointer text-muted-foreground hover:text-foreground">
+          Cancel
+        </button>
+        <button type="submit" class="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/95 font-bold text-xs rounded-lg transition-colors cursor-pointer select-none">
+          Save Lesson Details
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  import { PUBLIC_SERVER_URL } from "astro:env/client";
+  import { toast } from "../../lib/dashboard-store";
+
+  // Elements selectors
+  const coursesListPanel = document.getElementById("courses-list-panel")!;
+  const coursesGrid = document.getElementById("courses-grid")!;
+  const coursesEmptyState = document.getElementById("courses-empty-state")!;
+  const coursesEmptyCreateBtn = document.getElementById("courses-empty-create-btn")!;
+
+  const coursesBuilderPanel = document.getElementById("courses-builder-panel")!;
+  const builderBackBtn = document.getElementById("builder-back-btn")!;
+  const builderCourseTitle = document.getElementById("builder-course-title")!;
+  const builderCourseCategory = document.getElementById("builder-course-category")!;
+  const builderCourseStatusBadge = document.getElementById("builder-course-status-badge")!;
+  
+  const builderCourseForm = document.getElementById("builder-course-form") as HTMLFormElement;
+  const builderTitleInput = document.getElementById("builder-title-input") as HTMLInputElement;
+  const builderSlugInput = document.getElementById("builder-slug-input") as HTMLInputElement;
+  const builderSmallDescInput = document.getElementById("builder-smalldesc-input") as HTMLTextAreaElement;
+  const builderPriceInput = document.getElementById("builder-price-input") as HTMLInputElement;
+  const builderDurationInput = document.getElementById("builder-duration-input") as HTMLInputElement;
+  const builderLevelInput = document.getElementById("builder-level-input") as HTMLSelectElement;
+  const builderStatusInput = document.getElementById("builder-status-input") as HTMLSelectElement;
+  const builderCategoryInput = document.getElementById("builder-category-input") as HTMLInputElement;
+  
+  const builderThumbFileInput = document.getElementById("builder-thumb-file-input") as HTMLInputElement;
+  const builderThumbUploadBtn = document.getElementById("builder-thumb-upload-btn")!;
+  const builderThumbPreview = document.getElementById("builder-thumb-preview")!;
+  const builderThumbProgressContainer = document.getElementById("builder-thumb-progress-container")!;
+  const builderThumbProgressBar = document.getElementById("builder-thumb-progress-bar")!;
+  const builderThumbProgressText = document.getElementById("builder-thumb-progress-text")!;
+
+  const builderChaptersContainer = document.getElementById("builder-chapters-container")!;
+  const builderAddChapterBtn = document.getElementById("builder-add-chapter-btn")!;
+
+  // Lesson Modal selectors
+  const lessonModalOverlay = document.getElementById("lesson-modal-overlay")!;
+  const lessonModalContent = document.getElementById("lesson-modal-content")!;
+  const lessonModalClose = document.getElementById("lesson-modal-close")!;
+  const lessonModalCancel = document.getElementById("lesson-modal-cancel")!;
+  const lessonModalForm = document.getElementById("lesson-modal-form") as HTMLFormElement;
+  const lessonTitleInput = document.getElementById("lesson-title-input") as HTMLInputElement;
+  const lessonDescriptionInput = document.getElementById("lesson-description-input") as HTMLTextAreaElement;
+  
+  const lessonVideoFileInput = document.getElementById("lesson-video-file-input") as HTMLInputElement;
+  const lessonVideoUploadBtn = document.getElementById("lesson-video-upload-btn")!;
+  const lessonVideoStatus = document.getElementById("lesson-video-status")!;
+  const lessonVideoProgressContainer = document.getElementById("lesson-video-progress-container")!;
+  const lessonVideoProgressBar = document.getElementById("lesson-video-progress-bar")!;
+  const lessonVideoProgressText = document.getElementById("lesson-video-progress-text")!;
+
+  const lessonThumbFileInput = document.getElementById("lesson-thumb-file-input") as HTMLInputElement;
+  const lessonThumbUploadBtn = document.getElementById("lesson-thumb-upload-btn")!;
+  const lessonThumbPreview = document.getElementById("lesson-thumb-preview")!;
+  const lessonThumbProgressContainer = document.getElementById("lesson-thumb-progress-container")!;
+  const lessonThumbProgressBar = document.getElementById("lesson-thumb-progress-bar")!;
+  const lessonThumbProgressText = document.getElementById("lesson-thumb-progress-text")!;
+
+  // Local State
+  let coursesList: any[] = [];
+  let currentEditingCourse: any = null;
+  let currentEditingLesson: any = null; // { lesson, chapterId }
+
+  // ---------------------------------------------------------------------------
+  // 1. API Interactions (Fetch Helpers)
+  // ---------------------------------------------------------------------------
+
+  // Load courses list
+  async function loadCourses() {
+    try {
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses`, { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load courses");
+      
+      coursesList = await res.json();
+      renderCourses();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to load courses Catalog");
+    }
+  }
+
+  // Load a single course in detail (includes chapters & lessons)
+  async function loadCourseDetail(courseId: string) {
+    try {
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${courseId}`, { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load course details");
+      
+      currentEditingCourse = await res.json();
+      openBuilderView();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to load course builder");
+    }
+  }
+
+  // Create course
+  async function createCourse(title: string, category: string, description: string) {
+    try {
+      // Structure description as stringified JSON mock for Tiptap
+      const emptyTiptapJson = JSON.stringify({
+        type: "doc",
+        content: [{ type: "paragraph", content: [{ type: "text", text: description }] }]
+      });
+
+      // Construct a slug from the title
+      const slug = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          slug,
+          smallDescription: description.substring(0, 195) + "...",
+          description: emptyTiptapJson,
+          fileKey: "placeholder_thumbnail", // Initial placeholder
+          price: 9900, // Default price $99.00 (in cents)
+          duration: 10, // Default duration 10 hours
+          level: "BEGINNER",
+          category,
+          status: "DRAFT"
+        }),
+        credentials: "include"
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to create course");
+      }
+
+      toast.success("Course created successfully!");
+      loadCourses();
+      return true;
+    } catch (e: any) {
+      toast.error(e.message);
+      return false;
+    }
+  }
+
+  // Delete Course
+  async function deleteCourse(courseId: string) {
+    if (!confirm("Are you sure you want to delete this course? All chapters, lessons, and records will be deleted permanently!")) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${courseId}`, {
+        method: "DELETE",
+        credentials: "include"
+      });
+
+      if (!res.ok) throw new Error("Failed to delete course");
+
+      toast.success("Course deleted successfully!");
+      loadCourses();
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  }
+
+  // S3 upload helper
+  async function uploadFileToMinIO(file: File, onProgress: (pct: number) => void): Promise<string> {
+    // 1. Get presigned URL
+    const presignedRes = await fetch(`${PUBLIC_SERVER_URL}/api/uploads/presigned-url`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        filename: file.name,
+        fileType: file.type,
+        fileSize: file.size
+      }),
+      credentials: "include"
+    });
+
+    if (!presignedRes.ok) {
+      const err = await presignedRes.json();
+      throw new Error(err.error || "Failed to fetch presigned URL");
+    }
+
+    const { uploadUrl, fileKey } = await presignedRes.json();
+
+    // 2. Perform direct PUT upload with progress reporting via XMLHttpRequest
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", uploadUrl, true);
+      xhr.setRequestHeader("Content-Type", file.type);
+      
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const pct = Math.round((event.loaded / event.total) * 100);
+          onProgress(pct);
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resolve(fileKey);
+        } else {
+          reject(new Error(`MinIO upload failed: ${xhr.statusText}`));
+        }
+      };
+
+      xhr.onerror = () => reject(new Error("Network error during MinIO upload."));
+      xhr.send(file);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. Rendering Logic
+  // ---------------------------------------------------------------------------
+
+  // Render course list grid
+  function renderCourses() {
+    if (coursesList.length === 0) {
+      coursesGrid.classList.add("hidden");
+      coursesEmptyState.classList.remove("hidden");
+      return;
+    }
+
+    coursesEmptyState.classList.add("hidden");
+    coursesGrid.classList.remove("hidden");
+    coursesGrid.innerHTML = "";
+
+    coursesList.forEach((course) => {
+      const card = document.createElement("div");
+      card.className = "bg-card border border-border/50 rounded-lg overflow-hidden flex flex-col justify-between hover:shadow-lg hover:border-border/80 transition-all duration-300 group cursor-pointer";
+
+      // Color Badge
+      const levelColors: Record<string, string> = {
+        BEGINNER: "bg-amber-400 text-amber-950 border-amber-500/20",
+        INTERMEDIATE: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+        ADVANCED: "bg-rose-500/10 text-rose-500 border-rose-500/20"
+      };
+
+      const statusColors: Record<string, string> = {
+        DRAFT: "bg-muted text-muted-foreground border-border",
+        PUBLISHED: "bg-primary/15 text-primary border-primary/20",
+        ARCHIVED: "bg-red-500/10 text-red-500 border-red-500/20"
+      };
+
+      const levelLabel = course.level.charAt(0) + course.level.slice(1).toLowerCase();
+      const statusLabel = course.status;
+      const formattedPrice = (course.price / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
+
+      // Thumbnail check
+      const thumbnailSrc = course.fileKey && course.fileKey !== "placeholder_thumbnail"
+        ? `${PUBLIC_SERVER_URL}/courses/uploads/${course.fileKey}` // standard serving url fallback or Tigris/MinIO served asset
+        : null;
+
+      card.innerHTML = `
+        <div>
+          <!-- Thumbnail Header -->
+          <div class="h-44 w-full bg-linear-to-br from-neutral-850 to-neutral-950 relative overflow-hidden select-none border-b border-border/40">
+            ${thumbnailSrc ? `
+              <img src="${thumbnailSrc}" class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" alt="${course.title}" />
+            ` : `
+              <!-- Stylized fallback cover art (Udemy style) -->
+              <div class="w-full h-full bg-gradient-to-br from-neutral-900 via-neutral-950 to-[#2c130f] flex items-center justify-center relative">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(223,119,91,0.08),transparent_60%)]"></div>
+                <div class="text-center z-10 p-4">
+                  <div class="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mx-auto mb-2">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                  <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">${course.category}</span>
+                </div>
+              </div>
+            `}
+            
+            <!-- Badges overlay (Udemy style: e.g. Bestseller / Level) -->
+            <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+              <span class="px-2 py-0.5 rounded-xs text-[9px] font-black tracking-wider bg-amber-400 text-amber-950 border border-amber-500/20 shadow-xs uppercase">${levelLabel}</span>
+              ${course.status === 'PUBLISHED' ? `
+                <span class="px-2 py-0.5 rounded-xs text-[9px] font-black tracking-wider bg-primary text-primary-foreground shadow-xs uppercase">Live</span>
+              ` : `
+                <span class="px-2 py-0.5 rounded-xs text-[9px] font-bold bg-muted text-muted-foreground border border-border shadow-xs uppercase">${statusLabel}</span>
+              `}
+            </div>
+          </div>
+
+          <!-- Description Body -->
+          <div class="p-5 pb-3 space-y-2.5 flex flex-col">
+            <span class="text-[9px] font-extrabold text-primary/80 uppercase tracking-widest leading-none">${course.category}</span>
+            <h4 class="font-extrabold text-[15px] text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-200" title="${course.title}">
+              ${course.title}
+            </h4>
+            <p class="text-xs text-muted-foreground/90 line-clamp-2 leading-relaxed">
+              ${course.smallDescription || 'No description provided.'}
+            </p>
+            <p class="text-[11px] text-muted-foreground/85">
+              Instructor: <span class="font-semibold text-foreground/85">Hiver Team</span>
+            </p>
+            
+            <!-- Rating line (Classic Udemy Orange Stars) -->
+            <div class="flex items-center gap-1 text-[11px]">
+              <span class="font-bold text-amber-500">4.8</span>
+              <div class="flex text-amber-500 gap-0.5">
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+              </div>
+              <span class="text-muted-foreground text-[10px]">(48)</span>
+            </div>
+
+            <!-- Metadata -->
+            <div class="flex items-center gap-1.5 text-[11px] text-muted-foreground pt-0.5">
+              <span class="flex items-center gap-1">
+                <svg class="w-3 h-3 text-muted-foreground/75" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                ${course.duration} hours
+              </span>
+              <span class="w-1 h-1 rounded-full bg-muted-foreground/35"></span>
+              <span>12 lectures</span>
+              <span class="w-1 h-1 rounded-full bg-muted-foreground/35"></span>
+              <span>${levelLabel}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Foot Info & Actions -->
+        <div class="p-5 pt-0 space-y-4">
+          <!-- Pricing -->
+          <div class="flex items-baseline gap-2 border-t border-border/40 pt-3.5">
+            <span class="text-foreground text-[17px] font-black tracking-tight">${formattedPrice}</span>
+            <span class="text-xs text-muted-foreground line-through">${(course.price * 1.5 / 100).toLocaleString("en-US", { style: "currency", currency: "USD" })}</span>
+            <span class="text-[9px] font-black text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-xs ml-auto">33% OFF</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-2">
+            <button class="btn-builder-open flex-1 py-2 bg-primary text-primary-foreground hover:bg-primary/95 font-bold text-xs rounded-md shadow-xs transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer select-none text-center" data-id="${course.id}">
+              Manage Curriculum
+            </button>
+            <button class="btn-course-delete p-2 hover:bg-destructive/10 text-muted-foreground hover:text-destructive rounded-md border border-border/60 hover:border-destructive/30 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer" data-id="${course.id}" aria-label="Delete Course">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+
+      coursesGrid.appendChild(card);
+    });
+
+    // Wire actions
+    document.querySelectorAll(".btn-builder-open").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id")!;
+        loadCourseDetail(id);
+      });
+    });
+
+    document.querySelectorAll(".btn-course-delete").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id")!;
+        deleteCourse(id);
+      });
+    });
+  }
+
+  // Render Chapters and Lessons inside Curriculum Builder
+  function renderCurriculum() {
+    builderChaptersContainer.innerHTML = "";
+
+    if (!currentEditingCourse.chapters || currentEditingCourse.chapters.length === 0) {
+      builderChaptersContainer.innerHTML = `
+        <div class="text-center py-12 border border-dashed border-border/40 rounded-xl bg-card">
+          <p class="text-xs text-muted-foreground">This course does not have any chapters yet.</p>
+          <p class="text-[10px] text-muted-foreground/60 mt-1">Click "+ Add Chapter" to start building your course syllabus.</p>
+        </div>
+      `;
+      return;
+    }
+
+    currentEditingCourse.chapters.forEach((chapter: any, chIndex: number) => {
+      const chapterCard = document.createElement("div");
+      chapterCard.className = "bg-card border border-border/80 rounded-xl overflow-hidden shadow-2xs space-y-3 p-4 relative";
+
+      // HTML structure for Chapter Header
+      chapterCard.innerHTML = `
+        <div class="flex items-center justify-between border-b border-border/40 pb-3 mb-2">
+          <!-- Reorder & Title -->
+          <div class="flex items-center gap-2 min-w-0">
+            <!-- Position Reordering Controls -->
+            <div class="flex flex-col gap-0.5">
+              <button class="btn-chapter-up p-0.5 hover:bg-muted text-muted-foreground hover:text-foreground rounded-xs cursor-pointer select-none ${chIndex === 0 ? 'opacity-30 pointer-events-none' : ''}" data-id="${chapter.id}">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7" /></svg>
+              </button>
+              <button class="btn-chapter-down p-0.5 hover:bg-muted text-muted-foreground hover:text-foreground rounded-xs cursor-pointer select-none ${chIndex === currentEditingCourse.chapters.length - 1 ? 'opacity-30 pointer-events-none' : ''}" data-id="${chapter.id}">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7" /></svg>
+              </button>
+            </div>
+            
+            <div class="min-w-0">
+              <span class="text-[9px] font-bold text-primary block leading-none">Chapter ${chIndex + 1}</span>
+              <h5 class="font-bold text-sm text-foreground leading-snug truncate mt-1">${chapter.title}</h5>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-1">
+            <button class="btn-chapter-edit p-1.5 hover:bg-muted text-muted-foreground hover:text-foreground rounded-lg transition-colors cursor-pointer" data-id="${chapter.id}" data-title="${chapter.title}" aria-label="Edit Chapter Name">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+            </button>
+            <button class="btn-chapter-delete p-1.5 hover:bg-destructive/10 text-muted-foreground hover:text-destructive rounded-lg transition-colors cursor-pointer" data-id="${chapter.id}" aria-label="Delete Chapter">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lessons Container -->
+        <div class="space-y-2 pl-3 border-l-2 border-border/30">
+          <div class="lessons-list space-y-1.5" id="lessons-list-${chapter.id}">
+            <!-- Lessons go here -->
+          </div>
+          
+          <button class="btn-add-lesson w-full flex items-center justify-center gap-1.5 py-1.5 bg-muted/40 hover:bg-muted/70 text-[10px] font-bold text-muted-foreground hover:text-foreground border border-dashed border-border/80 hover:border-border rounded-lg transition-all cursor-pointer mt-3 select-none" data-chapter-id="${chapter.id}">
+            + Add Lesson
+          </button>
+        </div>
+      `;
+
+      // Render Lessons List
+      const lessonsListEl = chapterCard.querySelector(`.lessons-list`)!;
+      if (!chapter.lessons || chapter.lessons.length === 0) {
+        lessonsListEl.innerHTML = `<p class="text-[10px] text-muted-foreground/60 italic py-1">No lessons in this chapter.</p>`;
+      } else {
+        chapter.lessons.forEach((lesson: any, lsIndex: number) => {
+          const lessonEl = document.createElement("div");
+          lessonEl.className = "flex items-center justify-between p-2 rounded-lg bg-muted/30 border border-border/40 hover:bg-muted/50 hover:border-border/80 transition-all group/lesson";
+
+          lessonEl.innerHTML = `
+            <div class="flex items-center gap-2 min-w-0">
+              <!-- Reorder Arrow buttons -->
+              <div class="flex flex-col gap-0.5 shrink-0 opacity-40 group-hover/lesson:opacity-100 transition-opacity">
+                <button class="btn-lesson-up p-0.5 hover:bg-muted rounded-xs cursor-pointer select-none ${lsIndex === 0 ? 'opacity-30 pointer-events-none' : ''}" data-id="${lesson.id}" data-chapter-id="${chapter.id}">
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 15l7-7 7 7" /></svg>
+                </button>
+                <button class="btn-lesson-down p-0.5 hover:bg-muted rounded-xs cursor-pointer select-none ${lsIndex === chapter.lessons.length - 1 ? 'opacity-30 pointer-events-none' : ''}" data-id="${lesson.id}" data-chapter-id="${chapter.id}">
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7" /></svg>
+                </button>
+              </div>
+
+              <!-- Media Badges & Title -->
+              <div class="min-w-0">
+                <span class="text-[9px] font-bold text-muted-foreground block leading-none">Lesson ${lsIndex + 1}</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <h6 class="font-semibold text-xs text-foreground truncate leading-none">${lesson.title}</h6>
+                  <div class="flex gap-1 shrink-0">
+                    ${lesson.videoKey ? `<span class="px-1 py-0.2 bg-emerald-500/10 text-emerald-500 text-[8px] font-bold border border-emerald-500/20 rounded-sm">VIDEO</span>` : ''}
+                    ${lesson.thumbnailKey ? `<span class="px-1 py-0.2 bg-primary/10 text-primary text-[8px] font-bold border border-primary/20 rounded-sm">IMAGE</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-1 opacity-60 group-hover/lesson:opacity-100 transition-opacity shrink-0">
+              <button class="btn-lesson-edit p-1 hover:bg-muted rounded-md cursor-pointer text-muted-foreground hover:text-foreground" data-id="${lesson.id}" data-chapter-id="${chapter.id}">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+              </button>
+              <button class="btn-lesson-delete p-1 hover:bg-destructive/10 rounded-md cursor-pointer text-muted-foreground hover:text-destructive" data-id="${lesson.id}" data-chapter-id="${chapter.id}">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+              </button>
+            </div>
+          `;
+
+          lessonsListEl.appendChild(lessonEl);
+        });
+      }
+
+      builderChaptersContainer.appendChild(chapterCard);
+    });
+
+    // Wire actions for Chapter/Lesson CRUD and Reorder controls
+    wireCurriculumListeners();
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. View Switchers & Modals Control
+  // ---------------------------------------------------------------------------
+
+  function openBuilderView() {
+    coursesListPanel.classList.add("hidden");
+    coursesBuilderPanel.classList.remove("hidden");
+
+    // Populate metadata inputs
+    builderCourseTitle.textContent = currentEditingCourse.title;
+    builderCourseCategory.textContent = currentEditingCourse.category;
+    builderCourseStatusBadge.textContent = currentEditingCourse.status;
+    
+    // Status color badge class mapping
+    builderCourseStatusBadge.className = "px-2 py-0.5 rounded-full text-[9px] font-bold border " + 
+      (currentEditingCourse.status === "PUBLISHED" ? "bg-primary/15 text-primary border-primary/20" : "bg-muted text-muted-foreground border-border");
+
+    builderTitleInput.value = currentEditingCourse.title;
+    builderSlugInput.value = currentEditingCourse.slug;
+    builderSmallDescInput.value = currentEditingCourse.smallDescription;
+    builderPriceInput.value = (currentEditingCourse.price / 100).toString();
+    builderDurationInput.value = currentEditingCourse.duration.toString();
+    builderLevelInput.value = currentEditingCourse.level;
+    builderStatusInput.value = currentEditingCourse.status;
+    builderCategoryInput.value = currentEditingCourse.category;
+
+    // Show thumbnail preview
+    renderBuilderThumbPreview();
+
+    // Render Chapters & Lessons
+    renderCurriculum();
+  }
+
+  function renderBuilderThumbPreview() {
+    if (currentEditingCourse.fileKey && currentEditingCourse.fileKey !== "placeholder_thumbnail") {
+      builderThumbPreview.innerHTML = `
+        <img src="${PUBLIC_SERVER_URL}/courses/uploads/${currentEditingCourse.fileKey}" class="w-full h-full object-cover" />
+      `;
+    } else {
+      builderThumbPreview.innerHTML = `<span class="text-[10px] text-muted-foreground">No thumbnail uploaded</span>`;
+    }
+  }
+
+  function closeBuilderView() {
+    coursesBuilderPanel.classList.add("hidden");
+    coursesListPanel.classList.remove("hidden");
+    currentEditingCourse = null;
+    loadCourses();
+  }
+
+  // Lesson Modal Toggle
+  function openLessonModal(lesson: any, chapterId: string) {
+    currentEditingLesson = { lesson, chapterId };
+    
+    lessonTitleInput.value = lesson.title;
+    lessonDescriptionInput.value = lesson.description || "";
+    
+    // Video status check
+    if (lesson.videoKey) {
+      lessonVideoStatus.textContent = "✓ Video Uploaded (" + lesson.videoKey.substring(0, 20) + "...)";
+      lessonVideoStatus.className = "text-[10px] text-emerald-500 font-semibold text-center py-4 border border-emerald-500/20 rounded-md bg-emerald-500/5";
+    } else {
+      lessonVideoStatus.textContent = "No video uploaded";
+      lessonVideoStatus.className = "text-[10px] text-muted-foreground text-center py-4 border border-dashed border-border rounded-md bg-muted/10";
+    }
+
+    // Thumbnail status check
+    if (lesson.thumbnailKey) {
+      lessonThumbPreview.innerHTML = `
+        <img src="${PUBLIC_SERVER_URL}/courses/uploads/${lesson.thumbnailKey}" class="w-full h-full object-cover" />
+      `;
+    } else {
+      lessonThumbPreview.innerHTML = `<span class="text-[9px] text-muted-foreground">No thumbnail</span>`;
+    }
+
+    // Reset progress bars
+    lessonVideoProgressContainer.classList.add("hidden");
+    lessonThumbProgressContainer.classList.add("hidden");
+
+    lessonModalOverlay.classList.remove("hidden");
+    lessonModalOverlay.classList.add("flex");
+    setTimeout(() => {
+      lessonModalContent.classList.remove("scale-95", "opacity-0");
+      lessonModalContent.classList.add("scale-100", "opacity-100");
+    }, 50);
+  }
+
+  function closeLessonModal() {
+    lessonModalContent.classList.remove("scale-100", "opacity-100");
+    lessonModalContent.classList.add("scale-95", "opacity-0");
+    setTimeout(() => {
+      lessonModalOverlay.classList.remove("flex");
+      lessonModalOverlay.classList.add("hidden");
+      currentEditingLesson = null;
+    }, 200);
+  }
+
+  // ---------------------------------------------------------------------------
+  // 4. Form Submissions and Event Bindings
+  // ---------------------------------------------------------------------------
+
+  // Handle Course Meta Info Form Submission
+  builderCourseForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!currentEditingCourse) return;
+
+    try {
+      const priceInCents = Math.round(parseFloat(builderPriceInput.value) * 100);
+
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: builderTitleInput.value,
+          slug: builderSlugInput.value,
+          smallDescription: builderSmallDescInput.value,
+          price: priceInCents,
+          duration: parseInt(builderDurationInput.value),
+          level: builderLevelInput.value,
+          status: builderStatusInput.value,
+          category: builderCategoryInput.value
+        }),
+        credentials: "include"
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to update course properties");
+      }
+
+      toast.success("Course details saved!");
+      currentEditingCourse = await res.json();
+      
+      // Update headers
+      builderCourseTitle.textContent = currentEditingCourse.title;
+      builderCourseCategory.textContent = currentEditingCourse.category;
+      builderCourseStatusBadge.textContent = currentEditingCourse.status;
+      builderCourseStatusBadge.className = "px-2 py-0.5 rounded-full text-[9px] font-bold border " + 
+        (currentEditingCourse.status === "PUBLISHED" ? "bg-primary/15 text-primary border-primary/20" : "bg-muted text-muted-foreground border-border");
+
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  });
+
+  // Handle Lesson details saving
+  lessonModalForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!currentEditingCourse || !currentEditingLesson) return;
+
+    const { lesson, chapterId } = currentEditingLesson;
+
+    try {
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}/chapters/${chapterId}/lessons/${lesson.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: lessonTitleInput.value,
+          description: lessonDescriptionInput.value
+        }),
+        credentials: "include"
+      });
+
+      if (!res.ok) throw new Error("Failed to update lesson metadata");
+
+      toast.success("Lesson details saved!");
+      closeLessonModal();
+      
+      // Reload course structure
+      loadCourseDetail(currentEditingCourse.id);
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  });
+
+  // Wire event handlers to dynamic Curriculum elements
+  function wireCurriculumListeners() {
+    // 1. Chapter Actions
+    document.querySelectorAll(".btn-chapter-edit").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const chapterId = btn.getAttribute("data-id")!;
+        const currentTitle = btn.getAttribute("data-title")!;
+        const newTitle = prompt("Enter new chapter title:", currentTitle);
+        if (!newTitle || newTitle === currentTitle) return;
+
+        try {
+          const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}/chapters/${chapterId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: newTitle }),
+            credentials: "include"
+          });
+          if (!res.ok) throw new Error("Failed to rename chapter");
+
+          toast.success("Chapter renamed!");
+          loadCourseDetail(currentEditingCourse.id);
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+      });
+    });
+
+    document.querySelectorAll(".btn-chapter-delete").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const chapterId = btn.getAttribute("data-id")!;
+        if (!confirm("Are you sure you want to delete this chapter? All lessons in it will be lost!")) return;
+
+        try {
+          const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}/chapters/${chapterId}`, {
+            method: "DELETE",
+            credentials: "include"
+          });
+          if (!res.ok) throw new Error("Failed to delete chapter");
+
+          toast.success("Chapter deleted!");
+          loadCourseDetail(currentEditingCourse.id);
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+      });
+    });
+
+    // Chapter Reordering Up/Down
+    document.querySelectorAll(".btn-chapter-up, .btn-chapter-down").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const chapterId = btn.getAttribute("data-id")!;
+        const direction = btn.classList.contains("btn-chapter-up") ? "up" : "down";
+        
+        // Find indices
+        const chapters = currentEditingCourse.chapters;
+        const index = chapters.findIndex((c: any) => c.id === chapterId);
+        if (index === -1) return;
+        
+        const targetIndex = direction === "up" ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= chapters.length) return;
+
+        // Perform swap positions locally first
+        const payload = [
+          { id: chapters[index].id, position: chapters[targetIndex].position },
+          { id: chapters[targetIndex].id, position: chapters[index].position }
+        ];
+
+        try {
+          const res = await fetch(`${PUBLIC_SERVER_URL}/api/reorder/chapters`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chapters: payload }),
+            credentials: "include"
+          });
+          if (!res.ok) throw new Error("Failed to reorder chapters");
+
+          loadCourseDetail(currentEditingCourse.id);
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+      });
+    });
+
+    // 2. Lesson Actions
+    document.querySelectorAll(".btn-add-lesson").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const chapterId = btn.getAttribute("data-chapter-id")!;
+        const title = prompt("Enter lesson title:");
+        if (!title) return;
+
+        try {
+          const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}/chapters/${chapterId}/lessons`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title }),
+            credentials: "include"
+          });
+          if (!res.ok) throw new Error("Failed to create lesson");
+
+          toast.success("Lesson created!");
+          loadCourseDetail(currentEditingCourse.id);
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+      });
+    });
+
+    document.querySelectorAll(".btn-lesson-edit").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const lessonId = btn.getAttribute("data-id")!;
+        const chapterId = btn.getAttribute("data-chapter-id")!;
+        
+        // Find chapter
+        const chapter = currentEditingCourse.chapters.find((c: any) => c.id === chapterId);
+        if (!chapter) return;
+        const lesson = chapter.lessons.find((l: any) => l.id === lessonId);
+        if (!lesson) return;
+
+        openLessonModal(lesson, chapterId);
+      });
+    });
+
+    document.querySelectorAll(".btn-lesson-delete").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const lessonId = btn.getAttribute("data-id")!;
+        const chapterId = btn.getAttribute("data-chapter-id")!;
+        if (!confirm("Are you sure you want to delete this lesson?")) return;
+
+        try {
+          const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}/chapters/${chapterId}/lessons/${lessonId}`, {
+            method: "DELETE",
+            credentials: "include"
+          });
+          if (!res.ok) throw new Error("Failed to delete lesson");
+
+          toast.success("Lesson deleted!");
+          loadCourseDetail(currentEditingCourse.id);
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+      });
+    });
+
+    // Lesson Reordering Up/Down
+    document.querySelectorAll(".btn-lesson-up, .btn-lesson-down").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const lessonId = btn.getAttribute("data-id")!;
+        const chapterId = btn.getAttribute("data-chapter-id")!;
+        const direction = btn.classList.contains("btn-lesson-up") ? "up" : "down";
+
+        // Find chapter
+        const chapter = currentEditingCourse.chapters.find((c: any) => c.id === chapterId);
+        if (!chapter) return;
+        
+        // Find indices
+        const lessons = chapter.lessons;
+        const index = lessons.findIndex((l: any) => l.id === lessonId);
+        if (index === -1) return;
+
+        const targetIndex = direction === "up" ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= lessons.length) return;
+
+        // Swapping payload
+        const payload = [
+          { id: lessons[index].id, position: lessons[targetIndex].position },
+          { id: lessons[targetIndex].id, position: lessons[index].position }
+        ];
+
+        try {
+          const res = await fetch(`${PUBLIC_SERVER_URL}/api/reorder/lessons`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lessons: payload }),
+            credentials: "include"
+          });
+          if (!res.ok) throw new Error("Failed to reorder lessons");
+
+          loadCourseDetail(currentEditingCourse.id);
+        } catch (e: any) {
+          toast.error(e.message);
+        }
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. File Upload Listeners
+  // ---------------------------------------------------------------------------
+
+  // A. Course Thumbnail Upload
+  builderThumbUploadBtn.addEventListener("click", () => builderThumbFileInput.click());
+  
+  builderThumbFileInput.addEventListener("change", async () => {
+    if (!builderThumbFileInput.files || builderThumbFileInput.files.length === 0 || !currentEditingCourse) return;
+
+    const file = builderThumbFileInput.files[0];
+    builderThumbProgressContainer.classList.remove("hidden");
+
+    try {
+      const fileKey = await uploadFileToMinIO(file, (pct) => {
+        builderThumbProgressBar.style.width = pct + "%";
+        builderThumbProgressText.textContent = pct + "%";
+      });
+
+      // Update course thumbnail reference in DB
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileKey }),
+        credentials: "include"
+      });
+
+      if (!res.ok) throw new Error("Failed to update course thumbnail Key in DB");
+
+      toast.success("Thumbnail uploaded successfully!");
+      currentEditingCourse = await res.json();
+      renderBuilderThumbPreview();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to upload thumbnail");
+    } finally {
+      builderThumbProgressContainer.classList.add("hidden");
+      builderThumbFileInput.value = "";
+    }
+  });
+
+  // B. Lesson Video Upload
+  lessonVideoUploadBtn.addEventListener("click", () => lessonVideoFileInput.click());
+
+  lessonVideoFileInput.addEventListener("change", async () => {
+    if (!lessonVideoFileInput.files || lessonVideoFileInput.files.length === 0 || !currentEditingCourse || !currentEditingLesson) return;
+
+    const file = lessonVideoFileInput.files[0];
+    lessonVideoProgressContainer.classList.remove("hidden");
+
+    try {
+      const videoKey = await uploadFileToMinIO(file, (pct) => {
+        lessonVideoProgressBar.style.width = pct + "%";
+        lessonVideoProgressText.textContent = pct + "%";
+      });
+
+      // Save video reference in DB
+      const { lesson, chapterId } = currentEditingLesson;
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}/chapters/${chapterId}/lessons/${lesson.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ videoKey }),
+        credentials: "include"
+      });
+
+      if (!res.ok) throw new Error("Failed to save video reference in database");
+
+      toast.success("Video uploaded successfully!");
+      
+      // Update state locally
+      const updatedLesson = await res.json();
+      currentEditingLesson.lesson = updatedLesson;
+
+      // Update UI
+      lessonVideoStatus.textContent = "✓ Video Uploaded (" + videoKey.substring(0, 20) + "...)";
+      lessonVideoStatus.className = "text-[10px] text-emerald-500 font-semibold text-center py-4 border border-emerald-500/20 rounded-md bg-emerald-500/5";
+
+    } catch (e: any) {
+      toast.error(e.message || "Failed to upload video");
+    } finally {
+      lessonVideoProgressContainer.classList.add("hidden");
+      lessonVideoFileInput.value = "";
+    }
+  });
+
+  // C. Lesson Thumbnail Upload
+  lessonThumbUploadBtn.addEventListener("click", () => lessonThumbFileInput.click());
+
+  lessonThumbFileInput.addEventListener("change", async () => {
+    if (!lessonThumbFileInput.files || lessonThumbFileInput.files.length === 0 || !currentEditingCourse || !currentEditingLesson) return;
+
+    const file = lessonThumbFileInput.files[0];
+    lessonThumbProgressContainer.classList.remove("hidden");
+
+    try {
+      const thumbnailKey = await uploadFileToMinIO(file, (pct) => {
+        lessonThumbProgressBar.style.width = pct + "%";
+        lessonThumbProgressText.textContent = pct + "%";
+      });
+
+      // Save thumbnail reference in DB
+      const { lesson, chapterId } = currentEditingLesson;
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}/chapters/${chapterId}/lessons/${lesson.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ thumbnailKey }),
+        credentials: "include"
+      });
+
+      if (!res.ok) throw new Error("Failed to save thumbnail reference in database");
+
+      toast.success("Lesson thumbnail uploaded!");
+      
+      const updatedLesson = await res.json();
+      currentEditingLesson.lesson = updatedLesson;
+
+      // Update UI preview
+      lessonThumbPreview.innerHTML = `
+        <img src="${PUBLIC_SERVER_URL}/courses/uploads/${thumbnailKey}" class="w-full h-full object-cover" />
+      `;
+
+    } catch (e: any) {
+      toast.error(e.message || "Failed to upload image");
+    } finally {
+      lessonThumbProgressContainer.classList.add("hidden");
+      lessonThumbFileInput.value = "";
+    }
+  });
+
+  // ---------------------------------------------------------------------------
+  // 6. Global Initializations
+  // ---------------------------------------------------------------------------
+
+  // Wire buttons inside panel
+
+  coursesEmptyCreateBtn.addEventListener("click", () => {
+    const trigger = document.getElementById("create-course-btn");
+    if (trigger) trigger.click();
+  });
+
+  builderBackBtn.addEventListener("click", closeBuilderView);
+
+  builderAddChapterBtn.addEventListener("click", async () => {
+    if (!currentEditingCourse) return;
+    const title = prompt("Enter chapter title:");
+    if (!title) return;
+
+    try {
+      const res = await fetch(`${PUBLIC_SERVER_URL}/api/courses/${currentEditingCourse.id}/chapters`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title }),
+        credentials: "include"
+      });
+      if (!res.ok) throw new Error("Failed to create chapter");
+
+      toast.success("Chapter added!");
+      loadCourseDetail(currentEditingCourse.id);
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  });
+
+  // Lesson Modal close bindings
+  lessonModalClose.addEventListener("click", closeLessonModal);
+  lessonModalCancel.addEventListener("click", closeLessonModal);
+  lessonModalOverlay.addEventListener("click", (e) => {
+    if (e.target === lessonModalOverlay) closeLessonModal();
+  });
+
+  // Listen to navigation trigger and custom event from header/modal
+  document.addEventListener("courses-updated", () => {
+    loadCourses();
+  });
+
+  // Intercept HiverLMS Sidebar active selection or manual loading
+  const navCoursesBtn = document.getElementById("nav-courses");
+  if (navCoursesBtn) {
+    navCoursesBtn.addEventListener("click", () => {
+      loadCourses();
+    });
+  }
+
+  // Load catalog on start if active
+  const activeNavItem = localStorage.getItem("active-nav-item");
+  if (activeNavItem === "nav-courses") {
+    loadCourses();
+  }
+</script>

@@ -10,6 +10,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   posts         Post[]
+  enrollments   Enrollment[]
 
   @@unique([email])
   @@map("user")

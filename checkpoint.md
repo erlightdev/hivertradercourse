@@ -81,6 +81,12 @@ To keep codebase maintenance high and maintain a modular design, the monolithic 
 - **Typing Indicator Overlay:** Captures keystrokes and broadcasts typing statuses, displaying responsive `[Name] is typing...` or `[X] people are typing...` labels right above the input pill.
 - Layout height is constrained to `h-[calc(100vh-11.5rem)]` and top-navigation elements are optimized to ensure full responsiveness without viewport spillages.
 
+### 3.6. Courses & Curriculum Builder Suite (`apps/web/src/components/courses/`)
+- **`CoursesView.astro`**: Provides the main courses catalog grid and full-featured curriculum settings builder.
+- **Udemy-Inspired Card Layout**: Displays course levels, live status badges, instructor credits, mock star ratings, price discount indicators, and interactive micro-animations.
+- **Atomic Drag-and-Drop Reordering**: Integrates visual handle controls allowing users to move chapters and lessons up/down in place, triggering backend updates.
+- **MinIO S3 Integration**: Integrates directly with MinIO to request pre-signed upload URLs and stream files asynchronously.
+
 ---
 
 ## 4. Key Database & Authentication Adjustments
@@ -92,6 +98,13 @@ Better Auth pre-creates credential rows with a temporary `tempPassword` for OTP 
   - `/api/account-status` inspects `passwordSet` directly.
   - `/api/set-initial-password` sets the password for users where `passwordSet` is false and marks it true upon successful resolution.
   - Registration hooks are configured to mark `passwordSet` as true for traditional credential signups.
+
+### 4.2. Courses & Curriculum Schema (`packages/db/prisma/schema/course.prisma`)
+Introduced relational models to support curriculum structure:
+- **`Course`**: Root entity storing slug, description, level, price (in cents), duration, and thumbnail references (`fileKey`).
+- **`Chapter`**: Represents course sections and includes a `position` tracker.
+- **`Lesson`**: Represents specific learning materials (including video and thumbnail references).
+- **`Enrollment`**: Tracks user purchases and access permissions.
 
 ---
 
@@ -105,6 +118,12 @@ Better Auth pre-creates credential rows with a temporary `tempPassword` for OTP 
    Primary sidebar and theme settings use global stylesheets and `is:global` style attributes within Astro templates to guarantee style rules apply correctly to deep children components.
 4. **No-Whitespace Bubble Rendering**:
    Bubble text variables (`${msg.text}`) in the Javascript templates are written fully side-by-side with tag definitions to prevent template indentation spaces from bleeding as empty whitespace inside the message rendering.
+5. **CORS Patch Allowed Method**:
+   Enabled `PATCH` inside Hono's CORS configuration. This resolved browser security preflight blockages (`TypeError: Failed to fetch`) when sending client database updates.
+6. **Media Streaming S3 Proxy Route**:
+   Introduced a GET proxy endpoint `/courses/uploads/*` on the Hono server. It resolves path URIs, pulls files securely from the MinIO S3 bucket, and streams them with proper content-type headers, solving local media preview serving.
+7. **Grid Alignment (`content-start`)**:
+   Applied `content-start` to catalog grids, keeping row heights natural and preventing empty vertical spacing issues.
 
 ---
 
@@ -118,5 +137,5 @@ Better Auth pre-creates credential rows with a temporary `tempPassword` for OTP 
 
 ## 7. Next Steps
 
-- Implement dashboard panels for **Courses**, **Analytics**, **Projects**, and **1:1 Live Sessions** (scaffolding inside `apps/web/src/components/` is ready).
+- Implement dashboard panels for **Analytics**, **Projects**, and **1:1 Live Sessions** (scaffolding inside `apps/web/src/components/` is ready).
 - Set up automated testing pipelines.

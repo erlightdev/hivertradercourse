@@ -15,10 +15,10 @@
 		"db:migrate": "prisma migrate dev --schema=prisma/schema",
 		"postinstall": "prisma generate --schema=prisma/schema",
 		"db:studio": "prisma studio",
-		"db:start": "docker compose up -d",
-		"db:watch": "docker compose up",
-		"db:stop": "docker compose stop",
-		"db:down": "docker compose down"
+		"db:start": "node docker-compose.js compose up -d",
+		"db:watch": "node docker-compose.js compose up",
+		"db:stop": "node docker-compose.js compose stop",
+		"db:down": "node docker-compose.js compose down"
 	},
 	"dependencies": {
 		"@hivertradercourse/env": "*",
