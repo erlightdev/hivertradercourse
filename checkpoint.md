@@ -67,7 +67,7 @@ To keep codebase maintenance high and maintain a modular design, the monolithic 
 ### 3.4. Account Settings (`apps/web/src/components/dashboard/ProfileSettingsModal.astro`)
 - Multi-tabbed account popup.
 - **Profile Tab**: Enables editing names, uploading profile avatars, and choosing personalized theme colors.
-- **Preferences Tab**: Configures local storage preferences (e.g., auto-save intervals, sidebar layout modes).
+- **Preferences Tab**: Configures regional configurations like default currency (INR, USD, EUR, NPR) and language. Saving preferences dispatches a global `preferences-updated` event, dynamically updating pricing formats and form labels across active dashboard views.
 - **Security Tab**: Facilitates secure password updates. Accommodates users who signed up with passwordless OTP by allowing them to create a password for the first time.
 
 ### 3.5. Group Chat UI & Ably Integration (`apps/web/src/components/chat/ChatView.astro`)
@@ -121,7 +121,7 @@ Introduced relational models to support curriculum structure:
 5. **CORS Patch Allowed Method**:
    Enabled `PATCH` inside Hono's CORS configuration. This resolved browser security preflight blockages (`TypeError: Failed to fetch`) when sending client database updates.
 6. **Media Streaming S3 Proxy Route**:
-   Introduced a GET proxy endpoint `/courses/uploads/*` on the Hono server. It resolves path URIs, pulls files securely from the MinIO S3 bucket, and streams them with proper content-type headers, solving local media preview serving.
+   Introduced a GET proxy endpoint `/courses/uploads/*` on the Hono server. It resolves path URIs, pulls files securely from the MinIO S3 bucket, and streams them with proper content-type headers, solving local media preview serving. The route strips only the leading slash from the requested path to match the raw database-saved `courses/uploads/...` S3 keys, avoiding double-prefixing.
 7. **Grid Alignment (`content-start`)**:
    Applied `content-start` to catalog grids, keeping row heights natural and preventing empty vertical spacing issues.
 

@@ -804,6 +804,9 @@
     localStorage.setItem("pref-currency", currencySelect.value);
     localStorage.setItem("pref-language", languageSelect.value);
     toast.success("Preferences updated successfully.");
+    document.dispatchEvent(new CustomEvent("preferences-updated", {
+      detail: { currency: currencySelect.value, language: languageSelect.value }
+    }));
   });
 
   // Run on first load to fetch avatar theme

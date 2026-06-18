@@ -71,7 +71,7 @@
 
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-1.5">
-              <label class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Price (USD)</label>
+              <label id="builder-price-label" class="text-[9px] font-bold text-muted-foreground uppercase tracking-wider block">Price (USD)</label>
               <input type="number" id="builder-price-input" min="0" step="0.01" class="w-full px-3 py-2 text-xs bg-muted/20 border border-border rounded-lg focus:outline-hidden text-foreground font-medium" required />
             </div>
             <div class="space-y-1.5">
@@ -307,6 +307,36 @@
   let currentEditingCourse: any = null;
   let currentEditingLesson: any = null; // { lesson, chapterId }
 
+  // Currency label selector
+  const builderPriceLabel = document.getElementById("builder-price-label");
+
+  // Helper to format currency dynamically based on preference
+  function formatCurrency(priceInCents: number): string {
+    const currency = localStorage.getItem("pref-currency") || "INR";
+    const amount = priceInCents / 100;
+    
+    switch (currency) {
+      case "USD":
+        return amount.toLocaleString("en-US", { style: "currency", currency: "USD" });
+      case "EUR":
+        return amount.toLocaleString("en-IE", { style: "currency", currency: "EUR" });
+      case "NPR":
+        return amount.toLocaleString("en-NP", { style: "currency", currency: "NPR" });
+      case "INR":
+      default:
+        return amount.toLocaleString("en-IN", { style: "currency", currency: "INR" });
+    }
+  }
+
+  // Helper to dynamically update the price field label in the builder sidebar
+  function updatePriceLabel() {
+    if (builderPriceLabel) {
+      const currency = localStorage.getItem("pref-currency") || "INR";
+      builderPriceLabel.textContent = `Price (${currency})`;
+    }
+  }
+
+
   // ---------------------------------------------------------------------------
   // 1. API Interactions (Fetch Helpers)
   // ---------------------------------------------------------------------------
@@ -487,11 +517,11 @@
 
       const levelLabel = course.level.charAt(0) + course.level.slice(1).toLowerCase();
       const statusLabel = course.status;
-      const formattedPrice = (course.price / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
+      const formattedPrice = formatCurrency(course.price);
 
       // Thumbnail check
       const thumbnailSrc = course.fileKey && course.fileKey !== "placeholder_thumbnail"
-        ? `${PUBLIC_SERVER_URL}/courses/uploads/${course.fileKey}` // standard serving url fallback or Tigris/MinIO served asset
+        ? `${PUBLIC_SERVER_URL}/${course.fileKey}` // standard serving url fallback or Tigris/MinIO served asset
         : null;
 
       card.innerHTML = `
@@ -573,7 +603,7 @@
           <!-- Pricing -->
           <div class="flex items-baseline gap-2 border-t border-border/40 pt-3.5">
             <span class="text-foreground text-[17px] font-black tracking-tight">${formattedPrice}</span>
-            <span class="text-xs text-muted-foreground line-through">${(course.price * 1.5 / 100).toLocaleString("en-US", { style: "currency", currency: "USD" })}</span>
+            <span class="text-xs text-muted-foreground line-through">${formatCurrency(course.price * 1.5)}</span>
             <span class="text-[9px] font-black text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-xs ml-auto">33% OFF</span>
           </div>
 
@@ -736,6 +766,9 @@
     coursesListPanel.classList.add("hidden");
     coursesBuilderPanel.classList.remove("hidden");
 
+    // Update currency label format
+    updatePriceLabel();
+
     // Populate metadata inputs
     builderCourseTitle.textContent = currentEditingCourse.title;
     builderCourseCategory.textContent = currentEditingCourse.category;
@@ -764,7 +797,7 @@
   function renderBuilderThumbPreview() {
     if (currentEditingCourse.fileKey && currentEditingCourse.fileKey !== "placeholder_thumbnail") {
       builderThumbPreview.innerHTML = `
-        <img src="${PUBLIC_SERVER_URL}/courses/uploads/${currentEditingCourse.fileKey}" class="w-full h-full object-cover" />
+        <img src="${PUBLIC_SERVER_URL}/${currentEditingCourse.fileKey}" class="w-full h-full object-cover" />
       `;
     } else {
       builderThumbPreview.innerHTML = `<span class="text-[10px] text-muted-foreground">No thumbnail uploaded</span>`;
@@ -797,7 +830,7 @@
     // Thumbnail status check
     if (lesson.thumbnailKey) {
       lessonThumbPreview.innerHTML = `
-        <img src="${PUBLIC_SERVER_URL}/courses/uploads/${lesson.thumbnailKey}" class="w-full h-full object-cover" />
+        <img src="${PUBLIC_SERVER_URL}/${lesson.thumbnailKey}" class="w-full h-full object-cover" />
       `;
     } else {
       lessonThumbPreview.innerHTML = `<span class="text-[9px] text-muted-foreground">No thumbnail</span>`;
@@ -1205,7 +1238,7 @@
 
       // Update UI preview
       lessonThumbPreview.innerHTML = `
-        <img src="${PUBLIC_SERVER_URL}/courses/uploads/${thumbnailKey}" class="w-full h-full object-cover" />
+        <img src="${PUBLIC_SERVER_URL}/${thumbnailKey}" class="w-full h-full object-cover" />
       `;
 
     } catch (e: any) {
@@ -1260,6 +1293,12 @@
   // Listen to navigation trigger and custom event from header/modal
   document.addEventListener("courses-updated", () => {
     loadCourses();
+  });
+
+  // Listen to preferences updates to refresh pricing currency dynamically
+  document.addEventListener("preferences-updated", () => {
+    loadCourses();
+    updatePriceLabel();
   });
 
   // Intercept HiverLMS Sidebar active selection or manual loading

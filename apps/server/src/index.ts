@@ -45,7 +45,7 @@ const s3Client = new S3Client({
 
 // Proxy route to stream course assets from MinIO
 app.get("/courses/uploads/*", async (c) => {
-	const key = decodeURIComponent(c.req.path.replace(/^\/courses\/uploads\//, ""));
+	const key = decodeURIComponent(c.req.path.replace(/^\//, ""));
 	try {
 		const command = new GetObjectCommand({
 			Bucket: env.MINIO_BUCKET_NAME,
